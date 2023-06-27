@@ -13,7 +13,7 @@ const Register = () => {
             <div className="w-full max-w-md space-y-8">
                 <div>
                     <img src={logo} alt="logo" className="h-28 mx-auto w-auto"/>
-                    <h1 className="text-xl font-semibold">
+                    <h1 className="text-xl font-semibold tracking-tight text-green-600">
                         Register an Account
                     </h1>
                     <form className="mt-8 space-y-8">
