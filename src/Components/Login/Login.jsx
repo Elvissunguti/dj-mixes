@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import logo from "../Assets/logo.png";
 
 const Login = () => {
 
@@ -7,15 +8,15 @@ const Login = () => {
     const [ password, setPassword ] = useState("");
 
 
-
     return(
-        <section>
-            <div>
+        <section className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-md space-y-8">
                 <div>
-                    <form>
-                        <h1>Login</h1>
+                    <form className="mt-8 space-y-8">
+                        <img src={logo} alt="logo" className="mx-auto h-28 w-auto" />
+                        <h1 className="text-xl font-bold tracking-tight text-green-600">Login to your account</h1>
                         <div>
-                            <label htmlFor="email">
+                            <label htmlFor="email" className="block flex flex-start ">
                                 Email
                             </label>
                             <input
@@ -27,11 +28,12 @@ const Login = () => {
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className=""
+                            className="relative px-3 py-2 w-full rounded-none rounded-b-md border border-gray-300 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm placeholder-gray-500"
                             />
                         </div>
                         <div>
-                            <label htmlFor="password">
+                            <label htmlFor="password"
+                             className="flex flex-start">
                                 Password
                             </label>
                             <input
@@ -42,19 +44,19 @@ const Login = () => {
                             value={password}
                             placeholder="Password"
                             onChange={(e) => setPassword(e.target.value)}
-                            className=""
+                            className="relative px-3 py-2 w-full text-gray-900 placeholder-gray-500 rounded-none rounded-b-md border border-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm placeholder-gray-500 "
                             />
                         </div>
                         <div>
                             <button type="submit"
-                             className="" >
+                             className="group relative flex w-full justify-center rounded-md border border-transparent text-white bg-green-500 py-2 px-4 text-lg font-medium hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-[#40AA54]-500 focus:ring-offset-2 cursor-pointer " >
                                 Login
                             </button>
                         </div>
                     </form>
                     <div>
-                        <p>
-                            Don't have an account? <Link><span>Register</span></Link>
+                        <p className="text-lg">
+                            Don't have an account? <Link><span className="text-red-500">Register</span></Link>
                         </p>
                     </div>
                 </div>
