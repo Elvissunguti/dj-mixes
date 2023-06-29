@@ -14,9 +14,9 @@ const Login = () => {
                 <div>
                     <form className="mt-8 space-y-8">
                         <img src={logo} alt="logo" className="mx-auto h-28 w-auto" />
-                        <h1 className="text-xl font-bold tracking-tight text-green-600">Login to your account</h1>
+                        <h1 className="text-2xl font-bold tracking-tight text-green-600">Login to your account</h1>
                         <div>
-                            <label htmlFor="email" className="block flex flex-start ">
+                            <label htmlFor="email" className="block flex flex-start font-bold text-lg">
                                 Email
                             </label>
                             <input
@@ -33,7 +33,7 @@ const Login = () => {
                         </div>
                         <div>
                             <label htmlFor="password"
-                             className="flex flex-start">
+                             className="flex flex-start font-bold text-lg">
                                 Password
                             </label>
                             <input
@@ -54,7 +54,7 @@ const Login = () => {
                             </button>
                         </div>
                     </form>
-                    <div>
+                    <div className="mt-4">
                         <p className="text-lg">
                             Don't have an account? <Link><span className="text-red-500">Register</span></Link>
                         </p>

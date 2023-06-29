@@ -10,8 +10,6 @@ const NavBar = () => {
     const [ searchText, setSearchText ] = useState("");
     const [ isOpen, setIsOpen ] = useState(false);
 
-    
-
 
     return(
         <nav className="">
@@ -34,23 +32,23 @@ const NavBar = () => {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-center justify-center">
-                    <button className="border border-green-300 flex items-center justify-center"
+                <div className="relative flex flex-col items-center justify-center ">
+                    <button className="border border-green-300 flex items-center justify-center text-lg  px-2 py-2"
                     onClick={() => setIsOpen(!isOpen)}>
-                    <MdAddCircleOutline sx={{ marginRight: '0.5rem' }}  /> 
-                    Create
+                    <MdAddCircleOutline className="mr-2" /> 
+                    CREATE
                     </button>
                     { isOpen && (
-                        <div>
-                            <ul className="space-y-2">
+                        <div className="absolute top-full mt-2 w-36 bg-green-500 rounded">
+                            <ul className="space-y-2 my-3">
                                 <li>
-                                    <Link to="/upload" className="flex justify-center items-center">
-                                    <MdAddCircleOutline />
+                                    <Link to="/upload" className="flex  items-center flex-start mx-4 text-lg">
+                                    <MdAddCircleOutline className="mx-2"/>
                                     Upload</Link>
                                     </li>
                                 <li>
-                                    <Link to="/post" className="flex justify-center items-center">
-                                        <IoCreateOutline />
+                                    <Link to="/post" className="flex  items-center flex-start mx-4 text-lg">
+                                        <IoCreateOutline className="mx-2" />
                                         Post</Link>
                                         </li>
                             </ul>

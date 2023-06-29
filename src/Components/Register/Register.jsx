@@ -13,12 +13,12 @@ const Register = () => {
             <div className="w-full max-w-md space-y-8">
                 <div>
                     <img src={logo} alt="logo" className="h-28 mx-auto w-auto"/>
-                    <h1 className="text-xl font-semibold tracking-tight text-green-600">
+                    <h1 className="text-2xl font-semibold tracking-tight text-green-600">
                         Register an Account
                     </h1>
                     <form className="mt-8 space-y-8">
                         <div className="block">
-                            <label htmlFor="userName" className="flex flex-start block">
+                            <label htmlFor="userName" className="flex flex-start block font-bold text-lg">
                                 Username
                             </label>
                             <input
@@ -34,7 +34,7 @@ const Register = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="email" className="flex flex-start block">
+                            <label htmlFor="email" className="flex flex-start block font-bold text-lg">
                                 Email
                             </label>
                             <input
@@ -50,7 +50,7 @@ const Register = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="password" className="flex flex-start block">
+                            <label htmlFor="password" className="flex flex-start block font-bold text-lg">
                                 Password
                             </label>
                             <input
@@ -71,7 +71,7 @@ const Register = () => {
                             </button>
                         </div>
                     </form>
-                    <div>
+                    <div className="mt-4" >
                         <p className="text-lg">
                             Already have an account? <Link to="/login"><span className="text-red-500">Login</span></Link>
                         </p>
