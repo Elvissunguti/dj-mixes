@@ -11,10 +11,6 @@ function App() {
       <Home />
       <Login />
       <Register />
-
-      
-   
-    
       
     </div>
   );
