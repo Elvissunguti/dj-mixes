@@ -1,12 +1,44 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../Assets/logo.png";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const Register = () => {
 
     const [ userName, setUserName ] = useState("");
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
+    const [ cookie, setCookie ] = useCookies(["token"])
+
+    const navigate = useNavigate();
+
+    const handleRegistration = async (e) => {
+        e.preventDefault();
+        
+        try{
+            const response = await axios.post("http://localhost:3000/auth/register", {userName, email, password});
+            console.log(response.data);
+
+            if(!response) {
+                const errorData = await response.json();
+                console.log(errorData.message);
+            } else {
+                const token = response.token;
+                const date = new Date();
+                date.setDate(date.getDate() + 30);
+                setCookie("token", token, {path: "/", expires: date})
+                navigate("/")
+                console.log("Registered successfully")
+
+
+            }
+
+        } catch(error) {
+            console.error("Error", error)
+        };
+      
+    }
 
     return(
         <section className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -16,7 +48,7 @@ const Register = () => {
                     <h1 className="text-2xl font-semibold tracking-tight text-green-600">
                         Register an Account
                     </h1>
-                    <form className="mt-8 space-y-8">
+                    <form className="mt-8 space-y-8" onSubmit={handleRegistration}>
                         <div className="block">
                             <label htmlFor="userName" className="flex flex-start block font-bold text-lg">
                                 Username
