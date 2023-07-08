@@ -38,4 +38,28 @@ router.post('/register', async (req, res) => {
     }
 });
 
+router.post("/login", async (req, res) => {
+    const { email, password} = req.body;
+    
+    // check if the user with the given email exist
+    const user = await User.findOne({ email: email});
+    if(!user){
+        return res.json({ err: "user with the given email does not exist"})
+    }
+    console.log(user);
+
+    // if user exists check if the password is correct
+     const validPassword = await bcrypt.compare(password, user.password);
+     
+     if(!validPassword){
+        return res.json({ err: "password does not match"})
+     }
+
+         // Step 4: If the credentials are correct, return a token to the user.
+    const token = await getToken(user.email, user);
+    const userToReturn = {...user.toJSON(), token};
+    delete userToReturn.password;
+    return res.status(200).json(userToReturn);
+})
+
 module.exports =  router;
