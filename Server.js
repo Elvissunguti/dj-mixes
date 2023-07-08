@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const User = require("./src/Backend/models/User");
+const authRoutes = require("./src/Backend/routes/Auth")
 
 
 const app = express();
@@ -35,6 +36,9 @@ mongoose.connect(
         );
         next();
       });
+
+
+ app.use("/auth", authRoutes);
 
       
 
