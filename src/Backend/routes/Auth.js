@@ -38,28 +38,53 @@ router.post('/register', async (req, res) => {
     }
 });
 
-router.post("/login", async (req, res) => {
-    const { email, password} = req.body;
-    
-    // check if the user with the given email exist
-    const user = await User.findOne({ email: email});
-    if(!user){
-        return res.json({ err: "user with the given email does not exist"})
-    }
-    console.log(user);
+// Login endpoint
+router.post("/login", (req, res) => {
+    // check if email exists
+    User.findOne({ email: req.body.email })
+  
+      // if email exists
+      .then((user) => {
+        // compare the password entered and the hashed password found
+        bcrypt
+          .compare(req.body.password, user.password)
+  
+          // if the passwords match
+          .then((passwordCheck) => {
+  
+            // check if password matches
+            if(!passwordCheck) {
+              return res.status(400).send({
+                message: "Passwords does not match",
+                error,
+              });
+            }
+  
+            
+  
+            //   return success response
+            res.status(200).send({
+              message: "Login Successful",
+              token,
+            });
+          })
+          // catch error if password does not match
+          .catch((error) => {
+            res.status(400).send({
+              message: "Passwords does not match",
+              error,
+            });
+          });
+      })
+      // catch error if email does not exist
+      .catch((e) => {
+        res.status(404).send({
+          message: "Email not found",
+          e,
+        });
+      });
+  });
 
-    // if user exists check if the password is correct
-     const validPassword = await bcrypt.compare(password, user.password);
-     
-     if(!validPassword){
-        return res.json({ err: "password does not match"})
-     }
 
-         // Step 4: If the credentials are correct, return a token to the user.
-    const token = await getToken(user.email, user);
-    const userToReturn = {...user.toJSON(), token};
-    delete userToReturn.password;
-    return res.status(200).json(userToReturn);
-});
 
 module.exports =  router;

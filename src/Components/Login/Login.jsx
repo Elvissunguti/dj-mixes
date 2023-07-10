@@ -92,8 +92,8 @@ const Login = () => {
                             />
                         </div>
                         <div>
-                            <div className="text-center text-red-500 md:text-lg">
-                                <p>{error} </p>
+                            <div className="text-center  font-medium text-red-600 md:text-lg my-2">
+                                <p>{error}</p>
                             </div>
                         <div>
                             <button type="submit"
