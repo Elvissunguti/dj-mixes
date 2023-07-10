@@ -39,23 +39,23 @@ router.post('/register', async (req, res) => {
 });
 
 // Login endpoint
-router.post("/login", (req, res) => {
+router.post("/login", (request, response) => {
     // check if email exists
-    User.findOne({ email: req.body.email })
+    User.findOne({ email: request.body.email })
   
       // if email exists
       .then((user) => {
         // compare the password entered and the hashed password found
         bcrypt
-          .compare(req.body.password, user.password)
+          .compare(request.body.password, user.password)
   
           // if the passwords match
           .then((passwordCheck) => {
   
             // check if password matches
             if(!passwordCheck) {
-              return res.status(400).send({
-                message: "Passwords does not match",
+              return response.status(400).send({
+                message: "Password does not match",
                 error,
               });
             }
@@ -63,22 +63,22 @@ router.post("/login", (req, res) => {
             
   
             //   return success response
-            res.status(200).send({
+            response.status(200).send({
               message: "Login Successful",
-              token,
+              
             });
           })
           // catch error if password does not match
           .catch((error) => {
-            res.status(400).send({
-              message: "Passwords does not match",
+            response.status(400).send({
+              message: "Password does not match",
               error,
             });
           });
       })
       // catch error if email does not exist
       .catch((e) => {
-        res.status(404).send({
+        response.status(404).send({
           message: "Email not found",
           e,
         });
