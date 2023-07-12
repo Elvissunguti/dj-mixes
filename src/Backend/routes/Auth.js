@@ -27,9 +27,13 @@ router.post('/register', async (req, res) => {
         await user.save();
 
         // token to return to the user
-        const token = getToken(email, user);
         
-        res.json({ message: "User created successfully"})
+        
+        
+
+        const token = await getToken(email, user);
+
+        return res.json({ message: "User created successfully", token})
 
     } catch(error) {
         console.error(error);
@@ -39,51 +43,45 @@ router.post('/register', async (req, res) => {
 });
 
 // Login endpoint
-router.post("/login", (request, response) => {
-    // check if email exists
-    User.findOne({ email: request.body.email })
-  
-      // if email exists
-      .then((user) => {
-        // compare the password entered and the hashed password found
-        bcrypt
-          .compare(request.body.password, user.password)
-  
-          // if the passwords match
-          .then((passwordCheck) => {
-  
-            // check if password matches
-            if(!passwordCheck) {
-              return response.status(400).send({
-                message: "Password does not match",
-                error,
-              });
-            }
-  
-            
-  
-            //   return success response
-            response.status(200).send({
-              message: "Login Successful",
-              
-            });
-          })
-          // catch error if password does not match
-          .catch((error) => {
-            response.status(400).send({
-              message: "Password does not match",
-              error,
-            });
-          });
-      })
-      // catch error if email does not exist
-      .catch((e) => {
-        response.status(404).send({
-          message: "Email not found",
-          e,
+router.post("/login", async (request, response) => {
+  try {
+    // Check if email exists
+    const user = await User.findOne({ email: request.body.email });
+
+    // If email exists
+    if (user) {
+      // Compare the password entered and the hashed password found
+      const passwordCheck = await bcrypt.compare(
+        request.body.password,
+        user.password
+      );
+
+      // If the passwords match
+      if (passwordCheck) {
+        // Generate a JWT token for authentication
+        const token = await getToken(user.email, user);
+        return response.status(200).json({ message: "Login Successfull", token});
+      } else {
+        
+        // Password does not match
+        return response.status(400).send({
+          message: "Password does not match",
         });
+      }
+    } else {
+      // Email not found
+      return response.status(404).send({
+        message: "Email not found",
       });
-  });
+    }
+  } catch (error) {
+    // Error occurred during login
+    return response.status(500).send({
+      message: "Internal Server Error",
+      error,
+    });
+  }
+});
 
 
 
