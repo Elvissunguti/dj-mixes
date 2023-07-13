@@ -4,6 +4,9 @@ import './App.css';
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
+import Profile from './Components/Profile/Profile';
+import Settings from './Components/Settings/Settings';
+import Feed from './Components/Feed/Feed';
 
 function App() {
   return (
@@ -12,6 +15,9 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register'  element={<Register />} />
+        <Route path='/Profile' element={<Profile />} />
+        <Route path='/settings' element={<Settings />} />
+        <Route path='/feed' element={<Feed />} />
       </Routes>
       
     </div>

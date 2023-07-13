@@ -94,16 +94,16 @@ const NavBar = () => {
                         <div className="absolute top-full mt-2 w-36 bg-green-500 rounded">
                             <ul className="space-y-2 my-3">
                                 <li className="text-lg cursor-pointer">
-                                    <Link>My dashboard</Link>
+                                    <Link to='/feed'>My dashboard</Link>
                                 </li>
                                 <li className="text-lg cursor-pointer">
-                                    <Link>My Profile</Link>
+                                    <Link to='/profile'>My Profile</Link>
                                 </li>
                                 <li className="text-lg cursor-pointer">
-                                    <Link>Settings</Link>
+                                    <Link to='/settings'>Settings</Link>
                                 </li>
                                 <li className="text-lg cursor-pointer">
-                                    <Link>Logout</Link>
+                                    <Link to='/logout'>Logout</Link>
                                 </li>
                             </ul>
                         </div>

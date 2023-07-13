@@ -1,11 +1,15 @@
 import React from "react";
+import SingleMixCard from "../shared/SingleMixCard";
 
 
 const Feed = () => {
     return(
         <section>
             <div>
-                Feed
+                feed
+                <div>
+                    <SingleMixCard />
+                </div>
             </div>
         </section>
     )
