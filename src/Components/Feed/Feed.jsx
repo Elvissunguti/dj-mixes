@@ -1,5 +1,5 @@
 import React from "react";
-import SingleMixCard from "../shared/SingleMixCard";
+import CurrentMix from "../shared/CurrentMix";
 
 
 const Feed = () => {
@@ -8,7 +8,7 @@ const Feed = () => {
             <div>
                 feed
                 <div>
-                    <SingleMixCard />
+                    <CurrentMix />
                 </div>
             </div>
         </section>
