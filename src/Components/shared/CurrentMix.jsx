@@ -46,18 +46,7 @@ const CurrentMix = () => {
                 </div>
                 <div className="flex flex-row relative space-x-6 items-center">
                     <FcLike className="cursor-pointer text-4xl" />
-                    <FcShare className="cursor-pointer text-4xl" onClick={() => setOpen(!open)}/>
-                    { open && (
-                        <div className="absolute bg-green-500 top-full mt-2 w-18 ">
-                            <ul className="flex text-xl font-medium">
-                                <li><AiOutlineTwitter /></li>
-                                <li><ImWhatsapp /></li>
-                                <li><ImFacebook /></li>
-                                <li><AiOutlineInstagram /></li>
-                            </ul>
-
-                        </div>
-                    )}
+                   
                 </div>
             </div>
         </section>
