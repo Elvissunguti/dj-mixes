@@ -7,6 +7,7 @@ import Register from './Components/Register/Register';
 import Profile from './Components/Profile/Profile';
 import Settings from './Components/Settings/Settings';
 import Feed from './Components/Feed/Feed';
+import UploadMix from './Components/Upload/UploadMix';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/Profile' element={<Profile />} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/feed' element={<Feed />} />
+        <Route path='/uploadMix' element={<UploadMix />} />
       </Routes>
       
     </div>

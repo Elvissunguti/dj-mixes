@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import avatar from "../Assets/avatar.png";
+import thumbnail from "../Assets/thumbnail.jpg";
 import { ImFacebook, ImPause, ImPlay, ImWhatsapp } from "react-icons/im";
-import { AiOutlineHeart, AiOutlineInstagram, AiOutlineTwitter } from "react-icons/ai";
+import { AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } from "react-icons/ai";
 import { FcShare } from "react-icons/fc";
  
 
@@ -11,52 +11,53 @@ const MixCard = () => {
     const [ currentSong, setCurrentSong ] = useState("play")
 
     return(
-        <section className="mx-auto flex justify-between ">
-            <div className="flex border border-b-green-500 w-2/3">
-                <div className="w-2/3">
-                    <img src={avatar} alt=""
-                    className="h-48 w-48 object-cover" />
+        <section className=" ">
+            <div className="flex border-b border-green-500  w-2/3">
+                <div className="w-1/5">
+                    <img src={thumbnail} alt=""
+                    className="h-full w-full rounded object-cover" />
                 </div>
-                <div className="flex flex-row">
-                <div className="flex ">
-                    <div className="font-medium text-4xl cursor-pointer  ">
+                <div className="flex flex-col w-4/5 space-x-12 mt-4 pl-4">
+                <div className="flex space-x-4 my-4">
+                    <div className="  text-5xl cursor-pointer  ">
                         {currentSong === "play" ? <ImPause /> : <ImPlay />}
                     </div>
                     <div className="text-2xl font-medium">
-                        <p>Name of mix</p>
-                        <p>Name of dj</p>
+                        <p className="hover:text-gray-600 cursor-pointer">
+                            Name of mix
+                        </p>
+                        <p className="text-light hover:text-gray-600 cursor-pointer">
+                            Name of dj
+                        </p>
                     </div>
                 </div>
-                <div className="flex" >
+                <div className="flex">
+                    <p>time </p>
                     <input 
                     type="range"
                     min="0"
-                    className="cursor-pointer"
+                    className="w-96 bg-gray-300 cursor-pointer"
                     />
-                </div>
-                <div className="flex flex-row">
-                    <ul className="flex flex-row">
-                        <li>
-                            <AiOutlineHeart /> no likes
-                        </li>
-                        <li>
+                    <p>full time</p>
+                    </div>
+                    
+                
+                <div className="flex flex-row relative mt-4 space-x-4">
+                        <AiOutlineHeart className="text-4xl cursor-pointer" /> no likes
                         <FcShare className="cursor-pointer text-4xl" onClick={() => setOpen(!open)}/>
                     { open && (
-                        <div className="absolute bg-green-500 top-full mt-2 w-18 ">
-                            <ul className="flex text-xl font-medium">
-                                <li><AiOutlineTwitter /></li>
-                                <li><ImWhatsapp /></li>
-                                <li><ImFacebook /></li>
-                                <li><AiOutlineInstagram /></li>
+                        <div className="absolute bg-green-500 top-full mt-2 px-2 py-3 ">
+                            <ul className="flex items-center justify-center space-x-4 text-xl font-medium">
+                                <li><AiOutlineTwitter className="cursor-pointer" /></li>
+                                <li><ImWhatsapp className="cursor-pointer" /></li>
+                                <li><ImFacebook className="cursor-pointer" /></li>
+                                <li><AiOutlineInstagram className="cursor-pointer" /></li>
                             </ul>
-
                         </div>
                     )}
-                        </li>
-                    </ul>
+                    <AiOutlineMore className="cursor-pointer text-4xl" />
                 </div>
                 </div>
-
             </div>
         </section>
     )
