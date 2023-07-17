@@ -9,7 +9,9 @@ const Feed = () => {
             <div>
                 feed
                 <div>
+                
                     <MixCard />
+                    <CurrentMix />
                 </div>
             </div>
         </section>

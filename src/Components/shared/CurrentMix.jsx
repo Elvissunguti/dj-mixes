@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ImPrevious, ImPause, ImPlay2, ImNext, ImWhatsapp, ImFacebook } from "react-icons/im";
 import { FcLike, FcShare } from "react-icons/fc";
 import { AiOutlineTwitter, AiOutlineInstagram, AiOutlineMore } from "react-icons/ai";
-import avatar from "../Assets/avatar.png";
+import thumbnail from "../Assets/thumbnail.jpg";
 
 
 const CurrentMix = () => {
@@ -17,13 +17,15 @@ const CurrentMix = () => {
         <section className="mx-auto flex justify-between  max-w-8xl max-w-10xl">
             <div className="flex  border-b-green-500 w-2/3">
                <div className="flex  ">
-                <img src={avatar} alt="thumbnail"
-                 className="h-full w-1/5" />
+                <img src={thumbnail} alt="thumbnail"
+                 className=" w-2/5" />
+                 </div>
+                 <div className="flex w-3/5">
                 <div className="font-medium text-lg flex-row mx-2">
-                    <p>mix name</p>
-                    <p>Name of dj</p>
+                    <p className="hover:text-gray-300 cursor-pointer">mix name</p>
+                    <p className="hover:text-gray-300 cursor-pointer">Name of dj</p>
                 </div>
-                </div> 
+                
                 <div className="flex items-center between space-x-6 text-4xl mx-4 ">
                     <ImPrevious className="cursor-pointer"/>
                     <div className="cursor-pointer">
@@ -48,6 +50,7 @@ const CurrentMix = () => {
                     <FcLike className="cursor-pointer text-4xl" />
                     <AiOutlineMore className="cursor-pointer text-4xl" />
                    
+                </div>
                 </div>
             </div>
         </section>

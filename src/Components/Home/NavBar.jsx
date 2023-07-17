@@ -71,7 +71,7 @@ const NavBar = () => {
                         <div className="absolute top-full mt-2 w-36 bg-green-500 rounded">
                             <ul className="space-y-2 my-3">
                                 <li>
-                                    <Link to="/upload" className="flex  items-center flex-start mx-4 text-lg">
+                                    <Link to="/uploadMix" className="flex  items-center flex-start mx-4 text-lg">
                                     <MdAddCircleOutline className="mx-2"/>
                                     Upload</Link>
                                     </li>

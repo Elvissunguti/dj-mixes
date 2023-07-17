@@ -8,6 +8,7 @@ import Profile from './Components/Profile/Profile';
 import Settings from './Components/Settings/Settings';
 import Feed from './Components/Feed/Feed';
 import UploadMix from './Components/Upload/UploadMix';
+import Post from './Components/Post/Post';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path='/settings' element={<Settings />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/uploadMix' element={<UploadMix />} />
+        <Route path='/post' element={<Post />} />
       </Routes>
       
     </div>
