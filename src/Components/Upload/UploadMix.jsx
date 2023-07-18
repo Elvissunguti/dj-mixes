@@ -36,7 +36,7 @@ const UploadMix = () => {
             <div className="flex flex-row items-center justify-center mx-auto max-w-4xl max-w-7xl"> 
                 <form>
                 <h1 className="text-2xl font-bold my-6">Upload Mix</h1>
-                    <div className="mb-6">
+                    <div className=" mb-6">
                     <label className="font-medium text-xl mx-4 mb-2">Enter title of the mix</label>
                     <input
                     type="text"
@@ -45,12 +45,12 @@ const UploadMix = () => {
                     value={title}
                     placeholder="Enter The title of the mix..."
                     onChange={(e) => setTitle(e.target.value) }
-                    className="px-3 py-2 text-lg border border-gray-300 placeholder-gray-500 text-gray-900 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500  "
+                    className="px-6 py-2 text-lg border border-gray-300 placeholder-gray-500 text-gray-900 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500  "
                     />
                     </div>
                     <div className="flex flex-row-reverse items-center justify-center my-4">
                         <div>
-                        <label className="block text-lg font-medium mb-2">Enter Mix Thumbnail</label>
+                        <label className="block text-xl font-medium mb-2">Enter Mix Thumbnail</label>
                         </div>
                         <div>
                         <input 
@@ -77,7 +77,7 @@ const UploadMix = () => {
               </div>
                     </div>
                     <div className="flex flex-row items-center justify-center my-4">
-                        <label className="font-medium text-lg mx-4 block mb-2">Enter mix Description</label>
+                        <label className="font-medium text-xl mx-4 block mb-2">Enter mix Description</label>
                         <textarea
                         type="text"
                         id="description"
@@ -111,7 +111,6 @@ const UploadMix = () => {
                     </button>
                 </div>
                 </form>
-                
             </div>
         </section>
     )
