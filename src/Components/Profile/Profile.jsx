@@ -15,8 +15,8 @@ const Profile = () => {
     return(
         <section className="mx-auto max-w-9xl ">
             <NavBar />
-            <div className="h-full w-2/5 flex flex-col justify-between ">
-                <div>
+            <div className="h-full     ">
+                <div className="flex">
                     { coverImage ? (
                         <div>
                           <img
@@ -32,8 +32,10 @@ const Profile = () => {
                     )}
                 </div>
 
-                <div className="h-full w-2/5 mx-8  flex flex-col items-center ">
-                    <div className="shadow-md ">
+                <div className="flex">
+
+                <div className="h-full w-1/5  mx-10 flex flex-col justify-between ">
+                    <div className="shadow-md px-8 w-full">
                     { profilePic ? (
                         <img
                         src={profilePic}
@@ -68,11 +70,24 @@ const Profile = () => {
                         <li><Link to="/profilepage" className="flex items-center text-lg mx-4 space-x-4 hover:text-blue-800">
                             <BsLink45Deg /><p>ADD LINKS</p>
                             </Link></li>
-                        <li className="border-t "><Link to="/profilepage" className="flex items-center hover:bg-gray-200 text-lg mx-4 my-4 space-x-4 hover:text-blue-800">
+                        <li className="border-t"><Link to="/profilepage" className="flex items-center hover:bg-gray-200 text-lg  my-4 space-x-4 hover:text-blue-800">
                             <AiOutlineMore /><p>MORE OPTIONS</p>
                             </Link></li>
                         </ul>
                     </div>
+                </div>
+                </div>
+                <div className="w-4/5 h-full overflow-auto">
+                    <div className="w-full">
+                        <button className="px-3 py-2 mx-4 text-white rounded-xl bg-gray-500 hover:bg-gray-800">
+                            History no
+                        </button>
+                        <button className="px-3 py-2 text-white rounded-xl bg-gray-500 hover:bg-gray-800">
+                            Favourites no
+                        </button>
+                    </div>
+
+
                 </div>
                 </div>
 
