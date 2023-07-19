@@ -9,6 +9,7 @@ import Settings from './Components/Settings/Settings';
 import Feed from './Components/Feed/Feed';
 import UploadMix from './Components/Upload/UploadMix';
 import Post from './Components/Post/Post';
+import ProfilePage from './Components/Profile/ProfilePage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path='/feed' element={<Feed />} />
         <Route path='/uploadMix' element={<UploadMix />} />
         <Route path='/post' element={<Post />} />
+        <Route path='/profilepage' element={<ProfilePage />}  />
       </Routes>
       
     </div>
