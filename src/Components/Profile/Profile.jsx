@@ -6,11 +6,22 @@ import { IoCreateOutline } from "react-icons/io5";
 import { BsLink45Deg } from "react-icons/bs";
 import { AiOutlineMore } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import History from "../shared/History";
+import Favourite from "../shared/Favourite";
 
 const Profile = () => {
 
     const [ coverImage, setCoverImage ] = useState(null);
     const [ profilePic, setProfilePic ] = useState(null);
+    const [ displayHistory, setDisplayHistory ] = useState(false);
+
+    const handleHistoryButtonClick = () => {
+        setDisplayHistory(true);
+      };
+
+      const handleFavouritesButtonClick = () => {
+        setDisplayHistory(false);
+      };
 
     return(
         <section className="mx-auto max-w-9xl ">
@@ -34,8 +45,8 @@ const Profile = () => {
 
                 <div className="flex">
 
-                <div className="h-full w-1/5  mx-10 flex flex-col justify-between ">
-                    <div className="shadow-md px-8 w-full">
+                <div className="h-full w-1/5   mx-10 flex flex-col justify-between ">
+                    <div className="shadow-md  w-full">
                     { profilePic ? (
                         <img
                         src={profilePic}
@@ -70,21 +81,26 @@ const Profile = () => {
                         <li><Link to="/profilepage" className="flex items-center text-lg mx-4 space-x-4 hover:text-blue-800">
                             <BsLink45Deg /><p>ADD LINKS</p>
                             </Link></li>
-                        <li className="border-t"><Link to="/profilepage" className="flex items-center hover:bg-gray-200 text-lg  my-4 space-x-4 hover:text-blue-800">
+                        <li className="border-t"><Link to="/profilepage" className="flex  px-2 py-1 items-center hover:bg-gray-200 text-lg  my-4 space-x-4 hover:text-blue-800">
                             <AiOutlineMore /><p>MORE OPTIONS</p>
                             </Link></li>
                         </ul>
                     </div>
                 </div>
                 </div>
-                <div className="w-4/5 h-full overflow-auto">
-                    <div className="w-full">
-                        <button className="px-3 py-2 mx-4 text-white rounded-xl bg-gray-500 hover:bg-gray-800">
+                <div className="w-4/5 h-full mt-6 flex flex-col overflow-auto">
+                    <div className="w-full flex flex-start">
+                        <button className="px-3 py-2 mx-6  text-white rounded-xl bg-gray-500 hover:bg-gray-800 active:bg-gray-800 cursor-pointer"
+                         onClick={handleHistoryButtonClick}>
                             History no
                         </button>
-                        <button className="px-3 py-2 text-white rounded-xl bg-gray-500 hover:bg-gray-800">
+                        <button className="px-3 py-2 text-white rounded-xl bg-gray-500 hover:bg-gray-800 active:bg-gray-800 cursor-pointer"
+                         onClick={handleFavouritesButtonClick}>
                             Favourites no
                         </button>
+                    </div>
+                    <div className="mt-4">
+                        { displayHistory ? <Favourite /> : <History />}
                     </div>
 
 
