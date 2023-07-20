@@ -15,6 +15,7 @@ const Profile = () => {
     const [ profilePic, setProfilePic ] = useState(null);
     const [ displayHistory, setDisplayHistory ] = useState(false);
 
+
     const handleHistoryButtonClick = () => {
         setDisplayHistory(true);
       };
@@ -90,17 +91,25 @@ const Profile = () => {
                 </div>
                 <div className="w-4/5 h-full mt-6 flex flex-col overflow-auto">
                     <div className="w-full flex flex-start">
-                        <button className="px-3 py-2 mx-6  text-white rounded-xl bg-gray-500 hover:bg-gray-800 active:bg-gray-800 cursor-pointer"
-                         onClick={handleHistoryButtonClick}>
+                        <button
+                           className={`px-3 py-2 mx-6 text-white rounded-xl ${
+                           displayHistory ? "bg-gray-800" : "bg-gray-500"
+                           } hover:bg-gray-800 outline-none cursor-pointer`}
+                           onClick={handleHistoryButtonClick}
+                        >
                             History no
                         </button>
-                        <button className="px-3 py-2 text-white rounded-xl bg-gray-500 hover:bg-gray-800 active:bg-gray-800 cursor-pointer"
-                         onClick={handleFavouritesButtonClick}>
+                        <button
+                          className={`px-3 py-2 text-white rounded-xl ${
+                          !displayHistory ? "bg-gray-800" : "bg-gray-500"
+                          } hover:bg-gray-800  outline-none cursor-pointer`}
+                          onClick={handleFavouritesButtonClick}
+                        >
                             Favourites no
                         </button>
                     </div>
                     <div className="mt-4">
-                        { displayHistory ? <Favourite /> : <History />}
+                        { displayHistory ? <History />  : <Favourite /> }
                     </div>
 
 
