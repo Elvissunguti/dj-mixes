@@ -4,7 +4,7 @@ import { useState } from "react";
 import avatar from "../Assets/avatar.png"
 import { IoCreateOutline } from "react-icons/io5";
 import { BsLink45Deg } from "react-icons/bs";
-import { AiOutlineMore } from "react-icons/ai";
+import { AiOutlineMore, AiOutlineCamera } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import History from "../shared/History";
 import Favourite from "../shared/Favourite";
@@ -28,41 +28,43 @@ const Profile = () => {
         <section className="mx-auto max-w-9xl ">
             <NavBar />
             <div className="h-full     ">
-                <div className="flex">
+                <div className="flex items-center justify-center w-full h-48">
                     { coverImage ? (
                         <div>
                           <img
                           src={coverImage}
                           alt="Cover image"
-                          className=""
+                          className="object-cover "
                           />
                         </div>
                     ) : (
-                        <div>
-                            <p>Upload cover image</p>
+                        <div className="flex items-center justify-center space-x-1">
+                           <AiOutlineCamera/><Link to="/profilepage"><p className="text-gray-800 hover:text-blue-400">Upload cover image</p></Link>
                         </div>
                     )}
                 </div>
 
                 <div className="flex">
 
-                <div className="h-full w-1/5   mx-10 flex flex-col justify-between ">
+                <div className="h-full w-1/5 mx-10 flex flex-col justify-between ">
                     <div className="shadow-md  w-full">
+                        <div className="flex items-center justify-center w-full my-4">
                     { profilePic ? (
                         <img
                         src={profilePic}
                         alt="Profile pic"
-                        className=""
+                        className="w-36 rounded-full "
                         />
                     ) : (
                         <div>
                             <img
                             src={avatar}
                             alt="avatar"
-                            className=""
+                            className="w-36 rounded-full"
                             />
                         </div>
                     )}
+                    </div>
                     <h1>userName</h1>
                     <div className="mt-6">
                         <button className="px-3 py-2 rounded text-white bg-blue-400 hover:bg-blue-700">
