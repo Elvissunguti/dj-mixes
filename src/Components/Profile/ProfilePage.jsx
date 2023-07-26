@@ -17,9 +17,9 @@ const ProfilePage = () => {
     return(
         <section>
             <NavBar />
-            <div className="mx-auto w-1/2">
+            <div className="mx-auto py-8 w-3/4 ">
                 <p className="font-semibold text-2xl my-4">Your profile settings</p>
-                <div>
+                <div className="w-full">
                     <form className="w-full flex justify-center items-center flex-col">
 
                         <div className="flex flex-row space-x-4 my-4">
@@ -36,7 +36,7 @@ const ProfilePage = () => {
                         />
                         </div>
 
-                        <div className="flex flex-row border-t my-4 pt-4">
+                        <div className="flex flex-row justify-center  border-t w-full space-x-8 my-4 pt-4">
                             <div className="flex flex-col items-start">
                             <label className="font-semibold">Biography</label>
                             <p>Up to 1,000 characters.</p>
@@ -44,42 +44,42 @@ const ProfilePage = () => {
                             <textarea
                             type="text"
                             id="biography"
-                            placeholder="Biography"
+                            placeholder="Enter some info about you..."
                             onChange={(e) => setBiography(e.target.value)}
-                            className=""
+                            className="h-36 w-1/4 bg-gray-100 px-3 py-2"
                             />
                         </div>
 
-                        <div className="border-t pt-4 my-4">
-                        <p className="font-semibold">Social Links</p>
-                        <div className="flex flex-row my-4 ">
-                            <label><BiLogoFacebookCircle /></label>
+                        <div className=" border-t pt-4 my-5 w-full">
+                        <p className="text-lg font-semibold">Social Links</p>
+                        <div className="flex flex-row items-center justify-center my-4 space-x-4">
+                            <label><BiLogoFacebookCircle className="text-3xl" /></label>
                             <input
                             type="text"
                             id="facebook"
                             placeholder="https://www.facebook.com/yourusername/"
                             onChange={(e) => setFacebookUrl(e.target.value)}
-                            className=""
+                            className="px-4 py-2 w-1/2 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
                             /> 
                         </div>
-                        <div className="flex flex-row my-4">
-                            <label><BiLogoTwitter /></label>
+                        <div className="flex flex-row items-center justify-center my-5 space-x-4">
+                            <label><BiLogoTwitter className="text-3xl" /></label>
                             <input
                             type="text"
                             id="twitter"
                             placeholder="https://www.twitter.com/@yournamehere"
                             onChange={(e) => setTwitterUrl(e.target.value)}
-                            className=""
+                            className="px-4 py-2 w-1/2 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
                             />
                         </div>
-                        <div className="flex flex-row my-4 justify-center">
-                            <label><BiLogoInstagram /></label>
+                        <div className="flex flex-row items-center justify-center my-5 space-x-4">
+                            <label><BiLogoInstagram className="text-3xl"/></label>
                             <input
                             type="text"
                             id="instagram"
                             placeholder="https://www.instagram.com/yourusername"
                             onChange={(e) => setInstagramUrl(e.target.value)}
-                            className=""
+                            className="px-4 py-2 w-1/2 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
                             />
                         </div>
                         </div>
@@ -92,11 +92,11 @@ const ProfilePage = () => {
                             id="profilePic"
                             type="file"
                             accept=".jpg,.jpeg,.gif,.png"
-                            className="absolute top-0 left-0 opacity-0"
+                            className="absolute hidden top-0 left-0 opacity-0  cursor-pointer"
                             />
                             <label
                             htmlFor="profilePic"
-                            className="bg-blue-700 px-3 py-2 text-white font-semibold rounded">
+                            className="bg-blue-700 px-3 py-2 text-white font-semibold rounded cursor-pointer">
                                 CHOOSE FILE
                             </label>
                             <div className="w-56 h-56">
@@ -117,8 +117,8 @@ const ProfilePage = () => {
                         </div>
 
 
-                        <div className="flex flex-row my-4 relative border-t">
-                            <div className="flex flex-col justify-start items-start w-2/3">
+                        <div className="flex flex-row my-4 pt-4 relative space-x-4 border-t">
+                            <div className="flex flex-col mr-8 justify-start items-start w-2/3">
                             <label className="font-semibold">Cover Picture</label>
                             <p>We recommend 1600px wide and 350px tall. Avoid using text within your cover image, as it could be cropped on smaller screens.</p>
                             </div>
@@ -126,11 +126,11 @@ const ProfilePage = () => {
                             id="coverPic"
                             type="file"
                             accept=".jpg,.jpeg,.gif,.png"
-                            className="absolute top-0 left-0 opacity-0"
+                            className="hidden"
                             />
                             <label
                             htmlFor="coverPic"
-                            className="">
+                            className="bg-blue-700 px-3 py-2 text-white font-semibold rounded cursor-pointer">
                                 CHOOSE FILE
                             </label>
                             <div className="w-56 h-16 ">
@@ -149,7 +149,7 @@ const ProfilePage = () => {
                         </div>
                         <div className="border-t my-4">
                             <button type="submit"
-                             className="px-3 py-2 text-lg text-white text-bold bg-blue-500 hover:bg-blue-700 ">
+                             className="px-3 py-2 text-lg text-white text-bold bg-blue-600 hover:bg-blue-800 rounded">
                                 SAVE PROFILE SETTINGS
                             </button>
                         </div>
