@@ -68,7 +68,7 @@ const Profile = () => {
                     <h1>userName</h1>
                     <div className="mt-6">
                         <button className="px-3 py-2 rounded text-white bg-blue-400 hover:bg-blue-700">
-                            <Link className="flex items-center text-xl space-x-4 ">
+                            <Link to="/profilepage" className="flex items-center text-xl space-x-4 ">
                             <IoCreateOutline /><p>EDIT MY PROFILE</p>
                             </Link>
                         </button>
