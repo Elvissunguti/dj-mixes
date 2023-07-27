@@ -17,13 +17,13 @@ const ProfilePage = () => {
     return(
         <section>
             <NavBar />
-            <div className="mx-auto py-8 w-3/4 ">
+            <div className="mx-auto py-8 w-1/2 ">
                 <p className="font-semibold text-2xl my-4">Your profile settings</p>
                 <div className="w-full">
                     <form className="w-full flex justify-center items-center flex-col">
 
-                        <div className="flex flex-row space-x-4 my-4">
-                            <div className="flex flex-col items-start">
+                        <div className="flex flex-row justify-center space-x-4 my-4 w-full">
+                            <div className="flex flex-col items-start w-1/2">
                         <label className="font-semibold">Display name</label>
                         <p className="text-gray-500">Spaces and special characters are fine</p>
                         </div>
@@ -32,21 +32,21 @@ const ProfilePage = () => {
                         id="name"
                         placeholder="Display name"
                         onChange={(e) =>setDisplayName(e.target.value) } 
-                        className="w-38 px-3 py-2 rounded "
+                        className="w-1/2 px-3 py-2 rounded border border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                         />
                         </div>
 
-                        <div className="flex flex-row justify-center  border-t w-full space-x-8 my-4 pt-4">
-                            <div className="flex flex-col items-start">
+                        <div className="flex flex-row justify-center border-t w-full space-x-8  my-4 pt-4">
+                            <div className="flex flex-col items-start w-1/2">
                             <label className="font-semibold">Biography</label>
-                            <p>Up to 1,000 characters.</p>
+                            <p className="text-gray-500">Up to 1,000 characters.</p>
                             </div>
                             <textarea
                             type="text"
                             id="biography"
                             placeholder="Enter some info about you..."
                             onChange={(e) => setBiography(e.target.value)}
-                            className="h-36 w-1/4 bg-gray-100 px-3 py-2"
+                            className="h-36 w-1/2 bg-gray-100 px-3 py-2 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                             />
                         </div>
 
@@ -59,7 +59,7 @@ const ProfilePage = () => {
                             id="facebook"
                             placeholder="https://www.facebook.com/yourusername/"
                             onChange={(e) => setFacebookUrl(e.target.value)}
-                            className="px-4 py-2 w-1/2 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
+                            className="px-4 py-2 w-2/3 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
                             /> 
                         </div>
                         <div className="flex flex-row items-center justify-center my-5 space-x-4">
@@ -69,7 +69,7 @@ const ProfilePage = () => {
                             id="twitter"
                             placeholder="https://www.twitter.com/@yournamehere"
                             onChange={(e) => setTwitterUrl(e.target.value)}
-                            className="px-4 py-2 w-1/2 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
+                            className="px-4 py-2 w-2/3 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
                             />
                         </div>
                         <div className="flex flex-row items-center justify-center my-5 space-x-4">
@@ -79,14 +79,14 @@ const ProfilePage = () => {
                             id="instagram"
                             placeholder="https://www.instagram.com/yourusername"
                             onChange={(e) => setInstagramUrl(e.target.value)}
-                            className="px-4 py-2 w-1/2 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
+                            className="px-4 py-2 w-2/3 border rounded border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
                             />
                         </div>
                         </div>
-                        <div className="flex flex-row my-4 pt-4 space-x-4 relative border-t  ">
-                            <div className="flex flex-col items-start">
+                        <div className="flex flex-row my-4 pt-4 space-x-4 border-t w-full ">
+                            <div className="flex flex-col items-start w-2/5">
                             <label className="font-semibold">Profile Picture</label>
-                            <p>JPEG, GIF or PNG</p>
+                            <p className="text-gray-500">JPEG, GIF or PNG</p>
                             </div>
                             <input
                             id="profilePic"
@@ -96,10 +96,10 @@ const ProfilePage = () => {
                             />
                             <label
                             htmlFor="profilePic"
-                            className="bg-blue-700 px-3 py-2 text-white font-semibold rounded cursor-pointer">
+                            className="bg-blue-700 h-10 px-3 py-2 text-white font-semibold rounded cursor-pointer">
                                 CHOOSE FILE
                             </label>
-                            <div className="w-56 h-56">
+                            <div className="w-64 h-64">
                                 { profilePic ? (
                                     <img
                                     src={profilePic}
@@ -117,10 +117,10 @@ const ProfilePage = () => {
                         </div>
 
 
-                        <div className="flex flex-row my-4 pt-4 relative space-x-4 border-t">
-                            <div className="flex flex-col mr-8 justify-start items-start w-2/3">
+                        <div className="flex flex-row my-4 pt-4 space-x-4 w-full border-t">
+                            <div className="flex flex-col items-start w-2/5">
                             <label className="font-semibold">Cover Picture</label>
-                            <p>We recommend 1600px wide and 350px tall. Avoid using text within your cover image, as it could be cropped on smaller screens.</p>
+                            <p className="text-left text-gray-500">We recommend 1600px wide and 350px tall. Avoid using text within your cover image, as it could be cropped on smaller screens.</p>
                             </div>
                             <input
                             id="coverPic"
@@ -130,10 +130,10 @@ const ProfilePage = () => {
                             />
                             <label
                             htmlFor="coverPic"
-                            className="bg-blue-700 px-3 py-2 text-white font-semibold rounded cursor-pointer">
+                            className="bg-blue-700 h-10 px-3 py-2  text-white font-semibold rounded cursor-pointer">
                                 CHOOSE FILE
                             </label>
-                            <div className="w-56 h-16 ">
+                            <div className="w-64 h-16 ">
                                 { coverPic ? (
                                     <img
                                     src={coverPic}
