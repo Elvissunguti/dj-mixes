@@ -1,14 +1,14 @@
 import React from "react";
 import LoggedInContainer from "../Containers/LoggedInContainer";
 
-const NewUpload = () => {
-    return(
-        <LoggedInContainer curActiveScreen="new uploads">
+const PostPage = () => {
+    return (
+        <LoggedInContainer curActiveScreen="post page">
             <div>
-                <h1>NEW UPLOADS</h1>
+                <h1>POSTS</h1>
             </div>
-
         </LoggedInContainer>
+
     )
 }
-export default NewUpload;
+export default PostPage; 

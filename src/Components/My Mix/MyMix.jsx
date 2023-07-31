@@ -1,12 +1,13 @@
 import React from "react";
+import LoggedInContainer from "../Containers/LoggedInContainer";
 
 const MyMix = () => {
     return(
-        <section>
-            <div>
-                My Mix
-            </div>
-        </section>
+       <LoggedInContainer curActiveScreen="my mixes">
+        <div>
+            <h1>MY MIXES</h1>
+        </div>
+       </LoggedInContainer>
     )
 }
 export default MyMix;

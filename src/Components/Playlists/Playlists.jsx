@@ -1,14 +1,13 @@
 import React from "react";
 import LoggedInContainer from "../Containers/LoggedInContainer";
 
-const NewUpload = () => {
-    return(
-        <LoggedInContainer curActiveScreen="new uploads">
+const Playlists = () => {
+    return (
+        <LoggedInContainer curActiveScreen="playlists" >
             <div>
-                <h1>NEW UPLOADS</h1>
+                <h1>Playlists</h1>
             </div>
-
         </LoggedInContainer>
     )
 }
-export default NewUpload;
+export default Playlists;

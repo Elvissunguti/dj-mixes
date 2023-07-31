@@ -8,29 +8,16 @@ import { Link } from "react-router-dom";
 import { AiOutlineHeart } from "react-icons/ai";
 import { GoVideo } from "react-icons/go";
 import { SlCalender, SlPlaylist } from "react-icons/sl";
+import LoggedInContainer from "../Containers/LoggedInContainer";
 
 
 const Feed = () => {
     return(
-        <section>
-            <div>
-                <NavBar />
-                <div>
-                    <div>
-                        <ul>
-                        <li><Link><FiLayers /> FEED</Link></li>
-                        <li><Link><GoVideo  />NEW UPLOADS</Link></li>
-                        <li><Link><FiMusic /> MY TRACKS</Link></li>
-                        <li><Link><MdOutlineLibraryBooks /> POSTS</Link></li>
-                        <li><Link><AiOutlineHeart /> FAVOURITES</Link></li>
-                        <li><Link><SlCalender />HISTORY</Link></li>
-                        <li><Link><SlPlaylist /> PLAYLISTS</Link></li>
-                        </ul>
-                        
-                    </div>
-                </div>
-            </div>
-        </section>
+      <LoggedInContainer curActiveScreen="feed">
+        <div>
+            <h1 className="text-center">Feed</h1>
+        </div>
+      </LoggedInContainer>
     )
 }
 export default Feed;

@@ -1,14 +1,13 @@
 import React from "react";
 import LoggedInContainer from "../Containers/LoggedInContainer";
 
-const NewUpload = () => {
+const Favourites = () => {
     return(
-        <LoggedInContainer curActiveScreen="new uploads">
+        <LoggedInContainer curActiveScreen="favourites">
             <div>
-                <h1>NEW UPLOADS</h1>
+                <h1>Favouriotes</h1>
             </div>
-
         </LoggedInContainer>
     )
 }
-export default NewUpload;
+export default Favourites;
