@@ -18,6 +18,7 @@ import PostPage from './Components/Post/PostPage';
 import Favourites from './Components/Favourites/Favourites';
 import Historys from './Components/Historys/Historys';
 import Playlists from './Components/Playlists/Playlists';
+import PublicProfile from './Components/Profile/PublicProfile';
 
 function App() {
   return (
@@ -39,6 +40,8 @@ function App() {
         <Route path="/favourites" element={<Favourites />} />
         <Route path="/historys" element={<Historys />} />
         <Route path="/playlists" element={<Playlists />} />
+        <Route path='/post card' element={<PostCard />} />
+        <Route path='/public profile' element={<PublicProfile />} />
       </Routes>
       
     </div>
