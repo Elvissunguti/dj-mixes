@@ -38,6 +38,26 @@ mongoose.connect(
         next();
       });
 
+      // setup passport-jwt
+let opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = "thisKeyIsSupposedToBeSecret";
+passport.use(
+    new JwtStrategy(opts, function (jwt_payload, done) {
+        User.findOne({_id: jwt_payload.identifier}, function (err, user) {
+            // done(error, doesTheUserExist)
+            if (err) {
+                return done(err, false);
+            }
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+                // or you could create a new account
+            }
+        });
+    })
+);
 
  app.use("/auth", authRoutes);
  app.use("/mix", mixRoutes)
