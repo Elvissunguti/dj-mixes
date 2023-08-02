@@ -3,7 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const User = require("./src/Backend/models/User");
-const authRoutes = require("./src/Backend/routes/Auth")
+const authRoutes = require("./src/Backend/routes/Auth");
+const mixRoutes = require("./src/Backend/routes/Mix");
 
 
 const app = express();
@@ -39,6 +40,7 @@ mongoose.connect(
 
 
  app.use("/auth", authRoutes);
+ app.use("/mix", mixRoutes)
 
       
 

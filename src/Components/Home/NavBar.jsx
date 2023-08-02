@@ -4,8 +4,6 @@ import logo from "../Assets/logo.png";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdAddCircleOutline } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
-import { createImageFromInitials } from "../shared/getInitials";
-import { getRandomColor } from "../shared/getRandomColor";
 import { useEffect } from "react";
 import axios from "axios";
 import avatar from "../Assets/avatar.png"
@@ -17,27 +15,7 @@ const NavBar = () => {
     const [openAvatar, setOpenAvatar] = useState(false);
     const [dataUrl, setDataUrl] = useState('');
 
-    useEffect(() => {
-        fetchInitialsImage();
-      }, []);
     
-      const fetchInitialsImage = async () => {
-        try {
-          const response = await axios.get('http://localhost:3000/initialsImage', {
-            headers: {
-              Authorization: 'Bearer your-token' // Replace 'your-token' with the actual JWT token
-            }
-          });
-    
-          const {  dataUrl  } = response.data;
-          
-          setDataUrl(dataUrl);
-
-    
-        } catch (error) {
-          console.error('Error fetching initials image:', error);
-        }
-      };
 
 
     return(

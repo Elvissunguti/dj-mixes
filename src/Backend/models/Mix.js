@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Mix = new mongoose.schema({
+const Mix = new mongoose.Schema({
     title: {
         type: String,
         required: true,
