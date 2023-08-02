@@ -41,7 +41,7 @@ mongoose.connect(
       // setup passport-jwt
 let opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = "thisKeyIsSupposedToBeSecret";
+opts.secretOrKey = "SECRETKEY";
 passport.use(
     new JwtStrategy(opts, function (jwt_payload, done) {
         User.findOne({_id: jwt_payload.identifier}, function (err, user) {
