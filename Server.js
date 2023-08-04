@@ -2,6 +2,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const JwtStrategy = require("passport-jwt").Strategy,
+    ExtractJwt = require("passport-jwt").ExtractJwt;
+const passport = require("passport");
 const User = require("./src/Backend/models/User");
 const authRoutes = require("./src/Backend/routes/Auth");
 const mixRoutes = require("./src/Backend/routes/Mix");
@@ -13,6 +16,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 
 mongoose.connect(
@@ -39,25 +43,26 @@ mongoose.connect(
       });
 
       // setup passport-jwt
-let opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = "SECRETKEY";
-passport.use(
-    new JwtStrategy(opts, function (jwt_payload, done) {
-        User.findOne({_id: jwt_payload.identifier}, function (err, user) {
-            // done(error, doesTheUserExist)
-            if (err) {
-                return done(err, false);
-            }
+      const opts = {};
+      opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+      opts.secretOrKey = "SECRETKEY"; // Use environment variable for the secret key
+      
+      passport.use(
+        new JwtStrategy(opts, async function (jwt_payload, done) {
+          try {
+            const user = await User.findOne({ _id: jwt_payload.identifier });
             if (user) {
-                return done(null, user);
+              return done(null, user); // Authentication successful
             } else {
-                return done(null, false);
-                // or you could create a new account
+              return done(null, false); // User not found
+              // Alternatively, you could create a new account here
             }
-        });
-    })
-);
+          } catch (err) {
+            return done(err, false); // Error during user lookup
+          }
+        })
+      );
+      
 
  app.use("/auth", authRoutes);
  app.use("/mix", mixRoutes)

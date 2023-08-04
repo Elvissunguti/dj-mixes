@@ -9,10 +9,6 @@ const Mix = new mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
-        type: String,
-        required: true,
-    },
     track: {
         type: String,
         required: true,
