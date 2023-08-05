@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import NavBar from "../Home/NavBar";
+import axios from "axios";
 
 const UploadMix = () => {
 
     const [ title, setTitle ] = useState("");
-    const [ selectedImage, setSelectedImage ] = useState(null);
-    const [ selectedMix, setSelectedMix ] = useState(null);
-    const [ mixDescription, setMixDescription ] = useState("");
+    const [ thumbnail, setThumbnail ] = useState(null);
+    const [ track, setTrack ] = useState(null);
+
 
     const handleImageChange = (event) => {
         const imageFile = event.target.files[0];
@@ -14,7 +15,7 @@ const UploadMix = () => {
           // Use FileReader to convert the selected image to a data URL
           const reader = new FileReader();
           reader.onloadend = () => {
-            setSelectedImage(reader.result);
+            setThumbnail(reader.result);
           };
           reader.readAsDataURL(imageFile);
         }
@@ -24,7 +25,46 @@ const UploadMix = () => {
         const songFile = event.target.files[0];
         if (songFile) {
           // You can perform any additional handling here, such as uploading the song to a server or processing it.
-          setSelectedMix(songFile);
+          setTrack(songFile);
+        }
+      };
+
+      const handleFormSubmit = async (e) => {
+        e.preventDefault();
+    
+        if (!title || !thumbnail || !track) {
+          // You can show an error message here to inform the user about missing fields
+          return;
+        }
+    
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("thumbnail", thumbnail);
+        formData.append("track", track);
+    
+        try {
+          const token = localStorage.getItem("jwtToken"); // Assuming the JWT token is stored in "jwtToken" key in localStorage
+    
+          if (!token) {
+            // If the token is not present, handle the authentication error or redirect to the login page
+            return;
+          }
+    
+          const response = await axios.post("/mix/create", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`, // Include the JWT token in the "Authorization" header
+            },
+          });
+    
+          // Assuming the server returns the created mix object in the response
+          const createdMix = response.data;
+    
+          // Handle the created mix as needed (e.g., show a success message, redirect, etc.)
+          console.log("Mix created:", createdMix);
+        } catch (error) {
+          // Handle any error that occurred during the API call (e.g., show an error message)
+          console.error("Error creating mix:", error.response.data.error);
         }
       };
 
@@ -34,7 +74,7 @@ const UploadMix = () => {
                 <NavBar />
             </div>
             <div className="flex flex-row items-center justify-center mx-auto max-w-4xl max-w-7xl"> 
-                <form>
+                <form onSubmit={handleFormSubmit}>
                 <h1 className="text-2xl font-bold my-6">Upload Mix</h1>
                     <div className=" mb-6">
                     <label className="font-medium text-xl mx-4 mb-2">Enter title of the mix</label>
@@ -49,20 +89,22 @@ const UploadMix = () => {
                     />
                     </div>
                     <div className="flex flex-row-reverse items-center justify-center my-4">
-                        <div>
+                        <div className="">
                         <label className="block text-xl font-medium mb-2">Enter Mix Thumbnail</label>
                         </div>
-                        <div>
+                        <div className="relative">
                         <input 
                         type="file"
+                        id="image"
                         accept="image/"
-                        className=""
+                        className="hidden"
                         onChange={handleImageChange}
                         />
+                        <label htmlFor="image" className="px-2 py-2 bg-green-200 absolute cursor-pointer">Choose file</label>
                         <div className="flex items-center w-56 h-56 justify-center border border-red-500">
-                {selectedImage ? (
+                {thumbnail ? (
                   <img
-                    src={selectedImage}
+                    src={thumbnail}
                     alt="image of post"
                     required
                     
@@ -76,29 +118,23 @@ const UploadMix = () => {
               </div>
               </div>
                     </div>
-                    <div className="flex flex-row items-center justify-center my-4">
-                        <label className="font-medium text-xl mx-4 block mb-2">Enter mix Description</label>
-                        <textarea
-                        type="text"
-                        id="description"
-                        name="description"
-                        placeholder="What does this mix entail..."
-                        className="px-8 py-6 text-xl border border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-                        />
-                    </div>
-                    <div className="my-4">
-                        <label className="font-medium text-lg">Enter Mix</label>
+                    
+                    <div className="my-6">
+                        <label className="font-medium text-xl">Enter Mix</label>
                         <input
                         type="file"
                         accept="audio/*"
+                        id="audio"
                         onChange={handleMixChange}
+                        className="hidden"
                         />
-                        { selectedMix ? (
-                            <div className="px-2 py-3 bg-gray-300">
-                                <p>{selectedMix.name}</p>
+                        <label htmlFor="audio" className="px-2 py-3 bg-green-300 mx-2 cursor-pointer">Choose file</label>
+                        { track ? (
+                            <div className="px-2 py-3 my-4 bg-gray-300">
+                                <p>{track.name}</p>
                             </div>
                         ) : (
-                            <div className="px-2 py-3 bg-gray-300">
+                            <div className="px-2 py-3 my-4 bg-gray-300">
                                 <p>No mix has been selected</p>
                             </div>
                         )}
