@@ -19,15 +19,34 @@ import Favourites from './Components/Favourites/Favourites';
 import Historys from './Components/Historys/Historys';
 import Playlists from './Components/Playlists/Playlists';
 import PublicProfile from './Components/Profile/PublicProfile';
+import { useState } from 'react';
+import { useCookies } from "react-cookie";
+import MixContext from './Components/Contexts/MixContext';
 
 function App() {
+
+  const [ currentMix, setCurrentMix ] = useState(null);
+  const [ soundPlayed, setSoundPlayed ] = useState(null);
+  const [ isPaused, setIsPaused ] = useState(true);
+  const [ cookie, setCookie ] = useCookies(["token"]);
+
+
   return (
     <div className="App">
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register'  element={<Register />} />
-        <Route path='/Profile' element={<Profile />} />
+      
+        { cookie.token ? (
+          <MixContext.Provider
+          value= {{
+            currentMix,
+            setCurrentMix,
+            soundPlayed,
+            setSoundPlayed,
+            isPaused,
+            setIsPaused,
+          }}
+          >
+            <Routes>
+            <Route path='/Profile' element={<Profile />} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/uploadMix' element={<UploadMix />} />
@@ -42,7 +61,22 @@ function App() {
         <Route path="/playlists" element={<Playlists />} />
         <Route path='/post card' element={<PostCard />} />
         <Route path='/public profile' element={<PublicProfile />} />
-      </Routes>
+
+            </Routes>
+
+            </MixContext.Provider>
+        ) : (
+          <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register'  element={<Register />} />
+          </Routes>
+
+        )}
+        
+
+        
+      
       
     </div>
   );
