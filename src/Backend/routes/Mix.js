@@ -4,6 +4,7 @@ const Mix = require("../models/Mix");
 const passport = require("passport");
 const multer = require("multer"); // Require multer for file uploads
 const path = require("path");
+const User = require("../models/User");
 
 
 // ... (existing code up to multer configurations)
@@ -65,6 +66,23 @@ router.post(
     });
   }
 );
+
+
+// get route to get all the mix i have posted
+router.get("/get/myMix",
+   passport.authenticate("jwt", {session: false}), 
+   async (req, res) => {
+    const artistId = req.user._id;
+
+    const artist = await User.findOne({ _id: artistId});
+
+    if(!artist){
+      return res.json({err: "Artist does not exist"})
+    }
+
+    const mixes = await Mix.find({ artist: artistId});
+    return res.json({data: mixes})
+   });
 
 module.exports = router;
 
