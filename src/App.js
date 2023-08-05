@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Router, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
 import './App.css';
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
@@ -33,6 +33,7 @@ function App() {
 
   return (
     <div className="App">
+      <BrowserRouter>
       
         { cookie.token ? (
           <MixContext.Provider
@@ -46,7 +47,7 @@ function App() {
           }}
           >
             <Routes>
-            <Route path='/Profile' element={<Profile />} />
+        <Route path='/Profile' element={<Profile />} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/uploadMix' element={<UploadMix />} />
@@ -73,10 +74,7 @@ function App() {
           </Routes>
 
         )}
-        
-
-        
-      
+        </BrowserRouter>
       
     </div>
   );

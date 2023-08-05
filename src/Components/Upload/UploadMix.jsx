@@ -61,9 +61,11 @@ const UploadMix = () => {
           const createdMix = response.data;
     
           // Handle the created mix as needed (e.g., show a success message, redirect, etc.)
+          alert("Mix Ccreated Successfully")
           console.log("Mix created:", createdMix);
         } catch (error) {
           // Handle any error that occurred during the API call (e.g., show an error message)
+          alert("Could not Create Mix")
           console.error("Error creating mix:", error.response.data.error);
         }
       };
@@ -92,7 +94,7 @@ const UploadMix = () => {
                         <div className="">
                         <label className="block text-xl font-medium mb-2">Enter Mix Thumbnail</label>
                         </div>
-                        <div className="relative">
+                        <div className="">
                         <input 
                         type="file"
                         id="image"
@@ -100,7 +102,7 @@ const UploadMix = () => {
                         className="hidden"
                         onChange={handleImageChange}
                         />
-                        <label htmlFor="image" className="px-2 py-2 bg-green-200 absolute cursor-pointer">Choose file</label>
+                        <label htmlFor="image" className="px-2 py-2 bg-green-200 cursor-pointer">Choose file</label>
                         <div className="flex items-center w-56 h-56 justify-center border border-red-500">
                 {thumbnail ? (
                   <img

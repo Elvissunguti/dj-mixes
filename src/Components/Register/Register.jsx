@@ -28,7 +28,7 @@ const Register = () => {
                 const date = new Date();
                 date.setDate(date.getDate() + 30);
                 setCookie("token", token, {path: "/", expires: date})
-                navigate("/")
+                navigate("/feed")
                 console.log("Registered successfully")
 
 

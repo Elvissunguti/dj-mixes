@@ -38,7 +38,7 @@ const Login = () => {
                 date.setDate(date.getDate() + 30);
                 setCookies("token", token, {path:"/", expires: date })
                 // User signed up successfully
-                navigate("/");
+                navigate("/feed");
                 console.log("User Signed up successfully");
             } else {
                 console.error("Sign up failed");
