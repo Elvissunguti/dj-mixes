@@ -7,8 +7,6 @@ const path = require("path");
 const User = require("../models/User");
 
 
-// ... (existing code up to multer configurations)
-
 const mixStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "thumbnail") {
@@ -99,6 +97,21 @@ router.get(
     return res.json({data: mixes})
    });
    
+   // get router to get a mix by name
+   router.get("/get/title/:title",
+   passport.authenticate("jwt", { session: false }),
+   async (req, res) => {
+    const mixTitle = req.params.title;
+
+    try {
+      const mixes = await Mix.find({ title: mixTitle }).populate("artist");
+      return res.json({ data: mixes });
+    } catch (error) {
+      console.error("Error fetching mixes:", error);
+      return res.status(500).json({ error: "Failed to fetch mixes" });
+    }
+   });
+
 module.exports = router;
 
 
