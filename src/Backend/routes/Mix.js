@@ -69,7 +69,22 @@ router.post(
 
 
 // get route to get all the mix i have posted
-router.get("/get/myMix",
+router.get(
+  "/get/myMix",
+  passport.authenticate("jwt", {session: false}),
+  async (req, res) => {
+      // We need to get all songs where artist id == currentUser._id
+      const mixes = await Mix.find({artist: req.user._id}).populate(
+          "artist"
+      );
+      return res.status(200).json({data: mixes});
+  }
+);
+
+
+
+   // get route to get any mix anybody has posted
+   router.get("/get/artist/:artistId",
    passport.authenticate("jwt", {session: false}), 
    async (req, res) => {
     const artistId = req.user._id;
@@ -83,7 +98,7 @@ router.get("/get/myMix",
     const mixes = await Mix.find({ artist: artistId});
     return res.json({data: mixes})
    });
-
+   
 module.exports = router;
 
 
