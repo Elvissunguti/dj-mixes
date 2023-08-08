@@ -24,7 +24,10 @@ const Register = () => {
                 const errorData = await response.json();
                 console.log(errorData.message);
             } else {
-                const token = response.token;
+                
+                const data = await response.json();
+                const token = data.token; 
+                
                 const date = new Date();
                 date.setDate(date.getDate() + 30);
                 setCookie("token", token, {path: "/", expires: date})

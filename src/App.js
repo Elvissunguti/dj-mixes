@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Redirect } from 'react-router-dom';
 import './App.css';
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
@@ -19,25 +19,27 @@ import Favourites from './Components/Favourites/Favourites';
 import Historys from './Components/Historys/Historys';
 import Playlists from './Components/Playlists/Playlists';
 import PublicProfile from './Components/Profile/PublicProfile';
-import { useState } from 'react';
-import { useCookies } from "react-cookie";
+import { useCookies } from 'react-cookie';
 import MixContext from './Components/Contexts/MixContext';
 
 function App() {
+  const [currentMix, setCurrentMix] = useState(null);
+  const [soundPlayed, setSoundPlayed] = useState(null);
+  const [isPaused, setIsPaused] = useState(true);
+  const [cookie, setCookie] = useCookies(['token']);
+  const [loggedIn, setLoggedIn] = useState(false); // New state to check if the user is logged in
 
-  const [ currentMix, setCurrentMix ] = useState(null);
-  const [ soundPlayed, setSoundPlayed ] = useState(null);
-  const [ isPaused, setIsPaused ] = useState(true);
-  const [ cookie, setCookie ] = useCookies(["token"]);
-
+  useEffect(() => {
+    // Check if the token exists in cookies to determine if the user is logged in
+    const token = localStorage.getItem('token'); // You can also use cookies here if needed
+    setLoggedIn(!!token);
+  }, []);
 
   return (
     <div className="App">
-      <BrowserRouter>
-      
-        { cookie.token ? (
-          <MixContext.Provider
-          value= {{
+      <Router>
+        <MixContext.Provider
+          value={{
             currentMix,
             setCurrentMix,
             soundPlayed,
@@ -45,39 +47,34 @@ function App() {
             isPaused,
             setIsPaused,
           }}
-          >
-            <Routes>
-        <Route path='/Profile' element={<Profile />} />
-        <Route path='/settings' element={<Settings />} />
-        <Route path='/feed' element={<Feed />} />
-        <Route path='/uploadMix' element={<UploadMix />} />
-        <Route path='/post' element={<Post />} />
-        <Route path='/profilepage' element={<ProfilePage />}  />
-        <Route path="/loggedincontainer" element={<LoggedInContainer />} />
-        <Route path="/new uploads" element={<NewUpload />} />
-        <Route path="/my mixes" element={<MyMix />} />
-        <Route path="/post page" element={<PostPage />} />
-        <Route path="/favourites" element={<Favourites />} />
-        <Route path="/historys" element={<Historys />} />
-        <Route path="/playlists" element={<Playlists />} />
-        <Route path='/post card' element={<PostCard />} />
-        <Route path='/public profile' element={<PublicProfile />} />
-
-            </Routes>
-
-            </MixContext.Provider>
-        ) : (
+        >
           <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/register'  element={<Register />} />
+            {/* Public routes */}
+            {loggedIn ? (
+              <>
+              <Route path="/my mixes" element={<MyMix />} />
+              
+            </>
+            ) : (
+              // Logged-in routes
+              
+              <>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/*" element={<NotFound />} />
+            </>
+            )}
           </Routes>
-
-        )}
-        </BrowserRouter>
-      
+        </MixContext.Provider>
+      </Router>
     </div>
   );
 }
 
+function NotFound() {
+  return <h1>Page not found.</h1>;
+}
+
 export default App;
+

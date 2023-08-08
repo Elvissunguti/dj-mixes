@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const {getToken} = require("../Utils/Helpers");
+const {verifyToken} = require("../Utils/Helpers");
+const {invalidateToken} = require("../Utils/Helpers");
  
 
 
@@ -76,6 +78,33 @@ router.post("/login", async (request, response) => {
     }
   } catch (error) {
     // Error occurred during login
+    return response.status(500).send({
+      message: "Internal Server Error",
+      error,
+    });
+  }
+});
+
+router.post("/logout", async (request, response) => {
+  try {
+    // Verify the token
+    const token = request.headers.authorization;
+    const decodedToken = verifyToken(token); // You would need to implement the verifyToken function
+
+    if (!decodedToken) {
+      console.error("Invalid token:", token);
+      return response.status(401).send({
+        message: "Invalid token",
+      });
+    }
+
+    // Invalidate the token
+    invalidateToken(token); // You would need to implement the invalidateToken function
+
+    return response.status(200).json({
+      message: "Logout successful",
+    });
+  } catch (error) {
     return response.status(500).send({
       message: "Internal Server Error",
       error,

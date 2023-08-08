@@ -33,12 +33,16 @@ const Login = () => {
             if (response.ok){
                 // extract  the token from the response
                 
-                const token = response.token;
+                
+                const data = await response.json();
+                const token = data.token;
+                
                 const date = new Date();
                 date.setDate(date.getDate() + 30);
                 setCookies("token", token, {path:"/", expires: date })
+                localStorage.setItem("token", token)
                 // User signed up successfully
-                navigate("/feed");
+                navigate("/my mixes");
                 console.log("User Signed up successfully");
             } else {
                 console.error("Sign up failed");
