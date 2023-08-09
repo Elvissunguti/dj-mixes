@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import thumbnail from "../Assets/thumbnail.jpg";
 import { ImFacebook, ImPause, ImPlay, ImWhatsapp } from "react-icons/im";
 import { AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } from "react-icons/ai";
 import { FcShare } from "react-icons/fc";
@@ -9,6 +8,9 @@ const MixCard = () => {
 
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("play")
+    const [ thumbnail, setThumbnail ] = useState();
+    const [ title, setTitle] = useState();
+    const [ userName, setUserName ] = useState();
 
     return(
         <section className=" ">
@@ -24,10 +26,10 @@ const MixCard = () => {
                     </div>
                     <div className="text-2xl font-medium">
                         <p className="hover:text-gray-600 cursor-pointer">
-                            Name of mix
+                            {title}
                         </p>
                         <p className="text-light hover:text-gray-600 cursor-pointer">
-                            Name of dj
+                            {userName}
                         </p>
                     </div>
                 </div>

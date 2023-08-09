@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LoggedInContainer from "../Containers/LoggedInContainer";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
+import MixCard from "../shared/MixCard";
 
 const MyMix = () => {
 
@@ -21,6 +22,11 @@ const MyMix = () => {
        <LoggedInContainer curActiveScreen="my mixes">
         <div>
             <h1>MY MIXES</h1>
+        </div>
+        <div>
+            { mixData.map((item) => {
+                return <MixCard />
+            })}
         </div>
        </LoggedInContainer>
     )

@@ -49,14 +49,14 @@ router.post(
       }
 
       // Rest of the code to create the mix
-      const artist = req.user._id;
+      const artist = req.user.userName;
       const MixDetails = { title, thumbnail, track, artist };
      
       
       try {
         // Assuming the Mix model has a method named "create" to save the mix
         const createdMix = await Mix.create(MixDetails);
-        return res.status(200).json(createdMix);
+        return res.status(200).json({ message: "Created Mix Successfully", createdMix})
       } catch (error) {
         console.error("Error saving mix:", error);
         return res.status(500).json({ error: "Failed to save mix" });

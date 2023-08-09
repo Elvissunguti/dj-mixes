@@ -7,6 +7,7 @@ import { IoCreateOutline } from "react-icons/io5";
 import { useEffect } from "react";
 import axios from "axios";
 import avatar from "../Assets/avatar.png"
+import Logout from "../Logout/Logout";
 
 const NavBar = () => {
 
@@ -81,7 +82,7 @@ const NavBar = () => {
                                     <Link to='/settings'>Settings</Link>
                                 </li>
                                 <li className="text-lg cursor-pointer">
-                                    <Link to='/logout'>Logout</Link>
+                                    <Logout />
                                 </li>
                             </ul>
                         </div>

@@ -14,8 +14,9 @@ const Mix = new mongoose.Schema({
         required: true,
     },
     artist: {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
+        type: String,
+        required: true,
+        
     },
 });
 
