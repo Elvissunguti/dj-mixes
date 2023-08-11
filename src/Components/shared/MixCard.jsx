@@ -4,19 +4,24 @@ import { AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } f
 import { FcShare } from "react-icons/fc";
  
 
-const MixCard = () => {
+const MixCard = ({ thumbnail, title, artist }) => {
 
     const [ open, setOpen ] = useState(false);
-    const [ currentSong, setCurrentSong ] = useState("play")
-    const [ thumbnail, setThumbnail ] = useState();
-    const [ title, setTitle] = useState();
-    const [ userName, setUserName ] = useState();
+    const [ currentSong, setCurrentSong ] = useState("play");
+ 
+
+      // Extract the filename from the thumbnail path
+  const thumbnailFilename = thumbnail.split("\\").pop();
+
+  // Construct the relative URL for the thumbnail image
+  const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
+ 
 
     return(
         <section className=" ">
             <div className="flex border-b border-green-500  w-2/3">
                 <div className="w-1/5">
-                    <img src={thumbnail} alt=""
+                    <img src={imageUrl} alt=""
                     className="h-full w-full rounded object-cover" />
                 </div>
                 <div className="flex flex-col w-4/5 space-x-12 mt-4 pl-4">
@@ -29,7 +34,7 @@ const MixCard = () => {
                             {title}
                         </p>
                         <p className="text-light hover:text-gray-600 cursor-pointer">
-                            {userName}
+                            {artist}
                         </p>
                     </div>
                 </div>

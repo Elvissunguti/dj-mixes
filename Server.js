@@ -8,12 +8,14 @@ const passport = require("passport");
 const User = require("./src/Backend/models/User");
 const authRoutes = require("./src/Backend/routes/Auth");
 const mixRoutes = require("./src/Backend/routes/Mix");
+const path = require("path");
 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+app.use(express.static(path.join(__dirname, "public"))); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -42,6 +44,8 @@ mongoose.connect(
         next();
       });
 
+
+
       // setup passport-jwt
       const opts = {};
       opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
@@ -65,7 +69,7 @@ mongoose.connect(
       
 
  app.use("/auth", authRoutes);
- app.use("/mix", mixRoutes)
+ app.use("/mix", mixRoutes);
 
       
 
