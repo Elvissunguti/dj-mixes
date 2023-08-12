@@ -33,8 +33,8 @@ const MixCard = ({ thumbnail, title, artist }) => {
                         <p className="hover:text-gray-600 cursor-pointer">
                             {title}
                         </p>
-                        <p className="text-light hover:text-gray-600 cursor-pointer">
-                            {artist}
+                        <p className=" hover:text-gray-600 cursor-pointer">
+                            By <span className="text-gray-500 hover:text-black">{artist}</span>
                         </p>
                     </div>
                 </div>
