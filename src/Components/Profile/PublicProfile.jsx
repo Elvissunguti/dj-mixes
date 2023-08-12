@@ -8,12 +8,11 @@ import Favourite from "../shared/Favourite";
 import History from "../shared/History";
 import Uploads from "../Upload/Uploads";
 
-const PublicProfile = () => {
-  const [ coverImage, setCoverImage ] = useState(null);
-  const [ profilePic, setProfilePic ] = useState(null);
+const PublicProfile = ({coverImage, profilePic, userName, description}) => {
+  
+  
   const [isFollowing, setIsFollowing] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [ description, setDescription ]= useState("");
   const [activeTab, setActiveTab] = useState('uploads')
 
   const handleButtonClick = () => {
@@ -75,7 +74,7 @@ const PublicProfile = () => {
                                     </div>    
                                 )}
                             </div>
-                                <h1>Username</h1>
+                                <h1>{userName}</h1>
                             <div>
                                 <button onClick={() => setShowDropdown((prevState) => !prevState)}>
                                 {isFollowing ? 'FOLLOWING' : 'FOllOW'}

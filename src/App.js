@@ -65,6 +65,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/public profile" element={<PublicProfile /> } />
               <Route path="/*" element={<NotFound />} />
             </>
             )}
