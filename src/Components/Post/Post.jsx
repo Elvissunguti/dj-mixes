@@ -30,7 +30,7 @@ const Post = () => {
             <div>
             <input
               type="file"
-              name="file"
+              name="image"
               required
               onChange={handleImageChange}
             />

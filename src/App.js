@@ -53,6 +53,7 @@ function App() {
             {loggedIn ? (
               <>
               <Route path="/my mixes" element={<MyMix />} />
+              <Route path="/posts" element={<Post />} />
               <Route path="/*" element={<NotFound />} />
               
               
