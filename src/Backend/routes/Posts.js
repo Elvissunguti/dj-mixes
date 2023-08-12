@@ -3,6 +3,8 @@ const router = express.Router()
 const passport = require("passport");
 const { postUploads } = require("../Middleware/Posts");
 const Post = require("../models/Posts");
+const User = require("../models/User");
+
 
 router.post("/create",
  passport.authenticate("jwt", {session: false}),
@@ -31,5 +33,22 @@ router.post("/create",
         };
     });
  });
+
+
+// get all the posts posted by anyone
+router.get("/get/posts/:artistId",
+passport.authenticate("jwt", {session: false}),
+async (req, res) => {
+    const artistId = req.user._id;
+
+    const artist = await User.findOne({ _id: artistId});
+
+    if(!artist){
+        return res.json({ error: "Artist does not exist"})
+    }
+
+    const posts = await Post.find({ artist: artistId});
+    return res.json({data: posts});
+})
 
 module.exports = router;

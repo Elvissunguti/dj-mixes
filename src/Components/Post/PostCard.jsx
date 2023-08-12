@@ -1,7 +1,7 @@
 import React from "react";
-import thumbnail from "../Assets/thumbnail.jpg";
 
-const PostCard = () => {
+
+const PostCard = ({user, image, description}) => {
     
     // get the current date and time posted
     const currentDate = new Date();
@@ -12,13 +12,13 @@ const PostCard = () => {
         <section>
             <div>
                 <div className="flex flex-col items-start">
-                    <h2 className="font-semibold text-xl hover:text-green-500 cursor-pointer">username</h2>
+                    <h2 className="font-semibold text-xl hover:text-green-500 cursor-pointer">{user}</h2>
                     <img
-                    src={thumbnail}
+                    src={image}
                     alt="post image"
                     className="h-64 w-64 object-cover"
                     />
-                    <p className="text-left my-4">Description</p>
+                    <p className="text-left my-4">{description}</p>
                     <p>Posted on {formattedDate} at {formattedTime} </p>
                 </div>
             </div>
