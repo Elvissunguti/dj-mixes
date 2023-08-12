@@ -16,6 +16,10 @@ const User = new mongoose.Schema({
         type: String,
         required: true
     },
+    followedArtist: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Deejay"
+    }]
 });
 
 const UserModel = mongoose.model("User", User);
