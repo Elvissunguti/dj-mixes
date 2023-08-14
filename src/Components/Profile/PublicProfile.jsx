@@ -76,7 +76,7 @@ const PublicProfile = ({coverImage, profilePic, userName, description}) => {
                             </div>
                                 <h1>{userName}</h1>
                             <div>
-                                <button onClick={() => setShowDropdown((prevState) => !prevState)}>
+                                <button onClick={handleButtonClick}>
                                 {isFollowing ? 'FOLLOWING' : 'FOllOW'}
 
                                 </button>
@@ -84,6 +84,7 @@ const PublicProfile = ({coverImage, profilePic, userName, description}) => {
                                 {showDropdown && isFollowing && (
                                     <div className="absolute top-10 right-0 mt-2 py-2 px-4 bg-white rounded-lg shadow-md">
                                     {/* Add the unfollow options in the dropdown */}
+                                    
           
                                    </div>
                                  )}

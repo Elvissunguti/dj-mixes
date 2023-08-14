@@ -11,6 +11,7 @@ const mixRoutes = require("./src/Backend/routes/Mix");
 const path = require("path");
 const postRoutes = require("./src/Backend/routes/Posts");
 const profileRoutes = require("./src/Backend/routes/Profile");
+const userRoutes = require("./src/Backend/routes/User");
 
 
 const app = express();
@@ -71,6 +72,7 @@ mongoose.connect(
       
 
  app.use("/auth", authRoutes);
+ app.use("/user", userRoutes)
  app.use("/mix", mixRoutes);
  app.use("/post", postRoutes);
  app.use("/profile", profileRoutes);
