@@ -1,21 +1,40 @@
 import React from "react";
-import CurrentMix from "../shared/CurrentMix";
 import MixCard from "../shared/MixCard";
-import NavBar from "../Home/NavBar";
-import { FiLayers, FiMusic } from "react-icons/fi";
-import { MdOutlineLibraryBooks } from "react-icons/md";
-import { Link } from "react-router-dom";
-import { AiOutlineHeart } from "react-icons/ai";
-import { GoVideo } from "react-icons/go";
-import { SlCalender, SlPlaylist } from "react-icons/sl";
 import LoggedInContainer from "../Containers/LoggedInContainer";
+import { useState } from "react";
+import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
+import { useEffect } from "react";
 
 
 const Feed = () => {
+
+  const [ feedData, SetFeedData ] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        const response = await makeAuthenticatedGETRequest(
+          "/user/followed-mixes"
+        );
+        console.log("response:", response)
+        SetFeedData(response.data)
+    };
+    fetchData();
+  }, []);
+
+
     return(
       <LoggedInContainer curActiveScreen="feed">
-        <div>
-            <h1 className="text-center">Feed</h1>
+        <div className="flex items-start mb-6">
+            <h1 className="font-bold text-xl">Feed</h1>
+        </div>
+        <div className="space-y-4 overflow-auto ">
+        {feedData.length > 0 ? (
+          feedData.map((item, index) => (
+            <MixCard key={index} thumbnail={item.thumbnail} title={item.title} artist={item.artist} />
+              ))
+            ) : (
+             <p>Loading...</p>
+              )}
         </div>
       </LoggedInContainer>
     )

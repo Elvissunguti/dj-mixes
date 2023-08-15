@@ -93,9 +93,15 @@ router.post("/follow/:userNameToFollow",
 
             // Find mixes from followed users
             const mixesFromFollowedUsers = await Mix.find({ userId: { $in: followedUserIds } });
-            console.log("Mixes from Followed Users:", mixesFromFollowedUsers);
 
-            return res.status(200).json(mixesFromFollowedUsers);
+            const mixData = mixesFromFollowedUsers.map((mix) => ({
+                thumbnail: mix.thumbnail.replace("../../../public", ""), 
+                title: mix.title,
+                artist: mix.artist,
+                track: mix.track,
+            }));
+
+            return res.status(200).json({ data: mixData});
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: "Error fetching mixes" });
