@@ -22,7 +22,7 @@ const PublicProfile = ({coverImage, profilePic, userName, description}) => {
 
   const renderActiveTab = () => {
     switch (activeTab) {
-      case 'uploads':
+      case 'my mixes':
         return <Uploads />;
       case 'favorites':
         return <Favourite />;
@@ -105,9 +105,9 @@ const PublicProfile = ({coverImage, profilePic, userName, description}) => {
       <div className="flex space-x-4 mt-8">
         <button
           className={`${
-            activeTab === 'uploads' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+            activeTab === 'my mixes' ? 'bg-blue-500 text-white' : 'bg-white text-black'
           } px-4 py-2 rounded`}
-          onClick={() => setActiveTab('uploads')}
+          onClick={() => setActiveTab('my mixes')}
         >
           Shows
         </button>

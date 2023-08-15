@@ -55,6 +55,7 @@ function App() {
               <Route path='/feed' element={<Feed />} />
               <Route path="/my mixes" element={<MyMix />} />
               <Route path="/posts" element={<Post />} />
+              
               <Route path="/*" element={<NotFound />} />
               
               
@@ -66,6 +67,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/profile page" element={<ProfilePage />} />
               <Route path="/public profile" element={<PublicProfile /> } />
               <Route path="/*" element={<NotFound />} />
             </>
