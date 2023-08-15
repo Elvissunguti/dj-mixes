@@ -18,7 +18,7 @@ const User = new mongoose.Schema({
     },
     followedArtist: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Deejay"
+        ref: "User"
     }]
 });
 

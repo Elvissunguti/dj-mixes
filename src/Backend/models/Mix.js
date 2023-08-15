@@ -18,6 +18,10 @@ const Mix = new mongoose.Schema({
         required: true,
         
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User" // Reference to the User model
+    },
 });
 
 const MixModel = mongoose.model("Mix", Mix);

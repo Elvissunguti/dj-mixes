@@ -52,7 +52,7 @@ router.post(
 
       // Rest of the code to create the mix
       const artist = req.user.userName;
-      const MixDetails = { title, thumbnail, track, artist };
+      const MixDetails = { title, thumbnail, track, artist, userId: req.user._id };
      
       
       try {

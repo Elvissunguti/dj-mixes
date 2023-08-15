@@ -2,6 +2,7 @@ const express = require("express");
 const passport = require("passport");
 const router = express.Router();
 const User = require("../models/User");
+const Mix = require("../models/Mix");
 
 router.post("/follow/:userNameToFollow",
     passport.authenticate("jwt", { session: false }),
@@ -37,6 +38,30 @@ router.post("/follow/:userNameToFollow",
             res.status(500).json({ message: "Error following artist" });
         }
     });
+
+    router.get("/followed-mixes",
+    passport.authenticate("jwt", { session: false }),
+    async (req, res) => {
+        try {
+            const currentUser = req.user;
+            
+            // Fetch the list of user IDs that the current user is following
+            const followedUserIds = currentUser.followedArtist.map(artist => artist._id);
+            console.log("Followed User IDs:", followedUserIds);
+
+            // Find mixes from followed users
+            const mixesFromFollowedUsers = await Mix.find({ userId: { $in: followedUserIds } });
+            console.log("Mixes from Followed Users:", mixesFromFollowedUsers);
+
+            return res.status(200).json(mixesFromFollowedUsers);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Error fetching mixes" });
+        }
+    });
+
+
+  
 
 module.exports = router;
 
