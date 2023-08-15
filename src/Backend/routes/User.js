@@ -4,6 +4,8 @@ const router = express.Router();
 const User = require("../models/User");
 const Mix = require("../models/Mix");
 
+
+// router to follow a user
 router.post("/follow/:userNameToFollow",
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
@@ -39,6 +41,46 @@ router.post("/follow/:userNameToFollow",
         }
     });
 
+    // router to unfollow a user
+
+    router.post("/unfollow/:userNameToUnfollow",
+    passport.authenticate("jwt", {session: false}),
+    async (req, res) => {
+        try{
+
+            const currentUser = req.user;
+            const userNameToUnfollow = req.params.userNameToUnfollow;
+
+            console.log("Current User:", currentUser);
+            console.log("User to unfollow:", userNameToUnfollow);
+
+            // find the user to unfollow by their username
+            const userToUnfollow = await User.findOne({ userName: userNameToUnfollow});
+
+            console.log("User to Unfollow Document:", userToUnfollow);
+
+            if (!userToUnfollow) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            // Check if the user is being followed
+            if (!currentUser.followedArtist.includes(userToUnfollow._id)) {
+                return res.status(400).json({ message: "You are not following this artist" });
+            }
+
+            // Remove the artist from the list of followed artists
+            currentUser.followedArtist = currentUser.followedArtist.filter(id => id !== userToUnfollow._id);
+            await currentUser.save();
+
+            return res.status(200).json({ message: "You have unfollowed the artist" });
+
+        } catch (error) {
+            console.error(error);
+            res.json({ message: "Error unfollowing artist" });
+        }
+    })
+
+    // router to get mixes posted by a followed user
     router.get("/followed-mixes",
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
