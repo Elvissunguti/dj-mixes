@@ -12,7 +12,7 @@ const PostPage = () => {
     useEffect(() => {
         const getPostData = async () => {
             const response = await makeAuthenticatedGETRequest(
-                "/post"
+                "/post/"
             )
 
         }

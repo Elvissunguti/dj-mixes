@@ -3,7 +3,8 @@ const router = express.Router()
 const passport = require("passport");
 const { postUploads } = require("../Middleware/Posts");
 const Post = require("../models/Posts");
-const User = require("../models/User");
+
+
 
 
 router.post("/create",
@@ -22,7 +23,8 @@ router.post("/create",
         }
 
         const user = req.user.userName;
-        const PostDetails = { user, image, description};
+        const userId = req.user._id;
+        const PostDetails = { user, image, description, userId};
 
         try{
             const createdPost = await Post.create(PostDetails);
@@ -36,19 +38,32 @@ router.post("/create",
 
 
 // get all the posts posted by anyone
-router.get("/get/posts/:artistId",
+router.get("/get/posts",
 passport.authenticate("jwt", {session: false}),
 async (req, res) => {
-    const artistId = req.user._id;
+    try{
 
-    const artist = await User.findOne({ _id: artistId});
+        const currentUser = req.user;
 
-    if(!artist){
-        return res.json({ error: "Artist does not exist"})
+        const followedUserIds = currentUser.followedArtist.map(artist => artist._id)
+        console.log(followedUserIds);
+
+        const postFromFollowedUsers = await Post.find({ userId: { $in: followedUserIds } });
+        console.log("Error fetching data:", postFromFollowedUsers);
+
+        const postData = postFromFollowedUsers.map((post) => ({
+            user: post.user,
+            image: post.image.replace("../../../public", ""),
+            description: post.description,
+        }));
+
+        res.json({ data: postData });
+
+
+    } catch(error) {
+        console.log(error);
+        res.json({ error: "Could not fetch the posts"})
     }
-
-    const posts = await Post.find({ artist: artistId});
-    return res.json({data: posts});
 })
 
 module.exports = router;
