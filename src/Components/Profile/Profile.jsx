@@ -74,7 +74,7 @@ const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` :
 
                 <div className="flex">
                     <div className="h-full w-1/5 mx-10 flex flex-col justify-between">
-                        <div className="shadow-md  w-full">
+                        <div className="shadow-md bg-white w-full">
                             <div className="flex items-center justify-center w-full my-4">
                                 {profilePicUrl ? (
                                     <img
@@ -138,6 +138,9 @@ const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` :
                         >
                             Favourites
                         </button>
+                    </div>
+                    <div className="mt-4">
+                        { displayHistory ? <History /> : <Favourite />}
                     </div>
                     
                 </div>
