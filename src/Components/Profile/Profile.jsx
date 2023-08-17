@@ -13,33 +13,18 @@ const Profile = () => {
     const [displayHistory, setDisplayHistory] = useState(false);
     const [profileData, setProfileData] = useState(null); // Store fetched profile data
 
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const response = await makeAuthenticatedGETRequest("/profile/get/profiles");
-
-                if (response.ok) {
-                    const { data } = await response.json();
-                    const userData = data[0];
-                    console.log(userData )
-
-                    setProfileData(userData); // Set the entire profile data
-                    setLoading(false);
-                } else {
-                    setError("Error fetching user data");
-                    setLoading(false);
-                }
-            } catch (error) {
-                setError("Error fetching user data");
-                setLoading(false);
-            }
+            const response = await makeAuthenticatedGETRequest(
+                "/profile/get/profiles"
+            );
+            setProfileData(response.data);
         };
-
         fetchData();
     }, []);
+
+
 
     const handleHistoryButtonClick = () => {
         setDisplayHistory(true);
@@ -49,19 +34,25 @@ const Profile = () => {
         setDisplayHistory(false);
     };
 
-    if (loading) {
-        return <p>Loading...</p>;
+    if (!profileData) {
+        return <p>Loading...</p>; // or an appropriate error message
     }
-
-    if (error) {
-        return <p>Error fetching user data.</p>;
-    }
+   
 
     const { coverImage, profilePic, userName } = profileData;
+    console.log("profileData:", profileData);
+
+    
+    // Convert backslashes to forward slashes and extract filenames
     const coverImageFilename = coverImage ? coverImage.split("\\").pop() : null;
     const profilePicFilename = profilePic ? profilePic.split("\\").pop() : null;
-    const coverImageUrl = coverImage ? `/Profile/CoverImage/${coverImageFilename}` : null;
-    const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` : null;
+    
+
+// Construct URLs for display
+const coverImageUrl = coverImage ? `/Profile/CoverImage/${coverImageFilename}` : null;
+const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` : null;
+
+
 
     return (
         <section className="mx-auto max-w-9xl ">
@@ -101,7 +92,7 @@ const Profile = () => {
                                     </div>
                                 )}
                             </div>
-                            console.log("Fetched userName:", userName
+                            
                             <h1>{userName}</h1>
                             <div className="mt-6">
                                 <button className="px-3 py-2 rounded text-white bg-blue-400 hover:bg-blue-700">
@@ -148,13 +139,7 @@ const Profile = () => {
                             Favourites
                         </button>
                     </div>
-                    <div className="mt-4">
-                        {loading ? (
-                            <p>Loading...</p>
-                        ) : error ? (
-                            <p>Error fetching user data.</p>
-                        ) : displayHistory ? <History /> : <Favourite />}
-                    </div>
+                    
                 </div>
             </div>
         </section>

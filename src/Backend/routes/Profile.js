@@ -43,8 +43,7 @@ router.post("/create",
      async (req, res) => {
         try{
 
-            const userProfile = await Profile.findOne({ userName: req.user.userName  })
-            console.log(userProfile);
+            const userProfile = await Profile.findOne({ userName: req.user.userName  });
 
             if (!userProfile) {
                 return res.status(404).json({ error: "User profile not found" });
@@ -56,12 +55,8 @@ router.post("/create",
                 profilePic: userProfile.profilePic.replace("../../../public", ""),
               };
 
-
-              console.log(profileData);
               return res.json({ data:  profileData  });
               
-
-
         } catch (error){
             console.error("Error retrieving user Profile", error)
             return res.json({ error: "Failed to retrieve user profile"})
