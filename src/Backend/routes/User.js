@@ -89,7 +89,7 @@ router.post("/follow/:userNameToFollow",
             
             // Fetch the list of user IDs that the current user is following
             const followedUserIds = currentUser.followedArtist.map(artist => artist._id);
-            console.log("Followed User IDs:", followedUserIds);
+            
 
             // Find mixes from followed users
             const mixesFromFollowedUsers = await Mix.find({ userId: { $in: followedUserIds } });
@@ -107,6 +107,41 @@ router.post("/follow/:userNameToFollow",
             res.status(500).json({ message: "Error fetching mixes" });
         }
     });
+
+
+    // router to get the latest mix posted by users i have followed
+    router.get("/get/newUploads", 
+    passport.authenticate("jwt", {session: false}),
+     async (req, res) => {
+        try{
+            const currentUser = req.user;
+
+            const followedUserIds = currentUser.followedArtist.map(artist => artist._id);
+            console.log("Followed User IDs:", followedUserIds);
+
+            const latestMix = new Date();
+            latestMix.setMonth(latestMix.getMonth() -3);
+
+            const latestMixes = await Mix.find({
+                 userId: { $in: followedUserIds},
+                 createdAt: { $gte: latestMix}}).sort({ createdAt: -1}).populate("artist");
+
+
+                 const latestData = latestMixes.map((mix) => ({
+                    thumbnail: mix.thumbnail.replace("../../../public",""),
+                    title: mix.title,
+                    artist: mix.artist,
+                    track: mix.track,
+                    createdAt: mix.createdAt,
+                 }));
+
+                 return res.json({ data: latestData });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error fetching the mixes"})
+        }
+     });
 
 
   
