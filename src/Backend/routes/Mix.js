@@ -83,6 +83,7 @@ router.get(
           title: mix.title,
           artist: mix.artist,
           track: mix.track,
+          createdAt: mix.createdAt,
       }));
 
       return res.status(200).json({ data: mixData });

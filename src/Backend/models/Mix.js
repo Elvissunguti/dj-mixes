@@ -22,6 +22,10 @@ const Mix = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User" // Reference to the User model
     },
+    createdAt: {
+        type: Date,
+        default: Date.now // Set the default value to the current date and time
+    },
 });
 
 const MixModel = mongoose.model("Mix", Mix);
