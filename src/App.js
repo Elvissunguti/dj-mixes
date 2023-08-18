@@ -54,7 +54,8 @@ function App() {
               <>
               <Route path='/feed' element={<Feed />} />
               <Route path="/my mixes" element={<MyMix />} />
-              <Route path="/new uploads" element={<New} />
+              <Route path="/new uploads" element={<NewUpload />} />
+              <Route path="/post page" element={<PostPage />} />
               <Route path="/posts" element={<Post />} />
               <Route path="/profile" element={<Profile />} />
               

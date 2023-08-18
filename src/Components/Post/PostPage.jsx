@@ -12,11 +12,14 @@ const PostPage = () => {
     useEffect(() => {
         const getPostData = async () => {
             const response = await makeAuthenticatedGETRequest(
-                "/post/"
-            )
-
+                "/post/get/posts"
+            );
+            setPostData(response.data)
         }
-    })
+        getPostData();
+    }, []);
+
+    
 
     return (
         <LoggedInContainer curActiveScreen="post page">
@@ -24,9 +27,14 @@ const PostPage = () => {
                 <h1>POSTS</h1>
             </div>
             <div>
-                { postData.map((item, index) => {
-                    return <PostCard key={index} user={item.user} image={item.image} description={item.description} />
-                })}
+                { postData.length > 0 ? (
+                    postData.map((item, index) => (
+                         <PostCard key={index} user={item.user} image={item.image} description={item.description} />
+                    ))
+                ) : (
+                    <p>Loading...</p>
+                )}
+               
             </div>
         </LoggedInContainer>
 
