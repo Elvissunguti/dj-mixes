@@ -2,7 +2,7 @@ import React from "react";
 import MixCard from "../shared/MixCard";
 import LoggedInContainer from "../Containers/LoggedInContainer";
 import { useState } from "react";
-import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
+import { makeAuthenticatedGETRequest, makeAuthenticatedPUTRequest } from "../Utils/ServerHelpers";
 import { useEffect } from "react";
 
 
@@ -15,11 +15,35 @@ const Feed = () => {
         const response = await makeAuthenticatedGETRequest(
           "/user/followed-mixes"
         );
-        console.log("response:", response)
+        console.log("response fetchData:", response)
         SetFeedData(response.data)
     };
     fetchData();
   }, []);
+
+
+  const handleToggleFavourite = async ( _id ) => {
+    try {
+      const response = await makeAuthenticatedPUTRequest(
+        "/mix/toggleFavourite",
+        { mixId: _id }
+      );
+      console.log("Toggle Favorite Response:", response);
+
+      if (response.error) {
+        console.error("Error toggling favorite Status:", response.error);
+      } else {
+        const updatedFeedData = feedData.map((item) =>
+          item._id === response.mix._id ? response.mix : item
+        );
+        SetFeedData(updatedFeedData);
+        console.log("updatedFeedData data:", updatedFeedData);
+      }
+
+    } catch(error) {
+      console.error("Error toggling favorite Status:", error)
+    }
+  }
 
 
     return(
@@ -30,7 +54,16 @@ const Feed = () => {
         <div className="space-y-4 overflow-auto ">
         {feedData.length > 0 ? (
           feedData.map((item, index) => (
-            <MixCard key={index} thumbnail={item.thumbnail} title={item.title} artist={item.artist} />
+            <MixCard 
+            key={index} 
+            mixId={item._id}
+            thumbnail={item.thumbnail} 
+            title={item.title} 
+            artist={item.artist}
+            isFavourite={item.isFavourite} 
+            toggleFavourite={handleToggleFavourite}
+            
+            />
               ))
             ) : (
              <p>Loading...</p>

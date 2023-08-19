@@ -99,6 +99,7 @@ router.post("/follow/:userNameToFollow",
                 title: mix.title,
                 artist: mix.artist,
                 track: mix.track,
+                _id: mix._id,
             }));
 
             return res.status(200).json({ data: mixData});

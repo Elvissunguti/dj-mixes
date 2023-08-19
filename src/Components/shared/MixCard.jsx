@@ -4,15 +4,18 @@ import { AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } f
 import { FcShare } from "react-icons/fc";
  
 
-const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite, toggleFavourite }) => {
+const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite, toggleFavourite, favouriteCount }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("play");
+
+    const handleFavoriteClick = () => {
+        toggleFavourite(mixId);
+      };
  
 
-      // Extract the filename from the thumbnail path
+   // Extract the filename from the thumbnail path
   const thumbnailFilename = thumbnail.split("\\").pop();
-
   // Construct the relative URL for the thumbnail image
   const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
  
@@ -50,7 +53,12 @@ const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite, toggleFavourite
                     
                 
                 <div className="flex flex-row relative mt-4 space-x-4">
-                        <AiOutlineHeart className="text-4xl cursor-pointer "  /> no likes
+                    <div>
+                        <AiOutlineHeart 
+                         className={`text-4xl cursor-pointer ${isFavourite ? "text-red-500" : ""}`}
+                         onClick={handleFavoriteClick} />
+                        <span>{favouriteCount}</span>
+                    </div>    
                         <FcShare className="cursor-pointer text-4xl" onClick={() => setOpen(!open)}/>
                     { open && (
                         <div className="absolute bg-green-500 top-full mt-2 px-2 py-3 ">
