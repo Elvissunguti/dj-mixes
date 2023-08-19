@@ -67,6 +67,39 @@ router.post(
   }
 );
 
+// Route to toggle the favourite status of a mix
+router.put("/toggleFavourite",
+passport.authenticate('jwt',{session :false}),
+async (req ,res) => {
+  try{
+    const mixId = req.body.mixId;
+
+    if (!mixId) {
+      return res.status(400).json({ error: "Missing mixId in request body" });
+    }
+
+    const mix = await Mix.findById(mixId);
+
+    if (!mix) {
+      return res.status(404).json({ error: "Mix not found" });
+    }
+
+    const updatedFavoriteStatus = !mix.isFavorite;
+    mix.isFavorite = updatedFavoriteStatus;
+
+    // Deduct from or add to favoriteCount based on updatedFavoriteStatus
+    const favoriteCountModifier = updatedFavoriteStatus ? 1 : -1;
+    mix.favoriteCount += favoriteCountModifier;
+
+    return res.status(200).json({ message: "Toggled favorite status", mix });
+
+
+  } catch(error){
+    console.error(error);
+    return res.json({ error: "Failed to toggle favourite icon"})
+  }
+});
+
 
 // get route to get all the mix i have posted
 router.get(
@@ -91,8 +124,7 @@ router.get(
       console.error("Error fetching mixes:", error);
       return res.status(500).json({ error: "Failed to fetch mixes" });
   }
-  }
-);
+  });
 
 
 
@@ -126,6 +158,8 @@ router.get(
       return res.status(500).json({ error: "Failed to fetch mixes" });
     }
    });
+
+   
 
 
 module.exports = router;

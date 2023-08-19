@@ -4,7 +4,7 @@ import { AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } f
 import { FcShare } from "react-icons/fc";
  
 
-const MixCard = ({ thumbnail, title, artist }) => {
+const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite, toggleFavourite }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("play");
@@ -50,7 +50,7 @@ const MixCard = ({ thumbnail, title, artist }) => {
                     
                 
                 <div className="flex flex-row relative mt-4 space-x-4">
-                        <AiOutlineHeart className="text-4xl cursor-pointer" /> no likes
+                        <AiOutlineHeart className="text-4xl cursor-pointer "  /> no likes
                         <FcShare className="cursor-pointer text-4xl" onClick={() => setOpen(!open)}/>
                     { open && (
                         <div className="absolute bg-green-500 top-full mt-2 px-2 py-3 ">
