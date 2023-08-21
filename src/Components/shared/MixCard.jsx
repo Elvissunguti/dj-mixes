@@ -55,9 +55,9 @@ const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite, toggleFavourite
                 <div className="flex flex-row relative mt-4 space-x-4">
                     <div>
                         <AiOutlineHeart 
-                         className={`text-4xl cursor-pointer ${isFavourite ? "text-red-500" : ""}`}
+                         className={`text-4xl cursor-pointer ${isFavourite ? "text-red-500 bg-red-600" : ""}`}
                          onClick={handleFavoriteClick} />
-                        <span>{favouriteCount}</span>
+                        <span className="text-green-600">{favouriteCount}</span>
                     </div>    
                         <FcShare className="cursor-pointer text-4xl" onClick={() => setOpen(!open)}/>
                     { open && (

@@ -28,17 +28,17 @@ const Feed = () => {
         "/mix/toggleFavourite",
         { mixId: _id }
       );
-      console.log("Toggle Favorite Response:", response);
 
       if (response.error) {
         console.error("Error toggling favorite Status:", response.error);
       } else {
-        const updatedFeedData = feedData.map((item) =>
-          item._id === response.mix._id ? response.mix : item
-        );
-        SetFeedData(updatedFeedData);
-        console.log("updatedFeedData data:", updatedFeedData);
+        SetFeedData(prevFeedData => {
+          return prevFeedData.map((item) =>
+            item._id === response.mix._id ? response.mix : item
+          );
+        });
       }
+      
 
     } catch(error) {
       console.error("Error toggling favorite Status:", error)
@@ -61,7 +61,8 @@ const Feed = () => {
             title={item.title} 
             artist={item.artist}
             isFavourite={item.isFavourite} 
-            toggleFavourite={handleToggleFavourite}
+            toggleFavourite={() => handleToggleFavourite(item._id)}
+            favouriteCount={item.favouriteCount}
             
             />
               ))

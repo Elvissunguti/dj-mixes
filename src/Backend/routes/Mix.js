@@ -91,6 +91,8 @@ async (req ,res) => {
     const favoriteCountModifier = updatedFavoriteStatus ? 1 : -1;
     mix.favoriteCount += favoriteCountModifier;
 
+    await mix.save();
+
     return res.status(200).json({ message: "Toggled favorite status", mix });
 
 
