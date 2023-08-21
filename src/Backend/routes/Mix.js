@@ -84,12 +84,12 @@ async (req ,res) => {
       return res.status(404).json({ error: "Mix not found" });
     }
 
-    const updatedFavoriteStatus = !mix.isFavorite;
-    mix.isFavorite = updatedFavoriteStatus;
+    const updatedFavouriteStatus = !mix.isFavourite;
+    mix.isFavourite = updatedFavouriteStatus;
 
     // Deduct from or add to favoriteCount based on updatedFavoriteStatus
-    const favoriteCountModifier = updatedFavoriteStatus ? 1 : -1;
-    mix.favoriteCount += favoriteCountModifier;
+    const favouriteCountModifier = updatedFavouriteStatus ? 1 : -1;
+    mix.favouriteCount += favouriteCountModifier;
 
     await mix.save();
 

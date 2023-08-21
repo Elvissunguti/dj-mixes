@@ -22,10 +22,14 @@ const Mix = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User" // Reference to the User model
     },
-    isFavorite: {
+    isFavourite: {
         type: Boolean,
         default: false
-    },
+    }, 
+    favouriteCount: {
+        type: Number,
+        default: 0, // Initial favorite count is 0
+      },
     createdAt: {
         type: Date,
         default: Date.now // Set the default value to the current date and time
