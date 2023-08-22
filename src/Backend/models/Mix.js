@@ -30,6 +30,10 @@ const Mix = new mongoose.Schema({
         type: Number,
         default: 0, // Initial favorite count is 0
       },
+    favouritedBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User" // Reference to the User model
+    }],
     createdAt: {
         type: Date,
         default: Date.now // Set the default value to the current date and time

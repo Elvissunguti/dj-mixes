@@ -4,13 +4,13 @@ const mongoose = require("mongoose");
 const Favourite = new mongoose.Schema({
     user: {
         type: mongoose.Types.ObjectId,
-        ref: "User",
-        required: true,
+        ref: "User"
+        
     },
     mix: {
         type: mongoose.Types.ObjectId,
-        ref: "Mix",
-        required: true,
+        ref: "Mix"
+        
     },
 });
 

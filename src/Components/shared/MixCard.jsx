@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ImFacebook, ImPause, ImPlay, ImWhatsapp } from "react-icons/im";
-import { AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } from "react-icons/ai";
 import { FcShare } from "react-icons/fc";
  
 
@@ -51,12 +51,13 @@ const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite, toggleFavourite
                     <p>full time</p>
                     </div>
                     
-                
                 <div className="flex flex-row relative mt-4 space-x-4">
-                    <div>
-                        <AiOutlineHeart 
-                         className={`text-4xl cursor-pointer ${isFavourite ? "text-red-500 bg-red-600" : ""}`}
-                         onClick={handleFavoriteClick} />
+                    <div onClick={handleFavoriteClick}>
+                        { isFavourite ? (
+                            <AiFillHeart  className="text-red-600"  />
+                        ) : (
+                            <AiOutlineHeart className="text-black" />
+                        )}
                         <span className="text-green-600">{favouriteCount}</span>
                     </div>    
                         <FcShare className="cursor-pointer text-4xl" onClick={() => setOpen(!open)}/>

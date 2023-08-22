@@ -19,6 +19,10 @@ const User = new mongoose.Schema({
     followedArtist: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    }],
+    favoredMixes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Mix"
     }]
 });
 
