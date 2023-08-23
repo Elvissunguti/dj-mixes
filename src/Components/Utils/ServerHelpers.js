@@ -51,7 +51,22 @@ export const makeAuthenticatedPUTRequest = async (route, body) => {
     });
     const formattedResponse = await response.json();
     return formattedResponse;
-}
+};
+
+export const makeAuthenticatedDELETERequest = async ( route, body ) => {
+    const token = getToken();
+    const response = await fetch(backendUrl + route, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body)
+    });
+    const formattedResponse = await response.json();
+    return formattedResponse;
+};
+
 
 const getToken = () => {
     const accessToken = document.cookie.replace(

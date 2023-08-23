@@ -2,36 +2,11 @@ const express = require("express");
 const router = express.Router();
 const Mix = require("../models/Mix");
 const passport = require("passport");
-const multer = require("multer"); // Require multer for file uploads
-const path = require("path");
 const User = require("../models/User");
 const Favourite = require("../models/Favourite");
+const { mixUpload } = require("../Middleware/Mix");
 
 
-
-const mixStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (file.fieldname === "thumbnail") {
-      cb(null, path.join(__dirname, "../../../public/MixUploads/Thumbnail"));
-    } else if (file.fieldname === "track") {
-      cb(null, path.join(__dirname, "../../../public/MixUploads/Tracks"));
-    } else {
-      // Handle other file uploads if needed
-      cb(new Error("Invalid fieldname"), null);
-    }
-  },
-  filename: (req, file, cb) => {
-    const uniquePrefix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const extension = path.extname(file.originalname);
-    cb(null, uniquePrefix + extension);
-  },
-});
-
-const mixUpload = multer({ storage: mixStorage }).fields([
-  { name: "thumbnail", maxCount: 1 },
-  { name: "track", maxCount: 1 },
-  // Add more fields if needed for other file uploads
-]);
 
 
 router.post(
@@ -70,58 +45,6 @@ router.post(
 );
 
 
-// Route to toggle the favourite/like status of a mix
-router.put("/toggleFavourite",
-passport.authenticate('jwt',{session :false}),
-async (req ,res) => {
-  try{
-    const mixId = req.body.mixId;
-    const currentUser = req.user._id;
-
-    if (!mixId) {
-      return res.status(400).json({ error: "Missing mixId in request body" });
-    }
-
-    const mix = await Mix.findById(mixId);
-
-    if (!mix) {
-      return res.status(404).json({ error: "Mix not found" });
-    }
-
-    const user = await User.findById(currentUser);
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    
-    const userIndex = mix.favouritedBy.findIndex(id => id.equals(currentUser)); // Find user's ID index
-
-    const updatedFavouriteStatus = !mix.isFavourite;
-
-    if (updatedFavouriteStatus) {
-      if (userIndex === -1) {
-        mix.favouritedBy.push(currentUser);
-      }
-    } else {
-      if (userIndex !== -1) {
-        mix.favouritedBy.splice(userIndex, 1);
-      }
-    }
-
-    mix.isFavourite = updatedFavouriteStatus;
-    mix.favouriteCount = mix.favouritedBy.length; // Update favoriteCount based on the updated favoritedBy array
-
-    await mix.save();
-    
-        res.json({ message: "Favorite status toggled successfully" });
-
-
-  } catch(error){
-    console.error(error);
-    return res.json({ error: "Failed to toggle favourite icon"})
-  }
-});
 
 
 // Router to get all the Mix I liked
@@ -143,7 +66,7 @@ async (req, res) => {
     console.error(error);
     return res.json({ error: "Failed to get your favourite mixes"});
   }
-})
+});
 
 
 // get route to get all the mix i have posted

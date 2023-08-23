@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 
 const Favourite = new mongoose.Schema({
-    user: {
+    userId: {
         type: mongoose.Types.ObjectId,
         ref: "User"
         
     },
-    mix: {
+    mixId: {
         type: mongoose.Types.ObjectId,
         ref: "Mix"
         

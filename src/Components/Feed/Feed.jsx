@@ -1,76 +1,99 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MixCard from "../shared/MixCard";
 import LoggedInContainer from "../Containers/LoggedInContainer";
-import { useState } from "react";
-import { makeAuthenticatedGETRequest, makeAuthenticatedPUTRequest } from "../Utils/ServerHelpers";
-import { useEffect } from "react";
-
+import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest, makeAuthenticatedDELETERequest } from "../Utils/ServerHelpers";
 
 const Feed = () => {
-
-  const [ feedData, SetFeedData ] = useState([]);
+  const [feedData, setFeedData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
+      try {
         const response = await makeAuthenticatedGETRequest(
           "/user/followed-mixes"
         );
-        console.log("response fetchData:", response)
-        SetFeedData(response.data)
+        setFeedData(response.data);
+      } catch (error) {
+        console.error("Error fetching feed data:", error);
+      }
     };
     fetchData();
   }, []);
 
-
-  const handleToggleFavourite = async ( _id ) => {
+  const handleToggleFavourite = async (_id, isFavourite) => {
     try {
-      const response = await makeAuthenticatedPUTRequest(
-        "/mix/toggleFavourite",
+      if (isFavourite) {
+        await deleteFavourite(_id);
+      } else {
+        await addFavourite(_id);
+      }
+      // Refresh feed data after adding or removing from favorites
+      const response = await makeAuthenticatedGETRequest(
+        "/user/followed-mixes"
+      );
+      setFeedData(response.data);
+    } catch (error) {
+      console.error("Error toggling favourite:", error);
+    }
+  };
+
+  const addFavourite = async (_id) => {
+    try {
+      const response = await makeAuthenticatedPOSTRequest(
+        "/favorite/addFavourite",
         { mixId: _id }
       );
 
       if (response.error) {
-        console.error("Error toggling favorite Status:", response.error);
-      } else {
-        SetFeedData(prevFeedData => {
-          return prevFeedData.map((item) =>
-            item._id === response.mix._id ? response.mix : item
-          );
-        });
+        console.error("Error adding to favourites:", response.error);
       }
-      
-
-    } catch(error) {
-      console.error("Error toggling favorite Status:", error)
+    } catch (error) {
+      console.error("Error adding to favourites:", error);
     }
-  }
+  };
 
+  const deleteFavourite = async (_id) => {
+    try {
+      const response = await makeAuthenticatedDELETERequest(
+        "/favourite/deleteFavorite",
+        { mixId: _id }
+      );
 
-    return(
-      <LoggedInContainer curActiveScreen="feed">
-        <div className="flex items-start mb-6">
-            <h1 className="font-bold text-xl">Feed</h1>
-        </div>
-        <div className="space-y-4 overflow-auto ">
+      if (response.error) {
+        console.error("Error deleting from favourites:", response.error);
+      }
+    } catch (error) {
+      console.error("Error deleting from favourites:", error);
+    }
+  };
+
+  return (
+    <LoggedInContainer curActiveScreen="feed">
+      <div className="flex items-start mb-6">
+        <h1 className="font-bold text-xl">Feed</h1>
+      </div>
+      <div className="space-y-4 overflow-auto ">
         {feedData.length > 0 ? (
           feedData.map((item, index) => (
-            <MixCard 
-            key={index} 
-            mixId={item._id}
-            thumbnail={item.thumbnail} 
-            title={item.title} 
-            artist={item.artist}
-            isFavourite={item.isFavourite} 
-            toggleFavourite={() => handleToggleFavourite(item._id)}
-            favouriteCount={item.favouriteCount}
-            
+            <MixCard
+              key={index}
+              mixId={item._id}
+              thumbnail={item.thumbnail}
+              title={item.title}
+              artist={item.artist}
+              isFavourite={item.isFavourite}
+              toggleFavourite={() =>
+                handleToggleFavourite(item._id, item.isFavourite)
+              }
+              favouriteCount={item.favouriteCount}
             />
-              ))
-            ) : (
-             <p>Loading...</p>
-              )}
-        </div>
-      </LoggedInContainer>
-    )
-}
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+    </LoggedInContainer>
+  );
+};
+
 export default Feed;
