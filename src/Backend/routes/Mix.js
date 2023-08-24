@@ -3,12 +3,11 @@ const router = express.Router();
 const Mix = require("../models/Mix");
 const passport = require("passport");
 const User = require("../models/User");
-const Favourite = require("../models/Favourite");
 const { mixUpload } = require("../Middleware/Mix");
 
 
 
-
+// router to create a Mix
 router.post(
   "/create",
   passport.authenticate("jwt", { session: false }),
@@ -45,7 +44,7 @@ router.post(
 );
 
 
-// Like a mix
+//router to Like a mix
 router.post("/addFavourite",
 passport.authenticate("jwt", { session: false}),
 async ( req, res ) => {
@@ -83,7 +82,7 @@ async ( req, res ) => {
   }
 });
 
-// Unlike a mix
+//route to  Unlike a mix
 router.post("/deleteFavourite",
 passport.authenticate("jwt", { session: false}),
 async ( req, res ) => {

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import MixCard from "../shared/MixCard";
 import LoggedInContainer from "../Containers/LoggedInContainer";
-import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest, makeAuthenticatedDELETERequest } from "../Utils/ServerHelpers";
+import {
+  makeAuthenticatedGETRequest,
+  makeAuthenticatedPOSTRequest,
+  makeAuthenticatedDELETERequest
+} from "../Utils/ServerHelpers";
 
 const Feed = () => {
   const [feedData, setFeedData] = useState([]);
@@ -27,11 +31,12 @@ const Feed = () => {
       } else {
         await addFavourite(_id);
       }
-      // Refresh feed data after adding or removing from favorites
-      const response = await makeAuthenticatedGETRequest(
-        "/user/followed-mixes"
+      // No need to fetch data again, just update the state with the changed data
+      setFeedData((prevFeedData) =>
+        prevFeedData.map((item) =>
+          item._id === _id ? { ...item, isFavourite: !isFavourite } : item
+        )
       );
-      setFeedData(response.data);
     } catch (error) {
       console.error("Error toggling favourite:", error);
     }
@@ -72,7 +77,7 @@ const Feed = () => {
       <div className="flex items-start mb-6">
         <h1 className="font-bold text-xl">Feed</h1>
       </div>
-      <div className="space-y-4 overflow-auto ">
+      <div className="space-y-4 overflow-auto">
         {feedData.length > 0 ? (
           feedData.map((item, index) => (
             <MixCard
@@ -97,3 +102,4 @@ const Feed = () => {
 };
 
 export default Feed;
+

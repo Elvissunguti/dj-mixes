@@ -2,16 +2,38 @@ import React, { useState } from "react";
 import { ImFacebook, ImPause, ImPlay, ImWhatsapp } from "react-icons/im";
 import { AiFillHeart, AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } from "react-icons/ai";
 import { FcShare } from "react-icons/fc";
+import { useEffect } from "react";
  
 
-const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite, toggleFavourite, favouriteCount }) => {
+const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("play");
+    const [isFavourite, setIsFavourite] = useState(initialIsFavourite);
 
+    useEffect(() => {
+      // Load favorited mix IDs from local storage
+      const favoritedMixes = JSON.parse(localStorage.getItem("favoritedMixes")) || [];
+      setIsFavourite(favoritedMixes.includes(mixId));
+    }, [mixId]);
+  
     const handleFavoriteClick = () => {
-        toggleFavourite(mixId);
-      };
+      toggleFavourite(mixId);
+  
+      // Update local storage with favorited mix IDs
+      const favoritedMixes = JSON.parse(localStorage.getItem("favoritedMixes")) || [];
+      if (isFavourite) {
+        const updatedFavoritedMixes = favoritedMixes.filter(id => id !== mixId);
+        localStorage.setItem("favoritedMixes", JSON.stringify(updatedFavoritedMixes));
+      } else {
+        favoritedMixes.push(mixId);
+        localStorage.setItem("favoritedMixes", JSON.stringify(favoritedMixes));
+      }
+  
+      setIsFavourite(!isFavourite);
+    };
+
+   
  
 
    // Extract the filename from the thumbnail path
@@ -54,9 +76,9 @@ const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite, toggleFavourite
                 <div className="flex flex-row relative mt-4 space-x-4">
                     <div onClick={handleFavoriteClick}>
                         { isFavourite ? (
-                            <AiFillHeart  className="text-red-600"  />
+                            <AiFillHeart  className="text-red-600 text-4xl cursor-pointer"  />
                         ) : (
-                            <AiOutlineHeart className="text-black" />
+                            <AiOutlineHeart className="text-black text-4xl cursor-pointer" />
                         )}
                         <span className="text-green-600">{favouriteCount}</span>
                     </div>    
