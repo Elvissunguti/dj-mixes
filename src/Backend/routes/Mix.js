@@ -75,7 +75,7 @@ async ( req, res ) => {
     await mix.save();
     await user.save();
 
-    return res.status(200).json({ message: "Mix liked successfully", favouriteCount: mix.favouriteCount });
+    return res.status(200).json({ message: "Mix liked successfully", mix, user });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -124,23 +124,15 @@ async ( req, res ) => {
 
 
 // Router to get all the Mix I liked
-router.get("/favourite",
+router.get("/favourited",
 passport.authenticate("jwt", {session: false}),
 async (req, res) => {
-  try{
-    const currentUser = req.user._id;
-    
-
-    const favouriteMixes = await Mix.find({ userId: currentUser, isFavourite: true })
-    console.log(favouriteMixes);
-
-    return res.json({ data: favouriteMixes})
-
-
-
-  } catch( error){
-    console.error(error);
-    return res.json({ error: "Failed to get your favourite mixes"});
+  try {
+    const userId = req.user._id; // Assuming you have user information in req.user
+    const likedMixes = await Mix.find({ favouritedBy: userId }).exec();
+    res.json(likedMixes);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch liked mixes" });
   }
 });
 

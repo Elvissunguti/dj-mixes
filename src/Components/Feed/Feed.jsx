@@ -86,7 +86,6 @@ const Feed = () => {
               thumbnail={item.thumbnail}
               title={item.title}
               artist={item.artist}
-              isFavourite={item.isFavourite}
               toggleFavourite={() =>
                 handleToggleFavourite(item._id, item.isFavourite)
               }
