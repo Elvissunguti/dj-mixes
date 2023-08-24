@@ -22,10 +22,10 @@ const Mix = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User" // Reference to the User model
     },
-    isFavourite: {
-        type: Boolean,
-        default: false
-    }, 
+    favouritedBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User" // Reference to the user model
+    }],
     favouriteCount: {
         type: Number,
         default: 0, // Initial favorite count is 0

@@ -20,7 +20,7 @@ const User = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     }],
-    favoredMixes: [{
+    favouredMixes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Mix"
     }]

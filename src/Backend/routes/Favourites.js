@@ -29,7 +29,7 @@ router.post("/addFavourite",
         await mix.save();
       }
 
-      res.json({ message: "Mix added to favorites successfully" });
+      res.json({ message: "Mix added to favorites successfully", mix });
     } catch (error) {
       console.error(error);
       return res.json({ error: "Failed to add mix to favorites" });
@@ -38,7 +38,7 @@ router.post("/addFavourite",
 );
 
 
-router.delete("/deleteFavorite",
+router.delete("/deleteFavourite",
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
@@ -69,6 +69,21 @@ router.delete("/deleteFavorite",
     }
   }
 );
+
+router.get("/favouriteCount",
+passport.authenticate("jwt", { session: false}),
+async (req, res) => {
+  try{
+    const currentUser = req.user._id;
+    const mixId = req.body.mixId;
+
+
+
+  } catch (error){
+  console.error(error);
+  res.json({ error: "Failed to get the number of counts"})
+  }    n
+})
 
 
 

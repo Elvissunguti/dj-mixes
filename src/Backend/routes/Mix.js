@@ -45,6 +45,83 @@ router.post(
 );
 
 
+// Like a mix
+router.post("/addFavourite",
+passport.authenticate("jwt", { session: false}),
+async ( req, res ) => {
+  try {
+    const mixId = req.body.mixId;
+    const userId = req.user._id;
+
+    // Find the mix and user
+    const mix = await Mix.findById(mixId);
+    const user = await User.findById(userId);
+
+    if (!mix || !user) {
+      return res.status(404).json({ message: "Mix or user not found" });
+    }
+
+    // Check if the user has already liked the mix
+    const alreadyLiked = mix.favouritedBy.includes(userId);
+
+    if (alreadyLiked) {
+      return res.status(400).json({ message: "Mix is already liked by the user" });
+    }
+
+    // Update mix and user arrays
+    mix.favouritedBy.push(userId);
+    mix.favouriteCount++;
+    user.favouredMixes.push(mixId);
+
+    await mix.save();
+    await user.save();
+
+    return res.status(200).json({ message: "Mix liked successfully", favouriteCount: mix.favouriteCount });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Unlike a mix
+router.post("/deleteFavourite",
+passport.authenticate("jwt", { session: false}),
+async ( req, res ) => {
+
+  try {
+    const mixId = req.body.mixId;
+    const userId = req.user._id;
+
+    // Find the mix and user
+    const mix = await Mix.findById(mixId);
+    const user = await User.findById(userId);
+
+    if (!mix || !user) {
+      return res.status(404).json({ message: "Mix or user not found" });
+    }
+
+    // Check if the user has liked the mix
+    const likedIndex = mix.favouritedBy.indexOf(userId);
+
+    if (likedIndex === -1) {
+      return res.status(400).json({ message: "Mix is not liked by the user" });
+    }
+
+    // Update mix and user arrays
+    mix.favouritedBy.splice(likedIndex, 1);
+    mix.favouriteCount--;
+    user.favouredMixes.pull(mixId);
+
+    await mix.save();
+    await user.save();
+
+    return res.status(200).json({ message: "Mix unliked successfully", favouriteCount: mix.favouriteCount });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 
 // Router to get all the Mix I liked

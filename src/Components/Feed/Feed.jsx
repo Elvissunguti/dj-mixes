@@ -40,7 +40,7 @@ const Feed = () => {
   const addFavourite = async (_id) => {
     try {
       const response = await makeAuthenticatedPOSTRequest(
-        "/favorite/addFavourite",
+        "/favourite/addFavourite",
         { mixId: _id }
       );
 
@@ -55,7 +55,7 @@ const Feed = () => {
   const deleteFavourite = async (_id) => {
     try {
       const response = await makeAuthenticatedDELETERequest(
-        "/favourite/deleteFavorite",
+        "/favourite/deleteFavourite",
         { mixId: _id }
       );
 
