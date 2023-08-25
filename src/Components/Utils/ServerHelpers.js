@@ -26,7 +26,7 @@ export const makeAuthenticatedPOSTRequest = async (route, body) => {
     return formattedResponse;
 };
 
-export const makeAuthenticatedGETRequest = async (route) => {
+export const makeAuthenticatedGETRequest = async (route, body) => {
     const token = getToken();
     const response = await fetch(backendUrl + route, {
         method: "GET",
@@ -34,6 +34,7 @@ export const makeAuthenticatedGETRequest = async (route) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(body)
     });
     const formattedResponse = await response.json();
     return formattedResponse;

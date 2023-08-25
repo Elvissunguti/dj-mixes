@@ -57,6 +57,7 @@ function App() {
               <Route path="/new uploads" element={<NewUpload />} />
               <Route path="/post page" element={<PostPage />} />
               <Route path="/posts" element={<Post />} />
+              <Route path="/favourites" element={<Favourites />} />
               <Route path="/profile" element={<Profile />} />
               
               <Route path="/*" element={<NotFound />} />

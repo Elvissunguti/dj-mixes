@@ -16,6 +16,7 @@ const Feed = () => {
         const response = await makeAuthenticatedGETRequest(
           "/user/followed-mixes"
         );
+        console.log(response)
         setFeedData(response.data);
       } catch (error) {
         console.error("Error fetching feed data:", error);

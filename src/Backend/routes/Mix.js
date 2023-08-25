@@ -75,7 +75,7 @@ async ( req, res ) => {
     await mix.save();
     await user.save();
 
-    return res.status(200).json({ message: "Mix liked successfully", mix, user });
+    return res.status(200).json({ message: "Mix liked successfully", favouriteCount: mix.favouriteCount });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
