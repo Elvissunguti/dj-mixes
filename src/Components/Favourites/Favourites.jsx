@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LoggedInContainer from "../Containers/LoggedInContainer";
 import MixCard from "../shared/MixCard";
-import { makeAuthenticatedDELETERequest, makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
+import {  makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest, makeAuthenticatedUnlikeRequest } from "../Utils/ServerHelpers";
 import { useEffect } from "react";
 
 const Favourites = () => {
@@ -30,6 +30,7 @@ const Favourites = () => {
 
     const handleToggleFavourite = async (_id, isFavourite) => {
         try {
+          console.log("Toggling favorite for mix:", _id);
           if (isFavourite) {
             await deleteFavourite(_id);
           } else {
@@ -63,7 +64,7 @@ const Favourites = () => {
     
       const deleteFavourite = async (_id) => {
         try {
-          const response = await makeAuthenticatedDELETERequest(
+          const response = await makeAuthenticatedPOSTRequest(
             "/mix/deleteFavourite",
             { mixId: _id }
           );
@@ -99,7 +100,7 @@ const Favourites = () => {
         ) : (
           <p>Loading...</p>
         )}
-            </div>
+           </div>
         </LoggedInContainer>
     )
 }

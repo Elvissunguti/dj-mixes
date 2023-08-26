@@ -26,7 +26,7 @@ export const makeAuthenticatedPOSTRequest = async (route, body) => {
     return formattedResponse;
 };
 
-export const makeAuthenticatedGETRequest = async (route, body) => {
+export const makeAuthenticatedGETRequest = async (route) => {
     const token = getToken();
     const response = await fetch(backendUrl + route, {
         method: "GET",
@@ -34,7 +34,7 @@ export const makeAuthenticatedGETRequest = async (route, body) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(body)
+        
     });
     const formattedResponse = await response.json();
     return formattedResponse;
@@ -44,20 +44,6 @@ export const makeAuthenticatedPUTRequest = async (route, body) => {
     const token = getToken();
     const response = await fetch(backendUrl + route, {
         method : "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(body)
-    });
-    const formattedResponse = await response.json();
-    return formattedResponse;
-};
-
-export const makeAuthenticatedDELETERequest = async ( route, body ) => {
-    const token = getToken();
-    const response = await fetch(backendUrl + route, {
-        method: "DELETE",
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

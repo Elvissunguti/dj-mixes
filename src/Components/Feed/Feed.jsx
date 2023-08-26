@@ -4,7 +4,7 @@ import LoggedInContainer from "../Containers/LoggedInContainer";
 import {
   makeAuthenticatedGETRequest,
   makeAuthenticatedPOSTRequest,
-  makeAuthenticatedDELETERequest
+  makeAuthenticatedUnlikeRequest
 } from "../Utils/ServerHelpers";
 
 const Feed = () => {
@@ -60,7 +60,7 @@ const Feed = () => {
 
   const deleteFavourite = async (_id) => {
     try {
-      const response = await makeAuthenticatedDELETERequest(
+      const response = await makeAuthenticatedPOSTRequest(
         "/mix/deleteFavourite",
         { mixId: _id }
       );
@@ -91,6 +91,7 @@ const Feed = () => {
                 handleToggleFavourite(item._id, item.isFavourite)
               }
               favouriteCount={item.favouriteCount}
+              
             />
           ))
         ) : (
