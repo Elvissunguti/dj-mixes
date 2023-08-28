@@ -53,7 +53,7 @@ const UploadMix = () => {
           const response = await axios.post("/mix/create", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`, // Include the JWT token in the "Authorization" header
+              Authorization: `Bearer ${token}`, 
             },
           });
     

@@ -26,6 +26,20 @@ export const makeAuthenticatedPOSTRequest = async (route, body) => {
     return formattedResponse;
 };
 
+export const makeAuthenticatedMulterPostRequest = async (route, formData) => {
+    const token = getToken();
+    const response = await fetch(backendUrl + route, {
+        method: "POST",
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+    });
+    const formattedResponse = await response.json();
+    return formattedResponse;
+};
+
 export const makeAuthenticatedGETRequest = async (route) => {
     const token = getToken();
     const response = await fetch(backendUrl + route, {

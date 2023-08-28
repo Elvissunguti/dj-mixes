@@ -13,7 +13,6 @@ import ProfilePage from './Components/Profile/ProfilePage';
 import LoggedInContainer from './Components/Containers/LoggedInContainer';
 import NewUpload from './Components/Upload/newUploads';
 import MyMix from './Components/My Mix/MyMix';
-import PostCard from './Components/Post/PostCard';
 import PostPage from './Components/Post/PostPage';
 import Favourites from './Components/Favourites/Favourites';
 import Historys from './Components/Historys/Historys';
@@ -27,11 +26,11 @@ function App() {
   const [soundPlayed, setSoundPlayed] = useState(null);
   const [isPaused, setIsPaused] = useState(true);
   const [cookie, setCookie] = useCookies(['token']);
-  const [loggedIn, setLoggedIn] = useState(false); // New state to check if the user is logged in
+  const [loggedIn, setLoggedIn] = useState(false); 
 
   useEffect(() => {
     // Check if the token exists in cookies to determine if the user is logged in
-    const token = localStorage.getItem('token'); // You can also use cookies here if needed
+    const token = localStorage.getItem('token'); 
     setLoggedIn(!!token);
   }, []);
 
@@ -58,7 +57,9 @@ function App() {
               <Route path="/post page" element={<PostPage />} />
               <Route path="/posts" element={<Post />} />
               <Route path="/favourites" element={<Favourites />} />
+              <Route path="/historys" element={<Historys />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/uploadMix" element={<UploadMix />} />
               
               <Route path="/*" element={<NotFound />} />
               
