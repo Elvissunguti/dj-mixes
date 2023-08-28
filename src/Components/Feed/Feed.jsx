@@ -4,7 +4,6 @@ import LoggedInContainer from "../Containers/LoggedInContainer";
 import {
   makeAuthenticatedGETRequest,
   makeAuthenticatedPOSTRequest,
-  makeAuthenticatedUnlikeRequest
 } from "../Utils/ServerHelpers";
 
 const Feed = () => {

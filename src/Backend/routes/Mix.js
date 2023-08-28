@@ -130,7 +130,17 @@ async (req, res) => {
   try {
     const userId = req.user._id; // Assuming you have user information in req.user
     const likedMixes = await Mix.find({ favouritedBy: userId }).exec();
-    res.json(likedMixes);
+    
+    const mixData = likedMixes.map((mix) => ({
+      thumbnail: mix.thumbnail.replace("../../../public", ""), 
+      title: mix.title,
+      artist: mix.artist,
+      track: mix.track,
+      _id: mix._id,
+  }));
+
+  return res.status(200).json({ data: mixData});
+  
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch liked mixes" });
   }
