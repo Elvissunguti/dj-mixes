@@ -38,7 +38,7 @@ const Login = () => {
                 const token = data.token;
                 
                 const date = new Date();
-                date.setDate(date.getDate() + 30);
+                date.setDate(date.getDate() + 180);
                 setCookies("token", token, {path:"/", expires: date })
                 localStorage.setItem("token", token)
                 // User signed up successfully

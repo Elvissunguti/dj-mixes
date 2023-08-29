@@ -39,6 +39,7 @@ const Logout = () => {
           console.log("Logout successful");
         } else {
           console.error("Logout failed");
+          
         }
       } catch (error) {
         console.error("Error during logout:", error);

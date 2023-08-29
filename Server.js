@@ -14,6 +14,7 @@ const profileRoutes = require("./src/Backend/routes/Profile");
 const userRoutes = require("./src/Backend/routes/User");
 
 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -69,6 +70,8 @@ mongoose.connect(
           }
         })
       );
+
+
       
 
  app.use("/auth", authRoutes);

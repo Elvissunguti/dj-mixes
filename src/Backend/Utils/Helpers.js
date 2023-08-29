@@ -8,7 +8,7 @@ exports.getToken = async (email, user) => {
     const token = jwt.sign(
         { identifier: user._id },
         "SECRETKEY", // Replace with your actual secret key
-        { expiresIn: "7d" }
+        { expiresIn: "180d" }
 
     );
     return token;

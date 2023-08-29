@@ -3,8 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const {getToken} = require("../Utils/Helpers");
-const {verifyToken} = require("../Utils/Helpers");
-const {invalidateToken} = require("../Utils/Helpers");
+const jwtUtils = require('../Utils/Helpers');
  
 
 
@@ -89,7 +88,17 @@ router.post("/logout", async (request, response) => {
   try {
     // Verify the token
     const token = request.headers.authorization;
-    const decodedToken = verifyToken(token); // You would need to implement the verifyToken function
+
+    // Check if the token is invalid
+    if (jwtUtils.isTokenInvalid(token)) {
+      console.error("Invalid token:", token);
+      return response.status(401).send({
+        message: "Invalid token",
+      });
+    }
+
+    // Verify the token
+    const decodedToken = jwtUtils.verifyToken(token);
 
     if (!decodedToken) {
       console.error("Invalid token:", token);
@@ -99,7 +108,7 @@ router.post("/logout", async (request, response) => {
     }
 
     // Invalidate the token
-    invalidateToken(token); // You would need to implement the invalidateToken function
+    jwtUtils.invalidateToken(token);
 
     return response.status(200).json({
       message: "Logout successful",
@@ -111,7 +120,6 @@ router.post("/logout", async (request, response) => {
     });
   }
 });
-
 
 
 module.exports =  router;

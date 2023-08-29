@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import NavBar from "../Home/NavBar";
 import axios from "axios";
+import { makeAuthenticatedMulterPostRequest } from "../Utils/ServerHelpers";
+import { useNavigate } from "react-router-dom";
 
 const UploadMix = () => {
+
 
     const [ title, setTitle ] = useState("");
     const [ thumbnail, setThumbnail ] = useState(null);
     const [ track, setTrack ] = useState(null);
+
+    const navigate = useNavigate();
 
 
     const handleImageChange = (event) => {
@@ -33,42 +38,36 @@ const UploadMix = () => {
         e.preventDefault();
     
         if (!title || !thumbnail || !track) {
-          // You can show an error message here to inform the user about missing fields
+          console.log("All files are required")
           return;
         }
     
         const formData = new FormData();
         formData.append("title", title);
-        formData.append("thumbnail", thumbnail);
-        formData.append("track", track);
-    
-        try {
-          const token = localStorage.getItem("jwtToken"); // Assuming the JWT token is stored in "jwtToken" key in localStorage
-    
-          if (!token) {
-            // If the token is not present, handle the authentication error or redirect to the login page
-            return;
+        formData.append("thumbnailImage", thumbnail);
+        formData.append("audio", track);
+
+        try{
+          const createdMix = await makeAuthenticatedMulterPostRequest(
+            "/mix/create",
+            formData
+          );
+          console.log("Server response:", createdMix);
+          
+          if (createdMix){
+            alert("Mix created successfully");  
+            navigate("/my mixes")
+            console.log("Mix Created:", createdMix);
           }
-    
-          const response = await axios.post("/mix/create", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`, 
-            },
-          });
-    
-          // Assuming the server returns the created mix object in the response
-          const createdMix = response.data;
-    
-          // Handle the created mix as needed (e.g., show a success message, redirect, etc.)
-          alert("Mix Ccreated Successfully")
-          console.log("Mix created:", createdMix);
-        } catch (error) {
-          // Handle any error that occurred during the API call (e.g., show an error message)
-          alert("Could not Create Mix")
-          console.error("Error creating mix:", error.response.data.error);
+        } catch(error) {
+          console.error("Error creating mix:", error);
+          alert("Could not Create Mix");
+          
         }
-      };
+
+      };        
+
+
 
     return (
         <section>
@@ -79,7 +78,7 @@ const UploadMix = () => {
                 <form onSubmit={handleFormSubmit}>
                 <h1 className="text-2xl font-bold my-6">Upload Mix</h1>
                     <div className=" mb-6">
-                    <label className="font-medium text-xl mx-4 mb-2">Enter title of the mix</label>
+                    <label htmlFor="title" className="font-medium text-xl mx-4 mb-2">Enter title of the mix</label>
                     <input
                     type="text"
                     id="title"
@@ -97,29 +96,30 @@ const UploadMix = () => {
                         <div className="">
                         <input 
                         type="file"
-                        id="image"
-                        accept="image/"
+                        id="thumbnailImage"
+                        name="thumbnailImage"
+                        accept="image/*"
                         className="hidden"
                         onChange={handleImageChange}
                         />
-                        <label htmlFor="image" className="px-2 py-2 bg-green-200 cursor-pointer">Choose file</label>
+                        <label htmlFor="thumbnailImage" className="px-2 py-2 bg-green-200 cursor-pointer">Choose file</label>
                         <div className="flex items-center w-56 h-56 justify-center border border-red-500">
-                {thumbnail ? (
-                  <img
-                    src={thumbnail}
-                    alt="image of post"
-                    required
+                          {thumbnail ? (
+                            <img
+                             src={thumbnail}
+                             alt="image of post"
+                             required
                     
-                    className="h-full w-full object-cover "
-                  />
-                ) : (
-                  <div className="flex items-center justify-center w-full h-full bg-gray-200">
-                    No Image Selected
-                  </div>
-                )}
-              </div>
-              </div>
-                    </div>
+                            className="h-full w-full object-cover "
+                                 />
+                          ) : (
+                         <div className="flex items-center justify-center w-full h-full bg-gray-200">
+                           No Image Selected
+                         </div>
+                          )}
+                         </div>
+                         </div>
+                        </div>
                     
                     <div className="my-6">
                         <label className="font-medium text-xl">Enter Mix</label>
@@ -127,6 +127,7 @@ const UploadMix = () => {
                         type="file"
                         accept="audio/*"
                         id="audio"
+                        name="audio"
                         onChange={handleMixChange}
                         className="hidden"
                         />
