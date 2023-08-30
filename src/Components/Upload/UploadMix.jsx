@@ -15,21 +15,16 @@ const UploadMix = () => {
 
 
     const handleImageChange = (event) => {
-        const imageFile = event.target.files[0];
-        if (imageFile) {
-          // Use FileReader to convert the selected image to a data URL
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            setThumbnail(reader.result);
-          };
-          reader.readAsDataURL(imageFile);
-        }
-      };
+      const imageFile = event.target.files[0];
+      if (imageFile) {
+        setThumbnail(imageFile);
+        
+      }
+    };
 
       const handleMixChange = (event) => {
         const songFile = event.target.files[0];
         if (songFile) {
-          // You can perform any additional handling here, such as uploading the song to a server or processing it.
           setTrack(songFile);
         }
       };
@@ -40,24 +35,26 @@ const UploadMix = () => {
         if (!title || !thumbnail || !track) {
           console.log("All files are required")
           return;
-        }
+        };
+
+        console.log("Form data before submission:", title, thumbnail , track);
     
         const formData = new FormData();
         formData.append("title", title);
-        formData.append("thumbnailImage", thumbnail);
-        formData.append("audio", track);
+        formData.append("thumbnail", thumbnail);
+        formData.append("track", track);
 
         try{
-          const createdMix = await makeAuthenticatedMulterPostRequest(
+          const response = await makeAuthenticatedMulterPostRequest(
             "/mix/create",
             formData
           );
-          console.log("Server response:", createdMix);
+          console.log("Server response:", response);
           
-          if (createdMix){
+          if (response){
             alert("Mix created successfully");  
             navigate("/my mixes")
-            console.log("Mix Created:", createdMix);
+            console.log("Mix Created:", response.createdMix);
           }
         } catch(error) {
           console.error("Error creating mix:", error);
@@ -97,7 +94,7 @@ const UploadMix = () => {
                         <input 
                         type="file"
                         id="thumbnailImage"
-                        name="thumbnailImage"
+                        name="thumbnail"
                         accept="image/*"
                         className="hidden"
                         onChange={handleImageChange}
@@ -106,7 +103,7 @@ const UploadMix = () => {
                         <div className="flex items-center w-56 h-56 justify-center border border-red-500">
                           {thumbnail ? (
                             <img
-                             src={thumbnail}
+                             src={URL.createObjectURL(thumbnail)}  
                              alt="image of post"
                              required
                     
@@ -127,7 +124,7 @@ const UploadMix = () => {
                         type="file"
                         accept="audio/*"
                         id="audio"
-                        name="audio"
+                        name="track"
                         onChange={handleMixChange}
                         className="hidden"
                         />

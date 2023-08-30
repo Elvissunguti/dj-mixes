@@ -31,7 +31,7 @@ export const makeAuthenticatedMulterPostRequest = async (route, formData) => {
     const response = await fetch(backendUrl + route, {
         method: "POST",
         headers: {
-            
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
         },
         body: formData,
