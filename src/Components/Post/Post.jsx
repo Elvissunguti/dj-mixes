@@ -1,29 +1,60 @@
 import React, { useState } from "react";
 import NavBar from "../Home/NavBar";
+import { makeAuthenticatedMulterPostRequest } from "../Utils/ServerHelpers";
+import { useNavigate } from "react-router-dom";
 
 const Post = () => {
-  const [imageSelected, setImageSelected] = useState(null);
-  const [postDescription, setPostDescription] = useState("");
+  const [ image, setImage ] = useState(null);
+  const [ description, setdescription ] = useState("");
+
+  const navigate = useNavigate();
 
   const handleImageChange = (event) => {
     const imageFile = event.target.files[0];
     if (imageFile) {
-      // Use FileReader to convert the selected image to a data URL
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageSelected(reader.result);
-      };
-      reader.readAsDataURL(imageFile);
+      setImage(imageFile)
     }
   };
 
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!image || !description){
+      console.log("All files required");
+    }
+
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("description", description);
+
+    try{
+      const response = await makeAuthenticatedMulterPostRequest(
+        "/post/create", formData
+      );
+      console.log("Server response:", response);
+          
+      if (response){
+        alert("Post created successfully");  
+        navigate("/my mixes")
+        console.log("Post Created:", response.createdMix);
+      }
+
+    } catch(error){
+      console.error("Error creating post:", error);
+      alert("Could not Create post");
+    }
+  };
+
+  
+
+
   return (
-    <section className="">
+    <section>
       <div>
         <NavBar />
       </div>
       <div className="flex flex-row items-center justify-center mx-auto max-w-4xl max-w-7xl">
-        <form>
+        <form onSubmit={handleFormSubmit}>
           <h1 className="text-2xl font-semibold my-4 ">Post a show or something</h1>
           <div className="relative flex flex-row-reverse items-center justify-center">
             <label className="block text-lg font-medium my-4">Post a show</label>
@@ -37,9 +68,9 @@ const Post = () => {
             
               {/* Conditionally render the image div */}
               <div className="flex items-center w-56 h-56 justify-center border border-red-500">
-                {imageSelected ? (
+                {image ? (
                   <img
-                    src={imageSelected}
+                    src={URL.createObjectURL(image)}
                     alt="image of post"
                     required
                     
@@ -59,7 +90,8 @@ const Post = () => {
             <textarea
               id="description"
               name="description"
-              value={postDescription}
+              value={description}
+              onChange={(e) => setdescription(e.target.value)}
               placeholder="What is this post about..."
               className=" px-8 py-6 text-xl border border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
             />

@@ -55,7 +55,7 @@ const NavBar = () => {
                                     Upload</Link>
                                     </li>
                                 <li>
-                                    <Link to="/post" className="flex  items-center flex-start mx-4 text-lg">
+                                    <Link to="/posts" className="flex  items-center flex-start mx-4 text-lg">
                                         <IoCreateOutline className="mx-2" />
                                         Post</Link>
                                         </li>
