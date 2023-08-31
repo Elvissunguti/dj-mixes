@@ -29,7 +29,14 @@ const PostPage = () => {
             <div>
                 { postData.length > 0 ? (
                     postData.map((item, index) => (
-                         <PostCard key={index} user={item.user} image={item.image} description={item.description} />
+                         <PostCard
+                          key={index}
+                          user={item.user}
+                          image={item.image}
+                          description={item.description}
+                          postDate={item.postDate} 
+                          postTime={item.postTime} 
+                          />
                     ))
                 ) : (
                     <p>Loading...</p>

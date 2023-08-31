@@ -1,12 +1,8 @@
 import React from "react";
 
 
-const PostCard = ({user, image, description}) => {
+const PostCard = ({user, image, description, postDate, postTime}) => {
     
-    // get the current date and time posted
-    const currentDate = new Date();
-    const formattedDate = currentDate.toDateString();
-    const formattedTime = currentDate.toLocaleTimeString();
 
     const imageFileName = image.split("\\").pop();
     const ImageUrl = `/PostUploads/Images/${imageFileName}`;
@@ -22,7 +18,7 @@ const PostCard = ({user, image, description}) => {
                     className="h-64 w-64 object-cover"
                     />
                     <p className="text-left my-4">{description}</p>
-                    <p>Posted on {formattedDate} at {formattedTime} </p>
+                    <p>Posted on {postDate} at {postTime} </p>
                 </div>
             </div>
         </section>

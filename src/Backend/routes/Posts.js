@@ -3,7 +3,7 @@ const router = express.Router()
 const passport = require("passport");
 const { postUploads } = require("../Middleware/Posts");
 const Post = require("../models/Posts");
-
+const moment = require("moment");
 
 
 
@@ -11,6 +11,7 @@ router.post("/create",
  passport.authenticate("jwt", {session: false}),
  (req, res) => {
     postUploads(req, res, async (err) => {
+        try{
         if (err) {
             return res.json({ error: "Failed to upload files" })
         }
@@ -19,19 +20,21 @@ router.post("/create",
         const { description } = req.body;
 
         if (!image || !description){
-            return res.json({ error: "unable to create post"})
+             res.json({ error: "unable to create post"})
         }
 
         const user = req.user.userName;
         const userId = req.user._id;
-        const PostDetails = { user, image, description, userId};
-
-        try{
-            const createdPost = await Post.create(PostDetails);
-            return res.json({ message:"Post Created Successfully", createdPost})
+        const createdAt = new Date(); 
+        const postDate = moment(createdAt).format("YYYY-MM-DD");
+        const postTime = moment(createdAt).format("HH:mm:ss");
+        const PostDetails = { user, image, description, userId, postDate, postTime };
+        
+        const createdPost = await Post.create(PostDetails);
+        return res.json({ message:"Post Created Successfully", createdPost});
         } catch (error){
             console.error("Error saving post:", error);
-            return res.status(500).json({ error: "Failed to save post" });
+            res.status(500).json({ error: "Failed to save post" });
         };
     });
  });
@@ -45,16 +48,17 @@ async (req, res) => {
 
         const currentUser = req.user;
 
-        const followedUserIds = currentUser.followedArtist.map(artist => artist._id)
-        console.log(followedUserIds);
+        const followedUserIds = currentUser.followedArtist.map(artist => artist._id);
 
         const postFromFollowedUsers = await Post.find({ userId: { $in: followedUserIds } });
-        console.log("Error fetching data:", postFromFollowedUsers);
+
 
         const postData = postFromFollowedUsers.map((post) => ({
             user: post.user,
             image: post.image.replace("../../../public", ""),
             description: post.description,
+            postDate: post.postDate,
+            postTime: post.postTime,
         }));
 
         res.json({ data: postData });

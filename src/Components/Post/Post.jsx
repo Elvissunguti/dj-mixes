@@ -57,13 +57,16 @@ const Post = () => {
         <form onSubmit={handleFormSubmit}>
           <h1 className="text-2xl font-semibold my-4 ">Post a show or something</h1>
           <div className="relative flex flex-row-reverse items-center justify-center">
-            <label className="block text-lg font-medium my-4">Post a show</label>
+            <label for="image" className="px-2 py-2 bg-green-200 cursor-pointer">Choose an Image</label>
             <div>
             <input
               type="file"
               name="image"
+              id="image"
+              accept="image/*"
               required
               onChange={handleImageChange}
+              className="hidden"
             />
             
               {/* Conditionally render the image div */}
