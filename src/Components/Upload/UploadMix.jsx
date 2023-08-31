@@ -46,8 +46,7 @@ const UploadMix = () => {
 
         try{
           const response = await makeAuthenticatedMulterPostRequest(
-            "/mix/create",
-            formData
+            "/mix/create", formData
           );
           console.log("Server response:", response);
           
@@ -99,7 +98,7 @@ const UploadMix = () => {
                         className="hidden"
                         onChange={handleImageChange}
                         />
-                        <label htmlFor="thumbnailImage" className="px-2 py-2 bg-green-200 cursor-pointer">Choose file</label>
+                        <label htmlFor="thumbnailImage" className="px-2 py-2 bg-green-200 cursor-pointer">Choose thumbnail</label>
                         <div className="flex items-center w-56 h-56 justify-center border border-red-500">
                           {thumbnail ? (
                             <img
@@ -128,7 +127,7 @@ const UploadMix = () => {
                         onChange={handleMixChange}
                         className="hidden"
                         />
-                        <label htmlFor="audio" className="px-2 py-3 bg-green-300 mx-2 cursor-pointer">Choose file</label>
+                        <label htmlFor="audio" className="px-2 py-3 bg-green-300 mx-2 cursor-pointer">Choose track</label>
                         { track ? (
                             <div className="px-2 py-3 my-4 bg-gray-300">
                                 <p>{track.name}</p>

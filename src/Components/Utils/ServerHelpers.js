@@ -27,18 +27,30 @@ export const makeAuthenticatedPOSTRequest = async (route, body) => {
 };
 
 export const makeAuthenticatedMulterPostRequest = async (route, formData) => {
-    const token = getToken();
-    const response = await fetch(backendUrl + route, {
-        method: "POST",
-        headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-    });
-    const formattedResponse = await response.json();
-    return formattedResponse;
+    try {
+        const token = getToken();
+        const response = await fetch(backendUrl + route, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Request failed with status: ${response.status}`);
+        }
+
+        const formattedResponse = await response.json();
+        return formattedResponse;
+    } catch (error) {
+        console.error("Request error:", error);
+        const responseText = await error.text(); // Capture the error response text
+        console.log("Response text:", responseText); // Log the error response
+        return { error: "Request failed" };
+    }
 };
+
 
 export const makeAuthenticatedGETRequest = async (route) => {
     const token = getToken();
