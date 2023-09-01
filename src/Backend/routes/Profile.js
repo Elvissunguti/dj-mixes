@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const { profileUploads } = require("../Middleware/Profile");
-const Profile = require("../models/Profile");
+const profile = require("../models/Profile");
 
 
 router.post("/create",
@@ -15,17 +15,19 @@ router.post("/create",
             return res.json({ error: "Failed to upload files"})
         }
 
+        const userId = req.user._id;
+
         const coverPic = req.files["coverImage"][0].path;
         const profilePic = req.files["profilePic"][0].path;
         const { biography, facebookUrl, twitterUrl, instagramUrl } = req.body;
 
-        if (!biography || !facebookUrl || !twitterUrl || !instagramUrl || !coverPic || !profilePic){
+        if (!biography || !facebookUrl || !twitterUrl || !instagramUrl || !coverPic || !profilePic || !userId){
 
             return res.json({ error: "unable to upload profile data"})
         }
 
         
-        const profileData = { biography, facebookUrl, twitterUrl, instagramUrl, coverPic, profilePic};
+        const profileData = { biography, facebookUrl, twitterUrl, instagramUrl, coverPic, profilePic, userId};
 
         
             const createdProfile = await Profile.create(profileData);
@@ -52,7 +54,7 @@ router.post("/create",
 
               const profileData = {
                 userName: req.user.userName,
-                coverImage: userProfile.coverImage.replace("../../../public", ""),
+                coverPic: userProfile.coverImage.replace("../../../public", ""),
                 profilePic: userProfile.profilePic.replace("../../../public", ""),
               };
 

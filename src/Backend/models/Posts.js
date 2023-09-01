@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Post = mongoose.Schema({
+const Post = new mongoose.Schema({
     user: {
         type: String,
         required: true,
@@ -16,6 +16,10 @@ const Post = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    },
+    profilePic: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Profile"
     },
     postDate: String,
     postTime: String,

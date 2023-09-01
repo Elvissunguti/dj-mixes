@@ -4,6 +4,7 @@ const passport = require("passport");
 const { postUploads } = require("../Middleware/Posts");
 const Post = require("../models/Posts");
 const moment = require("moment");
+const Profile = require("../models/Profile");
 
 
 
@@ -48,9 +49,14 @@ async (req, res) => {
 
         const currentUser = req.user;
 
+        const userId = req.user._id;
+
+        const profilePic = await Profile.find({ userId})
+
         const followedUserIds = currentUser.followedArtist.map(artist => artist._id);
 
         const postFromFollowedUsers = await Post.find({ userId: { $in: followedUserIds } });
+        
 
 
         const postData = postFromFollowedUsers.map((post) => ({
@@ -59,6 +65,7 @@ async (req, res) => {
             description: post.description,
             postDate: post.postDate,
             postTime: post.postTime,
+            profilePic: profileData ? profileData.profilePic : '',
         }));
 
         res.json({ data: postData });

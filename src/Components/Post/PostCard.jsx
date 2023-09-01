@@ -1,7 +1,7 @@
 import React from "react";
 
 
-const PostCard = ({user, image, description, postDate, postTime}) => {
+const PostCard = ({profilePic, user, image, description, postDate, postTime}) => {
     
 
     const imageFileName = image.split("\\").pop();
@@ -11,7 +11,14 @@ const PostCard = ({user, image, description, postDate, postTime}) => {
         <section>
             <div>
                 <div className="flex flex-col items-start">
+                    <div>
+                    <img
+                    src={profilePic}
+                    alt="Profile pic"
+                    className=""
+                    />
                     <h2 className="font-semibold text-xl hover:text-green-500 cursor-pointer">{user}</h2>
+                    </div>
                     <img
                     src={ImageUrl}
                     alt="post image"

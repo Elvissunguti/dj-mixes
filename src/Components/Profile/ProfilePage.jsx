@@ -167,6 +167,7 @@ const ProfilePage = () => {
                             </div>
                             <input
                             id="coverPic"
+                            name="coverPic"
                             type="file"
                             accept="image/*"
                             onChange={handleCoverChange}

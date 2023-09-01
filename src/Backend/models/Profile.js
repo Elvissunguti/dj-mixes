@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Profile = mongoose.Schema({
+const Profile = new mongoose.Schema({
     coverPic:{
         type: String,
         required: true,
