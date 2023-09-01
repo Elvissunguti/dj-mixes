@@ -60,6 +60,7 @@ function App() {
               <Route path="/historys" element={<Historys />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/uploadMix" element={<UploadMix />} />
+              <Route path='/profilepage' element={<ProfilePage />} />
               
               <Route path="/*" element={<NotFound />} />
               
@@ -72,8 +73,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              
             
-              <Route path="/profile page" element={<ProfilePage />} />
               <Route path="/public profile" element={<PublicProfile /> } />
               <Route path="/*" element={<NotFound />} />
             </>

@@ -1,11 +1,7 @@
 const mongoose = require("mongoose");
 
 const Profile = mongoose.Schema({
-    userName :{
-        type: String,
-        required: true,
-    },
-    coverImage:{
+    coverPic:{
         type: String,
         required: true,
     },
@@ -13,7 +9,19 @@ const Profile = mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
+    biography: {
+        type: String,
+        required: true,
+    },
+    facebookUrl:{
+        type: String,
+        required: true,
+    },
+    twitterUrl:{
+        type: String,
+        required: true,
+    },
+    instagramUrl:{
         type: String,
         required: true,
     },

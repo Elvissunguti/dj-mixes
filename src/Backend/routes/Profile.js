@@ -9,24 +9,25 @@ router.post("/create",
  passport.authenticate("jwt", { session: false}),
  (req, res) => {
     profileUploads(req, res, async (err) => {
+        try{
         if (err) {
             console.log(err);
             return res.json({ error: "Failed to upload files"})
         }
 
-        const coverImage = req.files["coverImage"][0].path;
+        const coverPic = req.files["coverImage"][0].path;
         const profilePic = req.files["profilePic"][0].path;
-        const { description } = req.body;
+        const { biography, facebookUrl, twitterUrl, instagramUrl } = req.body;
 
-        if (!coverImage || !profilePic || !description){
+        if (!biography || !facebookUrl || !twitterUrl || !instagramUrl || !coverPic || !profilePic){
 
             return res.json({ error: "unable to upload profile data"})
         }
 
-        const userName = req.user.userName;
-        const profileData = { userName, coverImage, profilePic, description};
+        
+        const profileData = { biography, facebookUrl, twitterUrl, instagramUrl, coverPic, profilePic};
 
-        try{
+        
             const createdProfile = await Profile.create(profileData);
             return res.json({ message: "Profile created successfully", createdProfile})
         } catch(error) {
@@ -50,7 +51,7 @@ router.post("/create",
               }
 
               const profileData = {
-                userName: userProfile.userName,
+                userName: req.user.userName,
                 coverImage: userProfile.coverImage.replace("../../../public", ""),
                 profilePic: userProfile.profilePic.replace("../../../public", ""),
               };

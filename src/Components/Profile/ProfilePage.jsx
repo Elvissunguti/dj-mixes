@@ -3,10 +3,12 @@ import NavBar from "../Home/NavBar";
 import {BiLogoFacebookCircle, BiLogoInstagram, BiLogoTwitter} from "react-icons/bi";
 import avatar from "../Assets/avatar.png";
 import { IoImagesOutline } from "react-icons/io5";
+import { makeAuthenticatedMulterPostRequest } from "../Utils/ServerHelpers";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
 
-    const [ displayName, setDisplayName ] = useState("");
+    
     const [ biography, setBiography ] = useState("");
     const [ facebookUrl, setFacebookUrl ] = useState("");
     const [ twitterUrl, setTwitterUrl ] = useState("");
@@ -14,27 +16,66 @@ const ProfilePage = () => {
     const [ coverPic, setCoverPic ] = useState(null);
     const [ profilePic, setProfilePic ] = useState(null);
 
+    const navigate = useNavigate();
+
+
+    const handleCoverChange = (event) => {
+        const coverFile = event.target.files[0];
+        if(coverFile){
+            setCoverPic(coverFile)
+        }
+    };
+
+    const handlePictureChange = (event) => {
+        const imageFile = event.target.files[0];
+        if(imageFile){
+            setProfilePic(imageFile)
+        
+        }
+    }
+
+    const handleProfilePage = async (e) => {
+        e.preventDefault();
+
+        if ( !biography || !facebookUrl || !twitterUrl || !instagramUrl || !coverPic || !profilePic){
+            console.log("All files are required")
+          return;
+        };
+
+        const formData = new FormData();
+        formData.append("biography", biography);
+        formData.append("facebookUrl", facebookUrl);
+        formData.append("twitterUrl", twitterUrl);
+        formData.append("instagramUrl", instagramUrl);
+        formData.append("coverPic", coverPic);
+        formData.append("profilePic", profilePic);
+
+        try{
+
+            const response = await makeAuthenticatedMulterPostRequest(
+                "/profile/create", formData
+            );
+
+            if (response){
+                alert("Profile created successfully");  
+                navigate("/profile")
+                console.log("Mix Created:", response.createdMix);
+            }
+
+        } catch (error){
+            console.error("Error creating profile", error);
+            alert("Could not Create Profile");
+        }
+    }
+
     return(
         <section>
             <NavBar />
             <div className="mx-auto py-8 w-1/2 ">
                 <p className="font-semibold text-2xl my-4">Your profile settings</p>
                 <div className="w-full">
-                    <form className="w-full flex justify-center items-center flex-col">
+                    <form onSubmit={handleProfilePage} className="w-full flex justify-center items-center flex-col">
 
-                        <div className="flex flex-row justify-center space-x-4 my-4 w-full">
-                            <div className="flex flex-col items-start w-1/2">
-                        <label className="font-semibold">Display name</label>
-                        <p className="text-gray-500">Spaces and special characters are fine</p>
-                        </div>
-                        <input
-                        type="text"
-                        id="name"
-                        placeholder="Display name"
-                        onChange={(e) =>setDisplayName(e.target.value) } 
-                        className="w-1/2 px-3 py-2 rounded border border-gray-300 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-                        />
-                        </div>
 
                         <div className="flex flex-row justify-center border-t w-full space-x-8  my-4 pt-4">
                             <div className="flex flex-col items-start w-1/2">
@@ -91,7 +132,9 @@ const ProfilePage = () => {
                             <input
                             id="profilePic"
                             type="file"
-                            accept=".jpg,.jpeg,.gif,.png"
+                            name="profilePic"
+                            accept="image/*"
+                            onChange={handlePictureChange}
                             className="absolute hidden top-0 left-0 opacity-0  cursor-pointer"
                             />
                             <label
@@ -102,7 +145,7 @@ const ProfilePage = () => {
                             <div className="w-64 h-64">
                                 { profilePic ? (
                                     <img
-                                    src={profilePic}
+                                    src={URL.createObjectURL(profilePic)}
                                     alt="profile picture"
                                     className="w-full h-full"
                                     />
@@ -125,7 +168,8 @@ const ProfilePage = () => {
                             <input
                             id="coverPic"
                             type="file"
-                            accept=".jpg,.jpeg,.gif,.png"
+                            accept="image/*"
+                            onChange={handleCoverChange}
                             className="hidden"
                             />
                             <label
@@ -136,7 +180,7 @@ const ProfilePage = () => {
                             <div className="w-64 h-16 ">
                                 { coverPic ? (
                                     <img
-                                    src={coverPic}
+                                    src={URL.createObjectURL(coverPic)}  
                                     alt="cover picture"
                                     className="w-full h-full"
                                     />

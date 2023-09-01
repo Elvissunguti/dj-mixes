@@ -3,7 +3,7 @@ const path = require("path");
 
 const profileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        if (file.fieldname === "coverImage"){
+        if (file.fieldname === "coverPic"){
             cb(null, path.join(__dirname, "../../../public/Profile/CoverImage"));
         } else if (file.fieldname === "profilePic") {
             cb(null, path.join(__dirname, "../../../public/Profile/ProfilePic"))
@@ -21,6 +21,6 @@ const profileStorage = multer.diskStorage({
 
 
 exports.profileUploads = multer({ storage: profileStorage}).fields([
-    { name: "coverImage", maxCount: 1 },
+    { name: "coverPic", maxCount: 1 },
     { name: "profilePic", maxCount: 1},
 ]);
