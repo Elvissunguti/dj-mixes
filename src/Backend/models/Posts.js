@@ -19,7 +19,7 @@ const Post = new mongoose.Schema({
     },
     profilePic: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"Profile"
+        ref: "Profile"
     },
     postDate: String,
     postTime: String,

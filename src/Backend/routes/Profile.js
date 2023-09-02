@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const { profileUploads } = require("../Middleware/Profile");
-const profile = require("../models/Profile");
+const Profile = require("../models/Profile");
 
 
 router.post("/create",
  passport.authenticate("jwt", { session: false}),
  (req, res) => {
     profileUploads(req, res, async (err) => {
+
         try{
         if (err) {
             console.log(err);
@@ -17,7 +18,7 @@ router.post("/create",
 
         const userId = req.user._id;
 
-        const coverPic = req.files["coverImage"][0].path;
+        const coverPic = req.files["coverPic"][0].path;
         const profilePic = req.files["profilePic"][0].path;
         const { biography, facebookUrl, twitterUrl, instagramUrl } = req.body;
 

@@ -28,7 +28,7 @@ router.post("/create",
         const userId = req.user._id;
         const createdAt = new Date(); 
         const postDate = moment(createdAt).format("YYYY-MM-DD");
-        const postTime = moment(createdAt).format("HH:mm:ss");
+        const postTime = moment(createdAt).format("HH:mm");
         const PostDetails = { user, image, description, userId, postDate, postTime };
         
         const createdPost = await Post.create(PostDetails);
@@ -49,26 +49,33 @@ async (req, res) => {
 
         const currentUser = req.user;
 
-        const userId = req.user._id;
-
-        const profilePic = await Profile.find({ userId})
-
         const followedUserIds = currentUser.followedArtist.map(artist => artist._id);
 
-        const postFromFollowedUsers = await Post.find({ userId: { $in: followedUserIds } });
+        const postsFromFollowedUsers = await Post.find({ userId: { $in: followedUserIds } });
+
+        const postData = [];
+
+        // Iterate through posts and retrieve profilePics
+        for (const post of postsFromFollowedUsers) {
+            // Find the profile for the user who made the post
+            const userProfile = await Profile.findOne({ userId: post.userId });
+            console.log("User Profile:", userProfile);
+
+            // Get the profilePic from the user's profile
+            const profilePic = userProfile ? userProfile.profilePic : null;
+
+            postData.push({
+                user: post.user,
+                image: post.image.replace("../../../public", ""),
+                description: post.description,
+                postDate: post.postDate,
+                postTime: post.postTime,
+                profilePic: profilePic ? profilePic.replace("../../../public", "") : null,
+            });
+        }
+        console.log(postData);
+        return res.json({ data: postData });
         
-
-
-        const postData = postFromFollowedUsers.map((post) => ({
-            user: post.user,
-            image: post.image.replace("../../../public", ""),
-            description: post.description,
-            postDate: post.postDate,
-            postTime: post.postTime,
-            profilePic: profileData ? profileData.profilePic : '',
-        }));
-
-        res.json({ data: postData });
 
 
     } catch(error) {
