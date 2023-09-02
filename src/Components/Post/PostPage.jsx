@@ -36,6 +36,7 @@ const PostPage = () => {
                           description={item.description}
                           postDate={item.postDate} 
                           postTime={item.postTime} 
+                          profilePic={item.profilePic}
                           />
                     ))
                 ) : (
