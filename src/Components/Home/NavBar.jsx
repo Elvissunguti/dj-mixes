@@ -24,17 +24,17 @@ const NavBar = () => {
             <div className="mx-auto flex justify-between items-center max-w-4xl max-w-7xl" >
                 <div className="flex ">
                     <div className="">
-                        <Link to="/">
+                        <Link to="/feed">
                         <img src={logo} alt=""
                          className="w-auto h-20 flex cursor-pointer" />
                          </Link>
                     </div>
-                    <div className="flex items-center p-3 px-5 space-x-3 rounded-full ">
-                        <AiOutlineSearch className="text-lg font-semibold" />
+                    <div className="flex items-center  px-5 bg-gray-200 space-x-3  ">
+                        <AiOutlineSearch className="text-3xl font-semibold" />
                         <input
                         type="text"
                         placeholder="Search"
-                        className="text-xl font-semibold"
+                        className="text-xl text-white px-3 py-2 w-full bg-gray-600 rounded-none rounded-b-md border border-gray-300 placeholder-white focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                         onChange={(e) => setSearchText(e.target.value)}
                         
                         />
