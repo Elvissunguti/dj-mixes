@@ -39,18 +39,16 @@ const Profile = () => {
     }
    
 
-    const { coverImage, profilePic, userName } = profileData;
+    const { coverPic, profilePic, userName } = profileData;
     console.log("profileData:", profileData);
 
     
     // Convert backslashes to forward slashes and extract filenames
-    const coverImageFilename = coverImage ? coverImage.split("\\").pop() : null;
+    const coverImageFilename = coverPic ? coverPic.split("\\").pop() : null;
     const profilePicFilename = profilePic ? profilePic.split("\\").pop() : null;
-    
 
-// Construct URLs for display
-const coverImageUrl = coverImage ? `/Profile/CoverImage/${coverImageFilename}` : null;
-const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` : null;
+    const coverImageUrl = coverPic ? `/Profile/CoverImage/${coverImageFilename}` : null;
+    const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` : null;
 
 
 
@@ -72,7 +70,7 @@ const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` :
                     )}
                 </div>
 
-                <div className="flex">
+                <div className="flex ">
                     <div className="h-full w-1/5 mx-10 flex flex-col justify-between">
                         <div className="shadow-md bg-white w-full">
                             <div className="flex items-center justify-center w-full my-4">
@@ -93,7 +91,7 @@ const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` :
                                 )}
                             </div>
                             
-                            <h1>{userName}</h1>
+                            <h1 className="text-xl font-semibold">{userName}</h1>
                             <div className="mt-6">
                                 <button className="px-3 py-2 rounded text-white bg-blue-400 hover:bg-blue-700">
                                     <Link to="/profilepage" className="flex items-center text-xl space-x-4 ">
@@ -119,8 +117,8 @@ const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` :
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="w-4/5 h-full mt-6 flex flex-col overflow-auto">
+                
+                <div className="w-4/5 h-full mt-44 flex flex-col overflow-auto">
                     <div className="w-full flex flex-start">
                         <button
                             className={`px-3 py-2 mx-6 text-white rounded-xl ${
@@ -144,6 +142,7 @@ const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` :
                     </div>
                     
                 </div>
+            </div>
             </div>
         </section>
     )

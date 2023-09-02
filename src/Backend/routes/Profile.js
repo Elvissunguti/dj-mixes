@@ -47,7 +47,9 @@ router.post("/create",
      async (req, res) => {
         try{
 
-            const userProfile = await Profile.findOne({ userName: req.user.userName  });
+            currentUser = req.user._id;
+
+            const userProfile = await Profile.findOne({ userId: currentUser });
 
             if (!userProfile) {
                 return res.status(404).json({ error: "User profile not found" });
@@ -55,7 +57,7 @@ router.post("/create",
 
               const profileData = {
                 userName: req.user.userName,
-                coverPic: userProfile.coverImage.replace("../../../public", ""),
+                coverPic: userProfile.coverPic.replace("../../../public", ""),
                 profilePic: userProfile.profilePic.replace("../../../public", ""),
               };
 
