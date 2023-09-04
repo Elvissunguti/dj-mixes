@@ -1,19 +1,26 @@
 import React, { useState } from "react";
 import { AiOutlineCamera } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import NavBar from "../Home/NavBar";
 import avatar from "../Assets/avatar.png";
 import { BiLogoFacebookCircle, BiLogoInstagram, BiLogoTwitter } from "react-icons/bi";
 import Favourite from "../shared/Favourite";
 import History from "../shared/History";
 import Uploads from "../Upload/Uploads";
+import { useEffect } from "react";
+import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
 
-const PublicProfile = ({coverImage, profilePic, userName, description}) => {
+const PublicProfile = () => {
   
   
   const [isFollowing, setIsFollowing] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeTab, setActiveTab] = useState('uploads')
+  const [ profileData, setProfileData ] = useState(null);
+
+  
+  const location = useLocation();
+  const artistData = location.state.artist;
 
   const handleButtonClick = () => {
     setIsFollowing((prevIsFollowing) => !prevIsFollowing);
@@ -33,15 +40,35 @@ const PublicProfile = ({coverImage, profilePic, userName, description}) => {
     }
   };
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response =  await makeAuthenticatedGETRequest(
+        "/profile/get/artistProfile"
+      );
+      setProfileData(response.data);
+      console.log(response.data);
+    };
+    fetchData();
+  }, []);
+
+  const { coverPic, profilePic, userName, biography } = profileData;
+
+  const coverImageFilename = coverPic ? coverPic.split("\\").pop() : null;
+  const profilePicFilename = profilePic ? profilePic.split("\\").pop() : null;
+
+  const coverImageUrl = coverPic ? `/Profile/CoverImage/${coverImageFilename}` : null;
+  const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` : null;
+
     return(
         <section>
             <NavBar />
             <div>
                 <div className="flex items-center justify-center w-full h-48">
-                    { coverImage ? (
+                    { coverImageUrl ? (
                         <div>
                             <img
-                            src={coverImage}
+                            src={coverImageUrl}
                             alt="cover image"
                             className=""
                             />
@@ -58,9 +85,9 @@ const PublicProfile = ({coverImage, profilePic, userName, description}) => {
                 <div className="h-full w-1/5 mx-10 flex flex-col justify-between ">
                     <div className="shadow-xl  w-full">
                         <div className="flex items-center justify-center w-full my-4">
-                                {profilePic ? (
+                                {profilePicUrl ? (
                                     <img 
-                                    src={profilePic}
+                                    src={profilePicUrl}
                                     alt="profile pic"
                                     className="w-36 rounded-full"
                                     />
@@ -90,7 +117,7 @@ const PublicProfile = ({coverImage, profilePic, userName, description}) => {
                                  )}
                             </div>
                             <div>
-                                <p>{description} about dj </p>
+                                <p>{biography}</p>
                             </div>
                             <div>
                                 <ul className="flex flex-row items-center justify-center space-x-2 my-4 text-3xl font-semibold">

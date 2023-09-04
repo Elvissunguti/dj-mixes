@@ -137,6 +137,7 @@ async (req, res) => {
       artist: mix.artist,
       track: mix.track,
       _id: mix._id,
+      userId: mix.userId,
   }));
 
   return res.status(200).json({ data: mixData});
@@ -162,6 +163,7 @@ router.get(
           title: mix.title,
           artist: mix.artist,
           track: mix.track,
+          userId: mix.userId,
           createdAt: mix.createdAt,
       }));
 

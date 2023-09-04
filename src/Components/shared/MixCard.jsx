@@ -45,9 +45,7 @@ const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite: initialIsFavour
   const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
 
   const handleArtistClick = () => {
-    // Navigate to the artist's profile page
-    // Replace '/artist-profile' with the actual route for the artist's profile
-    navigate(`/public profile/${artist}`);
+    navigate("/public profile", { state: {artist}});
   };
  
 
