@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const { profileUploads } = require("../Middleware/Profile");
 const Profile = require("../models/Profile");
+const User = require("../models/User");
 
 
 router.post("/create",
@@ -59,6 +60,7 @@ router.post("/create",
                 userName: req.user.userName,
                 coverPic: userProfile.coverPic.replace("../../../public", ""),
                 profilePic: userProfile.profilePic.replace("../../../public", ""),
+                
               };
 
               return res.json({ data:  profileData  });
@@ -80,13 +82,19 @@ router.get("/get/artistProfile",
 
             const artistProfile = await Profile.findOne({ userId: artistId })
 
+           
+
             if (!artistProfile){
                 return res.status(404).json({ error: "Artist profile not found" });
             };
 
+            const usersUserName = await User.findOne({ _id: artistId})
+
             const profileData = {
+                userName: usersUserName.userName,
                 coverPic: artistProfile.coverPic.replace("../../public"),
                 profilePic: artistProfile.profilePic.replace("../../public"),
+                biography: artistProfile.biography,
             }
             return res.json({ data: profileData });
 
