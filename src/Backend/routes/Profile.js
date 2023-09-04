@@ -68,7 +68,34 @@ router.post("/create",
             return res.json({ error: "Failed to retrieve user profile"})
         }
 
-     })
+     });
+
+
+router.get("/get/artistProfile",
+  passport.authenticate("jwt", {session: false}),
+     async (req, res) => {
+        try{
+
+            const artistId = req.body.userId;
+
+            const artistProfile = await Profile.findOne({ userId: artistId })
+
+            if (!artistProfile){
+                return res.status(404).json({ error: "Artist profile not found" });
+            };
+
+            const profileData = {
+                coverPic: artistProfile.coverPic.replace("../../public"),
+                profilePic: artistProfile.profilePic.replace("../../public"),
+            }
+            return res.json({ data: profileData });
+
+        } catch (error){
+            console.error("Error retrieving artist Profile", error);
+            return res.json({ error: "Failed to retrieve artist profile" })
+        }
+     }
+)
 
  module.exports = router;
 

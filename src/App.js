@@ -61,6 +61,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/uploadMix" element={<UploadMix />} />
               <Route path='/profilepage' element={<ProfilePage />} />
+              <Route path="/public profile" element={<PublicProfile /> } />
               
               <Route path="/*" element={<NotFound />} />
               
@@ -73,9 +74,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              
-            
-              <Route path="/public profile" element={<PublicProfile /> } />
+    
               <Route path="/*" element={<NotFound />} />
             </>
             )}

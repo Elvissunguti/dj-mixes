@@ -3,6 +3,7 @@ import { ImFacebook, ImPause, ImPlay, ImWhatsapp } from "react-icons/im";
 import { AiFillHeart, AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } from "react-icons/ai";
 import { FcShare } from "react-icons/fc";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
  
 
 const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount }) => {
@@ -10,6 +11,8 @@ const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite: initialIsFavour
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("play");
     const [isFavourite, setIsFavourite] = useState(initialIsFavourite);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
       // Load favorited mix IDs from local storage
@@ -38,8 +41,14 @@ const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite: initialIsFavour
 
    // Extract the filename from the thumbnail path
   const thumbnailFilename = thumbnail.split("\\").pop();
-  // Construct the relative URL for the thumbnail image
+  // Relative URL for the thumbnail image
   const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
+
+  const handleArtistClick = () => {
+    // Navigate to the artist's profile page
+    // Replace '/artist-profile' with the actual route for the artist's profile
+    navigate(`/public profile/${artist}`);
+  };
  
 
     return(
@@ -58,7 +67,7 @@ const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite: initialIsFavour
                         <p className="hover:text-gray-600 cursor-pointer">
                             {title}
                         </p>
-                        <p className=" hover:text-gray-600 cursor-pointer">
+                        <p className=" hover:text-gray-600 cursor-pointer" onClick={handleArtistClick}>
                             By <span className="text-gray-500 hover:text-black">{artist}</span>
                         </p>
                     </div>
