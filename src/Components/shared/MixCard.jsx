@@ -9,8 +9,10 @@ import { useNavigate } from "react-router-dom";
 const MixCard = ({ mixId, thumbnail, userId, title, artist, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount }) => {
 
     const [ open, setOpen ] = useState(false);
-    const [ currentSong, setCurrentSong ] = useState("play");
-    const [isFavourite, setIsFavourite] = useState(initialIsFavourite);
+    const [ currentSong, setCurrentSong ] = useState("pause");
+    const [ isFavourite, setIsFavourite ] = useState(initialIsFavourite);
+    const [ currentTime, setCurrentTime ] = useState(0);
+    const [ duration, setDuration ] = useState(0);
 
     const navigate = useNavigate();
 
@@ -19,6 +21,21 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, isFavourite: initial
       const favoritedMixes = JSON.parse(localStorage.getItem("favoritedMixes")) || [];
       setIsFavourite(favoritedMixes.includes(mixId));
     }, [mixId]);
+
+      useEffect(() => {
+    const audioElement = document.getElementById(`audio-${mixId}`);
+
+    // Listen for the "timeupdate" event to update the currentTime and duration
+    audioElement.addEventListener("timeupdate", () => {
+      setCurrentTime(audioElement.currentTime);
+      setDuration(audioElement.duration);
+    });
+
+    // Remove event listener when the component unmounts
+    return () => {
+      audioElement.removeEventListener("timeupdate", () => {});
+    };
+  }, [mixId]);
   
     const handleFavoriteClick = () => {
       toggleFavourite(mixId);
@@ -43,6 +60,23 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, isFavourite: initial
   const handleArtistClick = () => {
     navigate(`/public profile?userId=${userId}`);
   };
+
+  const handlePlayPauseClick = () => {
+    const audioElement = document.getElementById(`audio-${mixId}`);
+    if (currentSong === "play") {
+      audioElement.play();
+      setCurrentSong("pause");
+    } else {
+      audioElement.pause();
+      setCurrentSong("play");
+    }
+  };
+
+  const handleSeek = (event) => {
+    const audioElement = document.getElementById(`audio-${mixId}`);
+    const newTime = (event.target.value / 100) * duration;
+    audioElement.currentTime = newTime;
+  };
  
 
     return(
@@ -66,14 +100,15 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, isFavourite: initial
                         </p>
                     </div>
                 </div>
-                <div className="flex">
-                    <p>time </p>
+                <div className="flex" onClick={handlePlayPauseClick}>
+                    <p>{currentTime.toFixed(0)}s</p>
                     <input 
-                    type="range"
-                    min="0"
-                    className="w-96 bg-gray-300 cursor-pointer"
+                      type="range"
+                      value={(currentTime / duration) * 100}
+                      onChange={handleSeek}
+                      className="w-96 bg-gray-300 cursor-pointer"
                     />
-                    <p>full time</p>
+                    <p>{duration.toFixed(0)}s</p>
                     </div>
                     
                 <div className="flex flex-row relative mt-4 space-x-4">

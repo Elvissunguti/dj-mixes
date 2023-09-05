@@ -133,6 +133,7 @@ async (req, res) => {
     
     const mixData = likedMixes.map((mix) => ({
       thumbnail: mix.thumbnail.replace("../../../public", ""), 
+      track: mix.track.replace("../../../public", ""),
       title: mix.title,
       artist: mix.artist,
       track: mix.track,
@@ -160,7 +161,7 @@ router.get(
       // Map the retrieved data to include thumbnail, title, and artist
       const mixData = mixes.map((mix) => ({
           thumbnail: mix.thumbnail.replace("../../../public", ""), 
-          title: mix.title,
+          title: mix.title.replace("../../../public", ""),
           artist: mix.artist,
           track: mix.track,
           userId: mix.userId,

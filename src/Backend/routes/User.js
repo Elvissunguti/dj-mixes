@@ -95,10 +95,10 @@ router.post("/follow/:userNameToFollow",
             const mixesFromFollowedUsers = await Mix.find({ userId: { $in: followedUserIds } });
 
             const mixData = mixesFromFollowedUsers.map((mix) => ({
-                thumbnail: mix.thumbnail.replace("../../../public", ""), 
+                thumbnail: mix.thumbnail.replace("../../../public", ""),
                 title: mix.title,
                 artist: mix.artist,
-                track: mix.track,
+                track: mix.track.replace("../../../public", ""),
                 _id: mix._id,
                 userId: mix.userId,
             }));
@@ -133,7 +133,7 @@ router.post("/follow/:userNameToFollow",
                     thumbnail: mix.thumbnail.replace("../../../public",""),
                     title: mix.title,
                     artist: mix.artist,
-                    track: mix.track,
+                    track: mix.trackreplace("../../../public", ""),
                     userId: mix.userId,
                     createdAt: mix.createdAt,
                  }));
