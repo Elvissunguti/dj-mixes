@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
  
 
-const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("play");
@@ -35,17 +35,13 @@ const MixCard = ({ mixId ,thumbnail, title, artist, isFavourite: initialIsFavour
   
       setIsFavourite(!isFavourite);
     };
-
    
- 
-
-   // Extract the filename from the thumbnail path
   const thumbnailFilename = thumbnail.split("\\").pop();
-  // Relative URL for the thumbnail image
+
   const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
 
   const handleArtistClick = () => {
-    navigate("/public profile", { state: {artist}});
+    navigate(`/public profile?userId=${userId}`);
   };
  
 

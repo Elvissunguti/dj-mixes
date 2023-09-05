@@ -18,9 +18,9 @@ const PublicProfile = () => {
   const [activeTab, setActiveTab] = useState('uploads')
   const [ profileData, setProfileData ] = useState(null);
 
-  
   const location = useLocation();
-  const artistData = location.state.artist;
+  const queryParams = new URLSearchParams(location.search);
+  const userId = queryParams.get("userId");
 
   const handleButtonClick = () => {
     setIsFollowing((prevIsFollowing) => !prevIsFollowing);
@@ -40,19 +40,28 @@ const PublicProfile = () => {
     }
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
-      const response =  await makeAuthenticatedGETRequest(
-        "/profile/get/artistProfile"
-      );
-      setProfileData(response.data);
-      console.log(response.data);
-    };
+        try {
+          const response =  await makeAuthenticatedGETRequest(
+            `/profile/get/artistProfile?userId=${userId}`
+          );
+          console.log(response);
+          setProfileData(response.data);
+        } catch (error){
+            console.error("Error fetching artistProfile :", error);
+        }
+    }
     fetchData();
-  }, []);
+}, [userId]);
 
-  const { coverPic, profilePic, userName, biography } = profileData;
+if (!profileData) {
+  return <p>Loading...</p>; // or an appropriate error message
+}
+
+
+  const { userName, coverPic, profilePic,  biography } = profileData;
+  console.log("profileData:", profileData)
 
   const coverImageFilename = coverPic ? coverPic.split("\\").pop() : null;
   const profilePicFilename = profilePic ? profilePic.split("\\").pop() : null;
@@ -83,7 +92,7 @@ const PublicProfile = () => {
                 </div>
                 <div className="flex">
                 <div className="h-full w-1/5 mx-10 flex flex-col justify-between ">
-                    <div className="shadow-xl  w-full">
+                    <div className="shadow-md bg-white w-full">
                         <div className="flex items-center justify-center w-full my-4">
                                 {profilePicUrl ? (
                                     <img 
@@ -101,7 +110,7 @@ const PublicProfile = () => {
                                     </div>    
                                 )}
                             </div>
-                                <h1>{userName}</h1>
+                                <h1 className="text-xl font-bold">{userName}</h1>
                             <div>
                                 <button onClick={handleButtonClick}>
                                 {isFollowing ? 'FOLLOWING' : 'FOllOW'}
@@ -129,34 +138,34 @@ const PublicProfile = () => {
                         </div>
                     </div>
                     <div className="flex flex-col items-center">
-      <div className="flex space-x-4 mt-8">
-        <button
-          className={`${
-            activeTab === 'my mixes' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-          } px-4 py-2 rounded`}
-          onClick={() => setActiveTab('my mixes')}
-        >
-          Shows
-        </button>
-        <button
-          className={`${
-            activeTab === 'favorites' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-          } px-4 py-2 rounded`}
-          onClick={() => setActiveTab('favorites')}
-        >
-          Favorites
-        </button>
-        <button
-          className={`${
-            activeTab === 'history' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-          } px-4 py-2 rounded`}
-          onClick={() => setActiveTab('history')}
-        >
-          History
-        </button>
-      </div>
-      <div className="mt-8">{renderActiveTab()}</div>
-    </div>
+                      <div className="flex space-x-4 mt-8">
+                        <button
+                          className={`${
+                          activeTab === 'my mixes' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                          } px-4 py-2 rounded`}
+                          onClick={() => setActiveTab('my mixes')}
+                        >
+                         Shows
+                        </button>
+                        <button
+                          className={`${
+                          activeTab === 'favorites' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                          } px-4 py-2 rounded`}
+                          onClick={() => setActiveTab('favorites')}
+                        >
+                        Favorites
+                        </button>
+                        <button
+                          className={`${
+                          activeTab === 'history' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                          } px-4 py-2 rounded`}
+                          onClick={() => setActiveTab('history')}
+                        >
+                        History
+                        </button>
+                        </div>
+                        <div className="mt-8">{renderActiveTab()}</div>
+                    </div>
                 </div>
 
             </div>

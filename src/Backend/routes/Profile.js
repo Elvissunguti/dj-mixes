@@ -78,7 +78,7 @@ router.get("/get/artistProfile",
      async (req, res) => {
         try{
 
-            const artistId = req.body.userId;
+            const artistId = req.query.userId;
 
             const artistProfile = await Profile.findOne({ userId: artistId })
 
@@ -101,9 +101,8 @@ router.get("/get/artistProfile",
         } catch (error){
             console.error("Error retrieving artist Profile", error);
             return res.json({ error: "Failed to retrieve artist profile" })
-        }
-     }
-)
+        };
+     });
 
  module.exports = router;
 
