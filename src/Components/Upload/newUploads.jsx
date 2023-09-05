@@ -28,7 +28,13 @@ const NewUpload = () => {
             <div>
             {newUploads.length > 0 ? (
               newUploads.map((item, index) => (
-                <MixCard key={index} thumbnail={item.thumbnail} title={item.title} artist={item.artist} />
+                <MixCard
+                  key={index} 
+                  thumbnail={item.thumbnail} 
+                  title={item.title} 
+                  artist={item.artist} 
+                  userId={item.userId}
+                  />
                 ))
              ) : (
              <p>Loading...</p>

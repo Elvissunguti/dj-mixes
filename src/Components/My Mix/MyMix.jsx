@@ -25,7 +25,13 @@ const MyMix = () => {
         </div>
         <div className="space-y-4 overflow-auto  ">
             { mixData.map((item, index) => {
-                return <MixCard key={index} thumbnail={item.thumbnail} title={item.title} artist={item.artist} />
+                return <MixCard 
+                         key={index}  
+                         thumbnail={item.thumbnail}  
+                         title={item.title}
+                         artist={item.artist} 
+                         userId={item.userId}
+                         />
             })}
         </div>
        </LoggedInContainer>
