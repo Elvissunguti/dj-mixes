@@ -31,6 +31,7 @@ const MyMix = () => {
                          title={item.title}
                          artist={item.artist} 
                          userId={item.userId}
+                         audioSrc={item.track}
                          />
             })}
         </div>

@@ -92,6 +92,7 @@ const Favourites = () => {
                  title={item.title}
                  artist={item.artist}
                  userId={item.userId}
+                 audioSrc={item.track}
                  toggleFavourite={() =>
                  handleToggleFavourite(item._id, item.isFavourite)
                   }

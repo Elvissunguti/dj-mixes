@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("pause");
@@ -15,12 +15,15 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, isFavourite: initial
     const [ duration, setDuration ] = useState(0);
 
     const navigate = useNavigate();
-
+      
+    // useEffect to add favoritedMixes to localStorage
     useEffect(() => {
       // Load favorited mix IDs from local storage
       const favoritedMixes = JSON.parse(localStorage.getItem("favoritedMixes")) || [];
       setIsFavourite(favoritedMixes.includes(mixId));
     }, [mixId]);
+
+
 
       useEffect(() => {
     const audioElement = document.getElementById(`audio-${mixId}`);
@@ -54,8 +57,12 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, isFavourite: initial
     };
    
   const thumbnailFilename = thumbnail.split("\\").pop();
+  const audioFilename = audioSrc.split("\\").pop();
 
   const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
+  const audioUrl = `/MixUploads/Tracks/${audioFilename}`;
+
+ 
 
   const handleArtistClick = () => {
     navigate(`/public profile?userId=${userId}`);
@@ -135,6 +142,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, isFavourite: initial
                 </div>
                 </div>
             </div>
+            <audio id={`audio-${mixId}`} src={audioUrl}></audio>
         </section>
     )
 };
