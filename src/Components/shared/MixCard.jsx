@@ -12,7 +12,8 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     const [ currentSong, setCurrentSong ] = useState("pause");
     const [ isFavourite, setIsFavourite ] = useState(initialIsFavourite);
     const [ currentTime, setCurrentTime ] = useState(0);
-    const [ duration, setDuration ] = useState(0);
+    const [ duration, setDuration ] = useState({});
+    const [ currentlyPlayingSong, setCurrentlyPlayingSong ] = useState(null);
 
     const navigate = useNavigate();
       
@@ -24,21 +25,37 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     }, [mixId]);
 
 
+    useEffect(() => {
+      const audioElement = document.getElementById(`audio-${mixId}`);
+  
+      // Listen for the "timeupdate" event to update currentTime
+      audioElement.addEventListener("timeupdate", () => {
+        setCurrentTime(audioElement.currentTime);
+      });
+  
+      // Listen for the "loadedmetadata" event to update the duration
+      audioElement.addEventListener("loadedmetadata", () => {
+        // Update the mixDurations state with the new duration
+        setDuration((prevDurations) => ({
+          ...prevDurations,
+          [mixId]: audioElement.duration,
+        }));
+      });
+  
+      // Remove event listeners when the component unmounts
+      return () => {
+        audioElement.removeEventListener("timeupdate", () => {});
+        audioElement.removeEventListener("loadedmetadata", () => {});
+      };
+    }, [mixId]);
 
-      useEffect(() => {
-    const audioElement = document.getElementById(`audio-${mixId}`);
 
-    // Listen for the "timeupdate" event to update the currentTime and duration
-    audioElement.addEventListener("timeupdate", () => {
-      setCurrentTime(audioElement.currentTime);
-      setDuration(audioElement.duration);
-    });
 
-    // Remove event listener when the component unmounts
-    return () => {
-      audioElement.removeEventListener("timeupdate", () => {});
-    };
-  }, [mixId]);
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
   
 
     
@@ -71,25 +88,29 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
   };
 
 
-  const handlePlay = () => {
-    const audioElement = document.getElementById(`audio-${mixId}`);
-    audioElement.play();
-    setCurrentSong("play");
-  };
-
-  const handlePause = () => {
-    const audioElement = document.getElementById(`audio-${mixId}`);
-    audioElement.pause();
-    setCurrentSong("pause");
-  };
-
-  const handlePlayPauseClick = () => {
-    if (currentSong === "play") {
-      handlePause();
-    } else {
-      handlePlay();
-    }
-  };
+    // Function to handle playing or pausing a mix
+    const handlePlayPause = () => {
+      const audioElement = document.getElementById(`audio-${mixId}`);
+  
+      if (currentlyPlayingSong === mixId) {
+        // If the mix is already playing, pause it
+        audioElement.pause();
+        setCurrentSong("pause");
+        setCurrentlyPlayingSong(null);
+      } else {
+        // Pause the currently playing mix, if there is one
+        if (currentlyPlayingSong !== null) {
+          const currentlyPlayingAudio = document.getElementById(`audio-${currentlyPlayingSong}`);
+          currentlyPlayingAudio.pause();
+        }
+  
+        // Play the selected mix
+        audioElement.play();
+        setCurrentSong("play");
+        setCurrentlyPlayingSong(mixId);
+      }
+    };
+  
 
   const handleSeek = (event) => {
     const audioElement = document.getElementById(`audio-${mixId}`);
@@ -108,10 +129,10 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                 <div className="flex flex-col w-4/5 space-x-12 mt-4 pl-4">
                 <div className="flex space-x-4 my-4">
                     <div className="  text-5xl cursor-pointer  ">
-                        {currentSong === "play" ? (
-                        <ImPause onClick={handlePause} /> 
+                        {currentSong === "play" && currentlyPlayingSong === mixId ? (
+                           <ImPause onClick={handlePlayPause} /> 
                         ) : (
-                           <ImPlay onClick={handlePlay} />
+                           <ImPlay onClick={handlePlayPause} />
                         )}
                     </div>
                     <div className="text-2xl font-medium">
@@ -123,15 +144,15 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                         </p>
                     </div>
                 </div>
-                <div className="flex" onClick={handlePlayPauseClick}>
-                    <p>{currentTime.toFixed(0)}s</p>
+                <div className="flex" >
+                    <p>{formatTime(currentTime)}</p>
                     <input 
                       type="range"
-                      value={(currentTime / duration) * 100}
+                      value={(currentTime / duration[mixId]) * 100}
                       onChange={handleSeek}
                       className="w-96 bg-gray-300 cursor-pointer"
                     />
-                    <p>{duration.toFixed(0)}s</p>
+                    <p>{formatTime(duration[mixId])}</p>
                     </div>
                     
                 <div className="flex flex-row relative mt-4 space-x-4">
