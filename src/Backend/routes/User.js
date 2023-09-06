@@ -135,6 +135,7 @@ router.post("/follow/:userNameToFollow",
                     artist: mix.artist,
                     track: mix.track.replace("../../../public", ""),
                     userId: mix.userId,
+                    _id: mix._id,
                     createdAt: mix.createdAt,
                  }));
 

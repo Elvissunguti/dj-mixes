@@ -165,6 +165,7 @@ router.get(
           artist: mix.artist,
           track: mix.track,
           userId: mix.userId,
+          _id: mix._id,
           createdAt: mix.createdAt,
       }));
 
