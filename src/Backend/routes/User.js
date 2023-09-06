@@ -133,7 +133,7 @@ router.post("/follow/:userNameToFollow",
                     thumbnail: mix.thumbnail.replace("../../../public",""),
                     title: mix.title,
                     artist: mix.artist,
-                    track: mix.trackreplace("../../../public", ""),
+                    track: mix.track.replace("../../../public", ""),
                     userId: mix.userId,
                     createdAt: mix.createdAt,
                  }));

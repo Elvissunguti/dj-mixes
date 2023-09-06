@@ -40,6 +40,8 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     };
   }, [mixId]);
   
+
+    
     const handleFavoriteClick = () => {
       toggleFavourite(mixId);
   
@@ -63,19 +65,29 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
   const audioUrl = `/MixUploads/Tracks/${audioFilename}`;
 
  
-
+  // To fetch the profile of an artist in a mix
   const handleArtistClick = () => {
     navigate(`/public profile?userId=${userId}`);
   };
 
-  const handlePlayPauseClick = () => {
+
+  const handlePlay = () => {
     const audioElement = document.getElementById(`audio-${mixId}`);
+    audioElement.play();
+    setCurrentSong("play");
+  };
+
+  const handlePause = () => {
+    const audioElement = document.getElementById(`audio-${mixId}`);
+    audioElement.pause();
+    setCurrentSong("pause");
+  };
+
+  const handlePlayPauseClick = () => {
     if (currentSong === "play") {
-      audioElement.play();
-      setCurrentSong("pause");
+      handlePause();
     } else {
-      audioElement.pause();
-      setCurrentSong("play");
+      handlePlay();
     }
   };
 
@@ -96,7 +108,11 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                 <div className="flex flex-col w-4/5 space-x-12 mt-4 pl-4">
                 <div className="flex space-x-4 my-4">
                     <div className="  text-5xl cursor-pointer  ">
-                        {currentSong === "play" ? <ImPause /> : <ImPlay />}
+                        {currentSong === "play" ? (
+                        <ImPause onClick={handlePause} /> 
+                        ) : (
+                           <ImPlay onClick={handlePlay} />
+                        )}
                     </div>
                     <div className="text-2xl font-medium">
                         <p className="hover:text-gray-600 cursor-pointer">
