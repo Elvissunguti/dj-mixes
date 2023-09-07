@@ -5,9 +5,11 @@ import {
   makeAuthenticatedGETRequest,
   makeAuthenticatedPOSTRequest,
 } from "../Utils/ServerHelpers";
+import CurrentMix from "../shared/CurrentMix";
 
 const Feed = () => {
   const [feedData, setFeedData] = useState([]);
+  const [currentMix, setCurrentMix] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +74,17 @@ const Feed = () => {
     }
   };
 
+  const handleMixPlay = (mixId) => {
+    // Find the playing mix data from feedData and set it as the currentMix
+    const playingMix = feedData.find((item) => item._id === mixId);
+    setCurrentMix({
+      ...playingMix,
+      currentSong: "play", 
+      currentTime: 0, 
+      duration: playingMix.trackDuration, 
+    });
+  };
+
   return (
     <LoggedInContainer curActiveScreen="feed">
       <div className="flex items-start mb-6">
@@ -92,6 +105,7 @@ const Feed = () => {
                 handleToggleFavourite(item._id, item.isFavourite)
               }
               favouriteCount={item.favouriteCount}
+              onMixPlay={handleMixPlay}
               
             />
           ))
@@ -99,6 +113,22 @@ const Feed = () => {
           <p>Loading...</p>
         )}
       </div>
+      {currentMix && (
+        <CurrentMix
+          mixId={currentMix._id}
+          thumbnail={currentMix.thumbnail}
+          title={currentMix.title}
+          artist={currentMix.artist}
+          audioSrc={currentMix.track}
+          currentSong={currentMix.currentSong}
+          setCurrentSong={(songState) =>
+            setCurrentMix({ ...currentMix, currentSong: songState })
+          }
+          currentTime={currentMix.currentTime}
+          duration={currentMix.duration}
+
+        />
+      )}
     </LoggedInContainer>
   );
 };

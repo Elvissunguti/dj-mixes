@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, onMixPlay }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("pause");
@@ -99,8 +99,8 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
         setCurrentlyPlayingSong(null);
       } else {
         // Pause the currently playing mix, if there is one
-        if (currentlyPlayingSong !== null) {
-          const currentlyPlayingAudio = document.getElementById(`audio-${currentlyPlayingSong}`);
+        const currentlyPlayingAudio = document.getElementById(`audio-${currentlyPlayingSong}`);
+      if (currentlyPlayingAudio && !currentlyPlayingAudio.paused) {
           currentlyPlayingAudio.pause();
         }
   
@@ -108,19 +108,25 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
         audioElement.play();
         setCurrentSong("play");
         setCurrentlyPlayingSong(mixId);
+
+        onMixPlay(mixId, audioElement.currentTime);
       }
     };
+
+    console.log("mixId:", mixId);
+    console.log("currentlyPlayingSong:", currentlyPlayingSong);
   
 
   const handleSeek = (event) => {
     const audioElement = document.getElementById(`audio-${mixId}`);
-    const newTime = (event.target.value / 100) * duration;
+    const newTime = (event.target.value / 100) * duration[mixId];
     audioElement.currentTime = newTime;
   };
- 
 
+  const isCurrentMixPlaying = currentlyPlayingSong === mixId;
+ 
     return(
-        <section className=" ">
+        <section className={`relative ${isCurrentMixPlaying ? "bg-gray-200" : ""}`}>
             <div className="flex border-b border-green-500  w-2/3">
                 <div className="w-1/5">
                     <img src={imageUrl} alt=""
@@ -128,11 +134,11 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                 </div>
                 <div className="flex flex-col w-4/5 space-x-12 mt-4 pl-4">
                 <div className="flex space-x-4 my-4">
-                    <div className="  text-5xl cursor-pointer  ">
+                    <div className="  text-5xl cursor-pointer" onClick={handlePlayPause}>
                         {currentSong === "play" && currentlyPlayingSong === mixId ? (
-                           <ImPause onClick={handlePlayPause} /> 
+                           <ImPause  /> 
                         ) : (
-                           <ImPlay onClick={handlePlayPause} />
+                           <ImPlay  />
                         )}
                     </div>
                     <div className="text-2xl font-medium">

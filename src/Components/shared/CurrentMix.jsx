@@ -1,50 +1,131 @@
 import React from "react";
 import { useState } from "react";
-import { ImPrevious, ImPause, ImPlay2, ImNext, ImWhatsapp, ImFacebook } from "react-icons/im";
+import { ImPrevious, ImPause, ImPlay, ImNext, ImWhatsapp, ImFacebook } from "react-icons/im";
 import { FcLike, FcShare } from "react-icons/fc";
 import { AiOutlineTwitter, AiOutlineInstagram, AiOutlineMore } from "react-icons/ai";
 import thumbnail from "../Assets/thumbnail.jpg";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 
-const CurrentMix = () => {
+const CurrentMix = ({ mixId, userId,  thumbnail, title, artist, audioSrc,  currentSong, setCurrentSong,  }) => {
 
-    const [currentSong, setCurrentSong ] = useState("play");
-    const [duration, setDuration ] = useState(0);
-    const [ trackProgress, setTrackProgress ] = useState(0);
     
+    const [ trackProgress, setTrackProgress ] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState([]);
+
+    const navigate = useNavigate();
+
+    console.log(mixId);
+
+
+    useEffect(() => {
+        const audioElement = document.getElementById(`audio-${mixId}`);
+    
+        // Listen for the "timeupdate" event to update currentTime
+        audioElement.addEventListener("timeupdate", () => {
+          setCurrentTime(audioElement.currentTime);
+        });
+    
+        // Listen for the "loadedmetadata" event to update duration
+        audioElement.addEventListener("loadedmetadata", () => {
+            console.log("Loaded metadata event fired"); 
+            console.log("Audio duration:", audioElement.duration); 
+          setDuration(audioElement.duration);
+        });
+    
+        // Clean up event listeners on unmount
+        return () => {
+          audioElement.removeEventListener("timeupdate", () => {});
+          audioElement.removeEventListener("loadedmetadata", () => {});
+        };
+      }, [mixId]);
+
+
+    const thumbnailFilename = thumbnail.split("\\").pop();
+    const audioFilename = audioSrc.split("\\").pop();
+  
+    const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
+    const audioUrl = `/MixUploads/Tracks/${audioFilename}`;
+    console.log("audioUrl:", audioUrl)
+
+    // To fetch the profile of an artist in a mix
+  const handleArtistClick = () => {
+    navigate(`/public profile?userId=${userId}`);
+  };
+    
+  const handlePlayPause = () => {
+    const audioElement = document.getElementById(`audio-${mixId}`);
+
+    if (currentSong === "play") {
+      // If the mix is currently playing, pause it
+      audioElement.pause();
+      setCurrentSong("pause");
+    } else {
+      // If the mix is paused, play it
+      audioElement.play();
+      setCurrentSong("play");
+    }
+  };
+
+
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  const handleTrackProgressChange = (event) => {
+    const newProgress = parseFloat(event.target.value);
+    setTrackProgress(newProgress);
+  
+    // Update the audio element's currentTime based on the new progress
+    const audioElement = document.getElementById(`audio-${mixId}`);
+    audioElement.currentTime = newProgress;
+  };
+
 
     return(
-        <section className="mx-auto flex justify-between  max-w-8xl max-w-10xl">
-            <div className="flex  border-b-green-500 w-2/3">
+        <section className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-300">
+        <div className="mx-auto flex justify-between  max-w-8xl max-w-10xl">
+            <div className="flex  w-2/3">
                <div className="flex  ">
-                <img src={thumbnail} alt="thumbnail"
+                <img src={imageUrl} alt="thumbnail"
                  className=" w-2/5" />
                  </div>
                  <div className="flex w-3/5">
                 <div className="font-medium text-lg flex-row mx-2">
-                    <p className="hover:text-gray-300 cursor-pointer">mix name</p>
-                    <p className="hover:text-gray-300 cursor-pointer">Name of dj</p>
+                    <p className="hover:text-gray-300 cursor-pointer">{title}</p>
+                    <p className="hover:text-gray-300 cursor-pointer" onClick={handleArtistClick}>{artist}</p>
                 </div>
                 
                 <div className="flex items-center between space-x-6 text-4xl mx-4 ">
                     <ImPrevious className="cursor-pointer"/>
-                    <div className="cursor-pointer">
-                        {currentSong === "play" ? <ImPause /> : <ImPlay2 /> }
+                    <div className="cursor-pointer" onClick={handlePlayPause}>
+                        {currentSong === "play" ? ( 
+                        <ImPause /> 
+                        ): (
+                        <ImPlay /> 
+                        )}
                     </div>
 
                     <ImNext className="cursor-pointer" />
                     
                 </div>
                 <div className="flex items-center">
-                    <p>track song progress</p>
+                    <p>{formatTime(currentTime)}</p>
                     <input
                     type="range"
                     min="0"
+                    max={duration}
+                    value={currentTime}
+                    onChange={handleTrackProgressChange}
                     className="w-80 bg-gray-300 cursor-pointer"
                     
                     />
-                    |<audio></audio>
-                    <p>track duration</p>
+                    
+                    <p>{formatTime(duration)}</p>
                 </div>
                 <div className="flex flex-row relative space-x-6 items-center">
                     <FcLike className="cursor-pointer text-4xl" />
@@ -53,6 +134,7 @@ const CurrentMix = () => {
                 </div>
                 </div>
             </div>
+        </div>
         </section>
     )
 }
