@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LoggedInContainer from "../Containers/LoggedInContainer";
 import MixCard from "../shared/MixCard";
-import {  makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest, makeAuthenticatedUnlikeRequest } from "../Utils/ServerHelpers";
+import {  makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import { useEffect } from "react";
 
 const Favourites = () => {
