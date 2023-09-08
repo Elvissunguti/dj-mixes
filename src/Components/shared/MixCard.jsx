@@ -14,7 +14,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     const [ currentTime, setCurrentTime ] = useState(0);
     const [ duration, setDuration ] = useState({});
     const [ currentlyPlayingSong, setCurrentlyPlayingSong ] = useState(null);
-
+    
     const navigate = useNavigate();
       
     // useEffect to add favoritedMixes to localStorage
@@ -94,6 +94,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
   
       if (currentlyPlayingSong === mixId) {
         // If the mix is already playing, pause it
+        console.log("The currentlyPlayingSong is:", currentlyPlayingSong);
         audioElement.pause();
         setCurrentSong("pause");
         setCurrentlyPlayingSong(null);

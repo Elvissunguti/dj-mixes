@@ -10,6 +10,7 @@ import CurrentMix from "../shared/CurrentMix";
 const Feed = () => {
   const [feedData, setFeedData] = useState([]);
   const [currentMix, setCurrentMix] = useState(null);
+  const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,15 +76,29 @@ const Feed = () => {
   };
 
   const handleMixPlay = (mixId) => {
+    
+    if (currentlyPlayingMixId) {
+      // Pause the audio of the previously playing mix
+      const prevMixAudio = document.getElementById(`audio-${currentlyPlayingMixId}`);
+      if (prevMixAudio) {
+        prevMixAudio.pause();
+        prevMixAudio.currentTime = 0; 
+      }
+    }
+
     // Find the playing mix data from feedData and set it as the currentMix
     const playingMix = feedData.find((item) => item._id === mixId);
     setCurrentMix({
       ...playingMix,
-      currentSong: "play", 
-      currentTime: 0, 
-      duration: playingMix.trackDuration, 
+      currentSong: "play",
+      currentTime: 0,
+      duration: playingMix.trackDuration,
     });
+
+    // Update the currentlyPlayingMixId
+    setCurrentlyPlayingMixId(mixId);
   };
+
 
   return (
     <LoggedInContainer curActiveScreen="feed">
@@ -106,6 +121,7 @@ const Feed = () => {
               }
               favouriteCount={item.favouriteCount}
               onMixPlay={handleMixPlay}
+              currentlyPlayingMixId={currentlyPlayingMixId}
               
             />
           ))
