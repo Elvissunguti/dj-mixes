@@ -11,6 +11,7 @@ const Feed = () => {
   const [feedData, setFeedData] = useState([]);
   const [currentMix, setCurrentMix] = useState(null);
   const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,28 +76,24 @@ const Feed = () => {
     }
   };
 
-  const handleMixPlay = (mixId) => {
-    
-    if (currentlyPlayingMixId) {
-      // Pause the audio of the previously playing mix
-      const prevMixAudio = document.getElementById(`audio-${currentlyPlayingMixId}`);
-      if (prevMixAudio) {
-        prevMixAudio.pause();
-        prevMixAudio.currentTime = 0; 
-      }
+  const handlePlayPause = (mixId) => {
+    if (currentlyPlayingMixId === mixId) {
+      // Pause the currently playing mix
+      setIsPlaying(false);
+      setCurrentlyPlayingMixId(null);
+    } else {
+      // Play the selected mix
+      setIsPlaying(true);
+      setCurrentlyPlayingMixId(mixId);
+      // Find the playing mix data from feedData and set it as the currentMix
+      const playingMix = feedData.find((item) => item._id === mixId);
+      setCurrentMix({
+        ...playingMix,
+        currentSong: "play",
+        currentTime: 0,
+        duration: playingMix.trackDuration,
+      });
     }
-
-    // Find the playing mix data from feedData and set it as the currentMix
-    const playingMix = feedData.find((item) => item._id === mixId);
-    setCurrentMix({
-      ...playingMix,
-      currentSong: "play",
-      currentTime: 0,
-      duration: playingMix.trackDuration,
-    });
-
-    // Update the currentlyPlayingMixId
-    setCurrentlyPlayingMixId(mixId);
   };
 
 
@@ -120,8 +117,9 @@ const Feed = () => {
                 handleToggleFavourite(item._id, item.isFavourite)
               }
               favouriteCount={item.favouriteCount}
-              onMixPlay={handleMixPlay}
+              onMixPlay={handlePlayPause}
               currentlyPlayingMixId={currentlyPlayingMixId}
+              isPlaying={isPlaying}
               
             />
           ))
@@ -142,6 +140,8 @@ const Feed = () => {
           }
           currentTime={currentMix.currentTime}
           duration={currentMix.duration}
+          isPlaying={isPlaying}
+          onMixPlay={handlePlayPause}
 
         />
       )}

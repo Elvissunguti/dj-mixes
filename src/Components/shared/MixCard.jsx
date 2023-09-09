@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, onMixPlay }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("pause");
@@ -26,6 +26,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
 
 
     useEffect(() => {
+
       const audioElement = document.getElementById(`audio-${mixId}`);
   
       // Listen for the "timeupdate" event to update currentTime
@@ -91,29 +92,31 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     // Function to handle playing or pausing a mix
     const handlePlayPause = () => {
       const audioElement = document.getElementById(`audio-${mixId}`);
-  
-      if (currentlyPlayingSong === mixId) {
+      if (currentlyPlayingMixId === mixId) {
         // If the mix is already playing, pause it
-        console.log("The currentlyPlayingSong is:", currentlyPlayingSong);
-        audioElement.pause();
-        setCurrentSong("pause");
-        setCurrentlyPlayingSong(null);
+        if (isPlaying) {
+          audioElement.pause();
+          onMixPlay(null, audioElement.currentTime);
+        } else {
+          // If the mix is paused, resume playback
+          audioElement.play();
+          onMixPlay(mixId, audioElement.currentTime);
+        }
       } else {
         // Pause the currently playing mix, if there is one
-        const currentlyPlayingAudio = document.getElementById(`audio-${currentlyPlayingSong}`);
-      if (currentlyPlayingAudio && !currentlyPlayingAudio.paused) {
+        const currentlyPlayingAudio = document.getElementById(
+          `audio-${currentlyPlayingMixId}`
+        );
+        if (currentlyPlayingAudio && !currentlyPlayingAudio.paused) {
           currentlyPlayingAudio.pause();
+          onMixPlay(null, 0); // Notify that playback stopped
         }
   
         // Play the selected mix
         audioElement.play();
-        setCurrentSong("play");
-        setCurrentlyPlayingSong(mixId);
-
         onMixPlay(mixId, audioElement.currentTime);
       }
     };
-
     console.log("mixId:", mixId);
     console.log("currentlyPlayingSong:", currentlyPlayingSong);
   
@@ -124,8 +127,9 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     audioElement.currentTime = newTime;
   };
 
-  const isCurrentMixPlaying = currentlyPlayingSong === mixId;
- 
+  const isCurrentMixPlaying = currentlyPlayingMixId === mixId && isPlaying;
+
+  
     return(
         <section className={`relative ${isCurrentMixPlaying ? "bg-gray-200" : ""}`}>
             <div className="flex border-b border-green-500  w-2/3">
@@ -136,7 +140,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                 <div className="flex flex-col w-4/5 space-x-12 mt-4 pl-4">
                 <div className="flex space-x-4 my-4">
                     <div className="  text-5xl cursor-pointer" onClick={handlePlayPause}>
-                        {currentSong === "play" && currentlyPlayingSong === mixId ? (
+                        {isPlaying && currentlyPlayingMixId === mixId ? (
                            <ImPause  /> 
                         ) : (
                            <ImPlay  />
