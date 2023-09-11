@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ currentSong, setCurrentSong ] = useState("pause");
@@ -114,7 +114,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
   
         // Play the selected mix
         audioElement.play();
-        onMixPlay(mixId, audioElement.currentTime);
+        onMixPlay(mixId, audioElement.currentTime, audioElement.duration);
       }
     };
     console.log("mixId:", mixId);
@@ -190,7 +190,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                 </div>
                 </div>
             </div>
-            <audio id={`audio-${mixId}`} src={audioUrl}></audio>
+            <audio id={`audio-${mixId}`} src={audioUrl} preload="metadata" onEnded={() => onMixPlay(null, 0)}></audio>
         </section>
     )
 };

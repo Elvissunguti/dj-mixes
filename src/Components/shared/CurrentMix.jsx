@@ -24,12 +24,12 @@ const CurrentMix = ({
   audioSrc,
   currentSong,
   setCurrentSong,
-  isPlaying, // Added prop to determine if the mix is playing or paused
-  onMixPlay, // Added prop to notify the parent component when the mix is played or paused
+  isPlaying,
+  onMixPlay, 
 }) => {
   const [trackProgress, setTrackProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState([]);
+  const [duration, setDuration] = useState(0);
 
   const navigate = useNavigate();
 
@@ -127,9 +127,9 @@ const CurrentMix = ({
                 type="range"
                 min="0"
                 max={duration}
-                value={currentTime}
+                value={ currentTime}
                 onChange={handleTrackProgressChange}
-                className="w-80 bg-gray-300 cursor-pointer"
+                className="w-96 bg-gray-300 cursor-pointer"
               />
               <p>{formatTime(duration)}</p>
             </div>
