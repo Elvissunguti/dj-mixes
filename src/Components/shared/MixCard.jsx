@@ -6,14 +6,13 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying }) => {
 
     const [ open, setOpen ] = useState(false);
-    const [ currentSong, setCurrentSong ] = useState("pause");
     const [ isFavourite, setIsFavourite ] = useState(initialIsFavourite);
     const [ currentTime, setCurrentTime ] = useState(0);
     const [ duration, setDuration ] = useState({});
-    const [ currentlyPlayingSong, setCurrentlyPlayingSong ] = useState(null);
+    
     
     const navigate = useNavigate();
       
@@ -117,8 +116,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
         onMixPlay(mixId, audioElement.currentTime, audioElement.duration);
       }
     };
-    console.log("mixId:", mixId);
-    console.log("currentlyPlayingSong:", currentlyPlayingSong);
+    
   
 
   const handleSeek = (event) => {

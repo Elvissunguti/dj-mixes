@@ -87,14 +87,16 @@ const Feed = () => {
       setCurrentlyPlayingMixId(mixId);
       // Find the playing mix data from feedData and set it as the currentMix
       const playingMix = feedData.find((item) => item._id === mixId);
+      console.log("playingMix:", playingMix);
       setCurrentMix({
         ...playingMix,
         currentSong: "play",
         currentTime: 0,
-        duration: playingMix.trackDuration,
+        duration: playingMix.duration,
       });
     }
   };
+ 
 
 
   return (
@@ -139,9 +141,9 @@ const Feed = () => {
             setCurrentMix({ ...currentMix, currentSong: songState })
           }
           currentTime={currentMix.currentTime}
-          duration={currentMix.duration}
           isPlaying={isPlaying}
           onMixPlay={handlePlayPause}
+          duration={currentMix.duration}
 
         />
       )}

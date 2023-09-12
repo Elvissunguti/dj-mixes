@@ -35,32 +35,35 @@ const CurrentMix = ({
 
   useEffect(() => {
     const audioElement = document.getElementById(`audio-${mixId}`);
-
+  
     // Listen for the "timeupdate" event to update currentTime
     audioElement.addEventListener("timeupdate", () => {
       setCurrentTime(audioElement.currentTime);
     });
-
+  
     // Listen for the "loadedmetadata" event to update duration
-    audioElement.addEventListener("loadedmetadata", () => {
+    const handleLoadedMetadata = () => {
       console.log("Loaded metadata event fired");
       console.log("Audio duration:", audioElement.duration);
       setDuration(audioElement.duration);
-    });
-
+    };
+  
+    audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+  
     // Clean up event listeners on unmount
     return () => {
       audioElement.removeEventListener("timeupdate", () => {});
-      audioElement.removeEventListener("loadedmetadata", () => {});
+      audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
   }, [mixId]);
+  
 
   const thumbnailFilename = thumbnail.split("\\").pop();
   const audioFilename = audioSrc.split("\\").pop();
 
   const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
   const audioUrl = `/MixUploads/Tracks/${audioFilename}`;
-  console.log("audioUrl:", audioUrl);
+  
 
   // To fetch the profile of an artist in a mix
   const handleArtistClick = () => {
@@ -74,12 +77,12 @@ const CurrentMix = ({
       // If the mix is currently playing, pause it
       audioElement.pause();
       setCurrentSong("pause");
-      onMixPlay(null); // Notify the parent component that playback stopped
+      onMixPlay(null, audioElement.duration); // Notify the parent component that playback stopped
     } else {
       // If the mix is paused, play it
       audioElement.play();
       setCurrentSong("play");
-      onMixPlay(mixId); // Notify the parent component that playback started
+      onMixPlay(mixId, audioElement.duration); // Notify the parent component that playback started
     }
   };
 
