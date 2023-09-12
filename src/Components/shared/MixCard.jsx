@@ -6,13 +6,14 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, }) => {
 
     const [ open, setOpen ] = useState(false);
+    const [ currentSong, setCurrentSong ] = useState("pause");
     const [ isFavourite, setIsFavourite ] = useState(initialIsFavourite);
     const [ currentTime, setCurrentTime ] = useState(0);
     const [ duration, setDuration ] = useState({});
-    
+    const [ currentlyPlayingSong, setCurrentlyPlayingSong ] = useState(null);
     
     const navigate = useNavigate();
       
@@ -95,11 +96,11 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
         // If the mix is already playing, pause it
         if (isPlaying) {
           audioElement.pause();
-          onMixPlay(null, audioElement.currentTime);
+          onMixPlay(null, audioElement.currentTime, audioElement.duration);
         } else {
           // If the mix is paused, resume playback
           audioElement.play();
-          onMixPlay(mixId, audioElement.currentTime);
+          onMixPlay(mixId, audioElement.currentTime, audioElement.duration);
         }
       } else {
         // Pause the currently playing mix, if there is one
@@ -108,7 +109,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
         );
         if (currentlyPlayingAudio && !currentlyPlayingAudio.paused) {
           currentlyPlayingAudio.pause();
-          onMixPlay(null, 0); // Notify that playback stopped
+          onMixPlay(null, 0, 0); // Notify that playback stopped
         }
   
         // Play the selected mix
@@ -116,7 +117,8 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
         onMixPlay(mixId, audioElement.currentTime, audioElement.duration);
       }
     };
-    
+    console.log("mixId:", mixId);
+    console.log("currentlyPlayingSong:", currentlyPlayingSong);
   
 
   const handleSeek = (event) => {

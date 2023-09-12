@@ -29,7 +29,8 @@ const CurrentMix = ({
 }) => {
   const [trackProgress, setTrackProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(null);
+  
 
   const navigate = useNavigate();
 
@@ -44,8 +45,9 @@ const CurrentMix = ({
     // Listen for the "loadedmetadata" event to update duration
     const handleLoadedMetadata = () => {
       console.log("Loaded metadata event fired");
-      console.log("Audio duration:", audioElement.duration);
+      
       setDuration(audioElement.duration);
+      console.log("Audio duration:", audioElement.duration);
     };
   
     audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -53,16 +55,18 @@ const CurrentMix = ({
     // Clean up event listeners on unmount
     return () => {
       audioElement.removeEventListener("timeupdate", () => {});
-      audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      
     };
   }, [mixId]);
   
 
   const thumbnailFilename = thumbnail.split("\\").pop();
   const audioFilename = audioSrc.split("\\").pop();
+ 
 
   const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
   const audioUrl = `/MixUploads/Tracks/${audioFilename}`;
+
   
 
   // To fetch the profile of an artist in a mix
@@ -77,12 +81,14 @@ const CurrentMix = ({
       // If the mix is currently playing, pause it
       audioElement.pause();
       setCurrentSong("pause");
-      onMixPlay(null, audioElement.duration); // Notify the parent component that playback stopped
+      const duration = audioElement.duration
+      onMixPlay(null, duration); // Notify the parent component that playback stopped
     } else {
       // If the mix is paused, play it
       audioElement.play();
       setCurrentSong("play");
-      onMixPlay(mixId, audioElement.duration); // Notify the parent component that playback started
+      const duration = audioElement.duration
+      onMixPlay(mixId, duration); // Notify the parent component that playback started
     }
   };
 
