@@ -44,20 +44,33 @@ const CurrentMix = ({
   
     // Listen for the "loadedmetadata" event to update duration
     const handleLoadedMetadata = () => {
-      console.log("Loaded metadata event fired");
-      
       setDuration(audioElement.duration);
-      console.log("Audio duration:", audioElement.duration);
     };
   
+    // Listen for the "loadedmetadata" event
     audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+  
+    // Fetch the audio duration asynchronously
+    const fetchAudioDuration = async () => {
+      try {
+      
+        const duration = audioElement.duration;
+        setDuration(duration);
+        console.log("Audio duration:", duration);
+      } catch (error) {
+        console.error("Error fetching audio duration:", error);
+      }
+    };
+  
+    fetchAudioDuration();
   
     // Clean up event listeners on unmount
     return () => {
       audioElement.removeEventListener("timeupdate", () => {});
-      
+      audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
   }, [mixId]);
+  
   
 
   const thumbnailFilename = thumbnail.split("\\").pop();
