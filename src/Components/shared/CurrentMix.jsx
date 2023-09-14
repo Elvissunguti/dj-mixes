@@ -35,42 +35,44 @@ const CurrentMix = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    const audioElement = document.getElementById(`audio-${mixId}`);
-  
-    // Listen for the "timeupdate" event to update currentTime
-    audioElement.addEventListener("timeupdate", () => {
-      setCurrentTime(audioElement.currentTime);
-    });
-  
-    // Listen for the "loadedmetadata" event to update duration
-    const handleLoadedMetadata = () => {
-      setDuration(audioElement.duration);
-    };
-  
-    // Listen for the "loadedmetadata" event
-    audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
-  
-    // Fetch the audio duration asynchronously
-    const fetchAudioDuration = async () => {
-      try {
+  const audioElement = document.getElementById(`audio-${mixId}`);
+
+  // Listen for the "timeupdate" event to update currentTime
+  audioElement.addEventListener("timeupdate", () => {
+    setCurrentTime(audioElement.currentTime);
+  });
+
+  // Listen for the "loadedmetadata" event to update duration
+  const handleLoadedMetadata = () => {
+    console.log("Loaded metadata event fired");
+    setDuration(audioElement.duration);
+    console.log("Audio duration:", audioElement.duration);
+  };
+
+  // Listen for the "loadedmetadata" event
+  audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+  // Fetch the audio duration asynchronously
+  const fetchAudioDuration = async () => {
+    try {
       
-        const duration = audioElement.duration;
-        setDuration(duration);
-        console.log("Audio duration:", duration);
-      } catch (error) {
-        console.error("Error fetching audio duration:", error);
-      }
-    };
-  
-    fetchAudioDuration();
-  
-    // Clean up event listeners on unmount
-    return () => {
-      audioElement.removeEventListener("timeupdate", () => {});
-      audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, [mixId]);
-  
+      const duration = audioElement.duration;
+      setDuration(duration);
+      console.log("Audio duration:", duration);
+    } catch (error) {
+      console.error("Error fetching audio duration:", error);
+    }
+  };
+
+  fetchAudioDuration();
+
+  // Clean up event listeners on unmount
+  return () => {
+    audioElement.removeEventListener("timeupdate", () => {});
+    audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+  };
+}, [mixId]);
+
   
 
   const thumbnailFilename = thumbnail.split("\\").pop();
@@ -94,14 +96,12 @@ const CurrentMix = ({
       // If the mix is currently playing, pause it
       audioElement.pause();
       setCurrentSong("pause");
-      const duration = audioElement.duration
-      onMixPlay(null, duration); // Notify the parent component that playback stopped
+      onMixPlay(null); // Notify the parent component that playback stopped
     } else {
       // If the mix is paused, play it
       audioElement.play();
       setCurrentSong("play");
-      const duration = audioElement.duration
-      onMixPlay(mixId, duration); // Notify the parent component that playback started
+      onMixPlay(mixId); // Notify the parent component that playback started
     }
   };
 
