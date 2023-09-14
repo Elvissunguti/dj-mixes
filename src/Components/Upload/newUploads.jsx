@@ -4,10 +4,15 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import MixCard from "../shared/MixCard";
+import CurrentMix from "../shared/CurrentMix";
 
 const NewUpload = () => {
 
     const [ newUploads, setNewUploads ] = useState([]);
+    const [currentMix, setCurrentMix] = useState(null);
+    const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+
 
     useEffect(() => {
         const uploads = async () => {
@@ -69,6 +74,27 @@ const NewUpload = () => {
       };
 
 
+      const handlePlayPause = (mixId) => {
+        if (currentlyPlayingMixId === mixId) {
+          // Pause the currently playing mix
+          setIsPlaying(false);
+          setCurrentlyPlayingMixId(null);
+        } else {
+          // Play the selected mix
+          setIsPlaying(true);
+          setCurrentlyPlayingMixId(mixId);
+          // Find the playing mix data from feedData and set it as the currentMix
+          const playingMix = newUploads.find((item) => item._id === mixId);
+          setCurrentMix({
+            ...playingMix,
+            currentSong: "play",
+            currentTime: 0,
+            duration: playingMix.trackDuration,
+          });
+        }
+      };
+
+
     return(
         <LoggedInContainer curActiveScreen="new uploads">
             <div>
@@ -89,14 +115,33 @@ const NewUpload = () => {
                     handleToggleFavourite(item._id, item.isFavourite)
                   }
                   favouriteCount={item.favouriteCount}
-                  />
+                  onMixPlay={handlePlayPause}
+                  currentlyPlayingMixId={currentlyPlayingMixId}
+                  isPlaying={isPlaying}
+                />
                 ))
              ) : (
              <p>Loading...</p>
             )}
-
             </div>
-
+            {currentMix && (
+              <CurrentMix
+              mixId={currentMix._id}
+              thumbnail={currentMix.thumbnail}
+              title={currentMix.title}
+              artist={currentMix.artist}
+              audioSrc={currentMix.track}
+              currentSong={currentMix.currentSong}
+              setCurrentSong={(songState) =>
+                setCurrentMix({ ...currentMix, currentSong: songState })
+              }
+              currentTime={currentMix.currentTime}
+              duration={currentMix.duration}
+              isPlaying={isPlaying}
+              onMixPlay={handlePlayPause}
+              
+              />
+            )}
         </LoggedInContainer>
     )
 }
