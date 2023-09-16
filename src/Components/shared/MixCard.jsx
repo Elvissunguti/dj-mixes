@@ -157,7 +157,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                     <p>{formatTime(currentTime)}</p>
                     <input 
                       type="range"
-                      value={(currentTime / duration[mixId]) * 100}
+                      value={(isNaN(duration[mixId]) ? 0 : (currentTime / duration[mixId]) * 100)}
                       onChange={handleSeek}
                       className="w-96 bg-gray-300 cursor-pointer"
                     />

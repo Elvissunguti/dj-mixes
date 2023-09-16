@@ -94,10 +94,10 @@ const Feed = () => {
         ...playingMix,
         currentSong: "play",
         currentTime: 0,
-        duration: playingMix.trackDuration,
       });
     }
   };
+ 
 
 
    // Function to handle next mix
@@ -118,6 +118,8 @@ const Feed = () => {
       setIsPlaying(true); 
     }
   };
+
+  console.log("CurrentMix data:", currentMix);
 
 
   return (
@@ -162,7 +164,6 @@ const Feed = () => {
             setCurrentMix({ ...currentMix, currentSong: songState })
           }
           currentTime={currentMix.currentTime}
-          duration={currentMix.duration}
           isPlaying={isPlaying}
           onMixPlay={handlePlayPause}
           onNextMixClick={handleNextMix} 

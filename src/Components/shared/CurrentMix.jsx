@@ -38,48 +38,59 @@ const CurrentMix = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-  const audioElement = document.getElementById(`audio-${mixId}`);
-
-  // Listen for the "timeupdate" event to update currentTime
-  audioElement.addEventListener("timeupdate", () => {
-    setCurrentTime(audioElement.currentTime);
-  });
-
-  // Listen for the "loadedmetadata" event to update duration
-  const handleLoadedMetadata = () => {
-    console.log("Loaded metadata event fired");
-    setDuration(audioElement.duration);
-    console.log("Audio duration:", audioElement.duration);
-  };
-
-  // Listen for the "loadedmetadata" event
-  audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-  // Fetch the audio duration asynchronously
-  const fetchAudioDuration = async () => {
-    try {
-      
-      const duration = audioElement.duration;
-      setDuration(duration);
-      console.log("Audio duration:", duration);
-    } catch (error) {
-      console.error("Error fetching audio duration:", error);
+    // Ensure mixId is defined and not null before trying to obtain the audio element
+    if (!mixId) {
+      return; // Early return if mixId is not defined
     }
-  };
+  
+    const audioElement = document.getElementById(`audio-${mixId}`);
+  
+    // Check if audioElement is not null before adding event listeners
+    if (!audioElement) {
+      return; // Early return if audioElement is not found
+    }
+  
+    // Listen for the "timeupdate" event to update currentTime
+    const handleTimeUpdate = () => {
+      setCurrentTime(audioElement.currentTime);
+    };
+  
+    audioElement.addEventListener("timeupdate", handleTimeUpdate);
+  
+    // Listen for the "loadedmetadata" event to update duration
+    const handleLoadedMetadata = () => {
+      console.log("Loaded metadata event fired");
+      setDuration(audioElement.duration);
+      console.log("Audio duration:", audioElement.duration);
+    };
+  
+    audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
 
-  fetchAudioDuration();
-
-  // Clean up event listeners on unmount
-  return () => {
-    audioElement.removeEventListener("timeupdate", () => {});
-    audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
-  };
-}, [mixId]);
+    const fetchAudioDuration = async () => {
+      try {
+        
+        const duration = audioElement.duration;
+        setDuration(duration);
+        console.log("Audio duration:", duration);
+      } catch (error) {
+        console.error("Error fetching audio duration:", error);
+      }
+    };
+  
+    fetchAudioDuration();
+  
+    // Clean up event listeners on unmount
+    return () => {
+      audioElement.removeEventListener("timeupdate", handleTimeUpdate);
+      audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, [mixId]);
+  
 
   
 
-  const thumbnailFilename = thumbnail.split("\\").pop();
-  const audioFilename = audioSrc.split("\\").pop();
+const thumbnailFilename = thumbnail ? thumbnail.split("\\").pop() : "";
+const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
  
 
   const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
@@ -94,20 +105,24 @@ const CurrentMix = ({
 
   const handlePlayPause = () => {
     const audioElement = document.getElementById(`audio-${mixId}`);
-
-    if (currentSong === "play") {
-      // If the mix is currently playing, pause it
-      audioElement.pause();
-      setCurrentSong("pause");
-      onMixPlay(null); // Notify the parent component that playback stopped
+  
+    if (audioElement) {
+      if (currentSong === "play") {
+        // If the mix is currently playing, pause it
+        audioElement.pause();
+        setCurrentSong("pause");
+        onMixPlay(null); // Notify the parent component that playback stopped
+      } else {
+        // If the mix is paused, play it
+        audioElement.play();
+        setCurrentSong("play");
+        onMixPlay(mixId); // Notify the parent component that playback started
+      }
     } else {
-      // If the mix is paused, play it
-      audioElement.play();
-      setCurrentSong("play");
-      onMixPlay(mixId); // Notify the parent component that playback started
+      console.error(`Audio element with id "audio-${mixId}" not found.`);
     }
   };
-
+  
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = Math.floor(timeInSeconds % 60);
@@ -135,7 +150,6 @@ const CurrentMix = ({
       }
     }
 
-    // Notify the parent component to switch to the next mix
     onNextMixClick();
   };
 
@@ -188,7 +202,7 @@ const CurrentMix = ({
                 type="range"
                 min="0"
                 max={duration}
-                value={ currentTime}
+                value={currentTime}
                 onChange={handleTrackProgressChange}
                 className="w-96 bg-gray-300 cursor-pointer"
               />
