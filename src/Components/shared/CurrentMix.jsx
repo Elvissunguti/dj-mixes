@@ -26,10 +26,13 @@ const CurrentMix = ({
   setCurrentSong,
   isPlaying,
   onMixPlay, 
+  onNextMixClick, 
+  onPrevMixClick,
 }) => {
   const [trackProgress, setTrackProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(null);
+  const [prevMixId, setPrevMixId] = useState(null);
   
 
   const navigate = useNavigate();
@@ -120,6 +123,42 @@ const CurrentMix = ({
     audioElement.currentTime = newProgress;
   };
 
+
+  const handleNextMix = () => {
+     
+    if (prevMixId) {
+      const prevAudioElement = document.getElementById(`audio-${prevMixId}`);
+      if (prevAudioElement) {
+        prevAudioElement.pause();
+        setCurrentSong("pause");
+        onMixPlay(null);
+      }
+    }
+
+    // Notify the parent component to switch to the next mix
+    onNextMixClick();
+  };
+
+  const handlePrevMix = () => {
+    // Pause the previously playing mix (if any)
+    if (prevMixId) {
+      const prevAudioElement = document.getElementById(`audio-${prevMixId}`);
+      if (prevAudioElement) {
+        prevAudioElement.pause();
+        setCurrentSong("pause");
+        onMixPlay(null);
+      }
+    }
+    onPrevMixClick();
+  };
+
+  useEffect(() => {
+    // Play the mix when the mixId prop changes
+    handlePlayPause();
+    // Update the previous mix ID
+    setPrevMixId(mixId);
+  }, [mixId]);
+
   return (
     <section className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-300">
       <div className="mx-auto flex justify-between  max-w-8xl max-w-10xl">
@@ -136,11 +175,11 @@ const CurrentMix = ({
             </div>
 
             <div className="flex items-center between space-x-6 text-4xl mx-4 ">
-              <ImPrevious className="cursor-pointer" />
+              <ImPrevious className="cursor-pointer" onClick={handlePrevMix} />
               <div className="cursor-pointer" onClick={handlePlayPause}>
                 {currentSong === "play" ? <ImPause /> : <ImPlay />}
               </div>
-              <ImNext className="cursor-pointer" />
+              <ImNext className="cursor-pointer" onClick={handleNextMix} />
             </div>
 
             <div className="flex items-center">

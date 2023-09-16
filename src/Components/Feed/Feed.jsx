@@ -12,6 +12,7 @@ const Feed = () => {
   const [currentMix, setCurrentMix] = useState(null);
   const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,6 +28,8 @@ const Feed = () => {
     };
     fetchData();
   }, []);
+
+  
 
   const handleToggleFavourite = async (_id, isFavourite) => {
     try {
@@ -97,6 +100,26 @@ const Feed = () => {
   };
 
 
+   // Function to handle next mix
+   const handleNextMix = () => {
+    if (currentIndex < feedData.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      setCurrentMix(feedData[currentIndex + 1]);
+      setIsPlaying(true); 
+      
+    }
+  };
+
+  // Function to handle previous mix
+  const handlePrevMix = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+      setCurrentMix(feedData[currentIndex - 1]);
+      setIsPlaying(true); 
+    }
+  };
+
+
   return (
     <LoggedInContainer curActiveScreen="feed">
       <div className="flex items-start mb-6">
@@ -142,6 +165,8 @@ const Feed = () => {
           duration={currentMix.duration}
           isPlaying={isPlaying}
           onMixPlay={handlePlayPause}
+          onNextMixClick={handleNextMix} 
+          onPrevMixClick={handlePrevMix}
 
         />
       )}
