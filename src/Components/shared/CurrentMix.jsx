@@ -85,6 +85,13 @@ const CurrentMix = ({
       audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
   }, [mixId]);
+
+  useEffect(() => {
+    // Play the mix when the mixId prop changes
+    handlePlayPause();
+    // Update the previous mix ID
+    setPrevMixId(mixId);
+  }, [mixId]);
   
 
   
@@ -104,24 +111,29 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
   };
 
   const handlePlayPause = () => {
+    console.log("handlePlayPause called with mixId:", mixId);
+  
     const audioElement = document.getElementById(`audio-${mixId}`);
   
     if (audioElement) {
-      if (currentSong === "play") {
+      if (isPlaying) {
+        console.log("Pausing mix with mixId:", mixId);
         // If the mix is currently playing, pause it
         audioElement.pause();
         setCurrentSong("pause");
-        onMixPlay(null); // Notify the parent component that playback stopped
+        onMixPlay(mixId); 
       } else {
+        console.log("Playing mix with mixId:", mixId);
         // If the mix is paused, play it
         audioElement.play();
         setCurrentSong("play");
-        onMixPlay(mixId); // Notify the parent component that playback started
+        onMixPlay(mixId); 
       }
     } else {
       console.error(`Audio element with id "audio-${mixId}" not found.`);
     }
   };
+  
   
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -166,12 +178,7 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
     onPrevMixClick();
   };
 
-  useEffect(() => {
-    // Play the mix when the mixId prop changes
-    handlePlayPause();
-    // Update the previous mix ID
-    setPrevMixId(mixId);
-  }, [mixId]);
+
 
   return (
     <section className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-300">

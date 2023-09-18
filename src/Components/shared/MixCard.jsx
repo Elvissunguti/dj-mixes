@@ -12,7 +12,6 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     const [ isFavourite, setIsFavourite ] = useState(initialIsFavourite);
     const [ currentTime, setCurrentTime ] = useState(0);
     const [ duration, setDuration ] = useState({});
-    const [ currentlyPlayingSong, setCurrentlyPlayingSong ] = useState(null);
     
     const navigate = useNavigate();
       
@@ -95,7 +94,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
         // If the mix is already playing, pause it
         if (isPlaying) {
           audioElement.pause();
-          onMixPlay(null, audioElement.currentTime );
+          onMixPlay(mixId, audioElement.currentTime );
         } else {
           // If the mix is paused, resume playback
           audioElement.play();
