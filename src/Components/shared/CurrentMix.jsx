@@ -86,13 +86,6 @@ const CurrentMix = ({
     };
   }, [mixId]);
 
-  useEffect(() => {
-    // Play the mix when the mixId prop changes
-    handlePlayPause();
-    // Update the previous mix ID
-    setPrevMixId(mixId);
-  }, [mixId]);
-  
 
   
 
@@ -116,18 +109,18 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
     const audioElement = document.getElementById(`audio-${mixId}`);
   
     if (audioElement) {
-      if (isPlaying) {
+      if (currentSong === "play") {
         console.log("Pausing mix with mixId:", mixId);
         // If the mix is currently playing, pause it
         audioElement.pause();
         setCurrentSong("pause");
-        onMixPlay(mixId); 
+        onMixPlay(mixId, audioElement.currentTime, false); 
       } else {
         console.log("Playing mix with mixId:", mixId);
         // If the mix is paused, play it
         audioElement.play();
         setCurrentSong("play");
-        onMixPlay(mixId); 
+        onMixPlay(mixId, audioElement.currentTime, true); 
       }
     } else {
       console.error(`Audio element with id "audio-${mixId}" not found.`);
@@ -152,30 +145,13 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
 
 
   const handleNextMix = () => {
-     
-    if (prevMixId) {
-      const prevAudioElement = document.getElementById(`audio-${prevMixId}`);
-      if (prevAudioElement) {
-        prevAudioElement.pause();
-        setCurrentSong("pause");
-        onMixPlay(null);
-      }
-    }
-
+    onPrevMixClick(prevMixId); // Pause the current mix when going to the next mix
     onNextMixClick();
   };
 
   const handlePrevMix = () => {
-    // Pause the previously playing mix (if any)
-    if (prevMixId) {
-      const prevAudioElement = document.getElementById(`audio-${prevMixId}`);
-      if (prevAudioElement) {
-        prevAudioElement.pause();
-        setCurrentSong("pause");
-        onMixPlay(null);
-      }
-    }
-    onPrevMixClick();
+    onNextMixClick(); // Pause the current mix when going to the previous mix
+    onPrevMixClick(prevMixId);
   };
 
 
@@ -198,7 +174,7 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
             <div className="flex items-center between space-x-6 text-4xl mx-4 ">
               <ImPrevious className="cursor-pointer" onClick={handlePrevMix} />
               <div className="cursor-pointer" onClick={handlePlayPause}>
-                {currentSong === "play" ? <ImPause /> : <ImPlay />}
+                {isPlaying && currentSong === "play" ? <ImPause /> : <ImPlay />}
               </div>
               <ImNext className="cursor-pointer" onClick={handleNextMix} />
             </div>

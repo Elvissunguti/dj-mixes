@@ -97,27 +97,48 @@ const Feed = () => {
       });
     }
   };
- 
 
-
-   // Function to handle next mix
-   const handleNextMix = () => {
+  const handleNextMix = () => {
     if (currentIndex < feedData.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      setCurrentMix(feedData[currentIndex + 1]);
-      setIsPlaying(true); 
-      
+      const nextIndex = currentIndex + 1;
+      const nextMix = feedData[nextIndex];
+  
+      if (nextMix) {
+        // Pause the currently playing mix if it's playing
+        if (isPlaying) {
+          handlePlayPause(currentlyPlayingMixId);
+        }
+  
+        // Set the next mix as the current mix and play it 
+        setCurrentIndex(nextIndex);
+        setCurrentMix(nextMix);
+        setIsPlaying(true);
+        setCurrentlyPlayingMixId(nextMix._id);
+        
+      }
     }
   };
-
-  // Function to handle previous mix
+  
   const handlePrevMix = () => {
     if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-      setCurrentMix(feedData[currentIndex - 1]);
-      setIsPlaying(true); 
+      const prevIndex = currentIndex - 1;
+      const prevMix = feedData[prevIndex];
+  
+      if (prevMix) {
+        // Pause the currently playing mix if it's playing
+        if (isPlaying) {
+          handlePlayPause(currentlyPlayingMixId);
+        }
+  
+        // Set the previous mix as the current mix and play it
+        setCurrentIndex(prevIndex);
+        setCurrentMix(prevMix);
+        setIsPlaying(true);
+        setCurrentlyPlayingMixId(prevMix._id);
+      }
     }
   };
+
 
   console.log("CurrentMix data:", currentMix);
 
