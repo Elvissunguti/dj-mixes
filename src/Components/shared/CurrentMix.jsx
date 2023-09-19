@@ -26,15 +26,13 @@ const CurrentMix = ({
   setCurrentSong,
   isPlaying,
   onMixPlay, 
-  onNextMixClick, 
-  onPrevMixClick,
+  onPlayNext, 
+  onPlayPrev,
 }) => {
   const [trackProgress, setTrackProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(null);
-  const [prevMixId, setPrevMixId] = useState(null);
   
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -144,18 +142,6 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
   };
 
 
-  const handleNextMix = () => {
-    onPrevMixClick(prevMixId); // Pause the current mix when going to the next mix
-    onNextMixClick();
-  };
-
-  const handlePrevMix = () => {
-    onNextMixClick(); // Pause the current mix when going to the previous mix
-    onPrevMixClick(prevMixId);
-  };
-
-
-
   return (
     <section className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-300">
       <div className="mx-auto flex justify-between  max-w-8xl max-w-10xl">
@@ -172,11 +158,11 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
             </div>
 
             <div className="flex items-center between space-x-6 text-4xl mx-4 ">
-              <ImPrevious className="cursor-pointer" onClick={handlePrevMix} />
+              <ImPrevious className="cursor-pointer" onClick={onPlayPrev} />
               <div className="cursor-pointer" onClick={handlePlayPause}>
                 {isPlaying && currentSong === "play" ? <ImPause /> : <ImPlay />}
               </div>
-              <ImNext className="cursor-pointer" onClick={handleNextMix} />
+              <ImNext className="cursor-pointer" onClick={onPlayNext} />
             </div>
 
             <div className="flex items-center">

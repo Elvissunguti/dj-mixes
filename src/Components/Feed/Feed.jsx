@@ -12,7 +12,7 @@ const Feed = () => {
   const [currentMix, setCurrentMix] = useState(null);
   const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +28,8 @@ const Feed = () => {
     };
     fetchData();
   }, []);
+
+
 
   
 
@@ -98,40 +100,44 @@ const Feed = () => {
     }
   };
 
-  const handleNextMix = () => {
-    if (currentIndex < feedData.length - 1) {
+  const playNextMix = () => {
+    // Pause the currently playing mix if it's playing
+    if (isPlaying && currentlyPlayingMixId) {
+      handlePlayPause(currentlyPlayingMixId);
+    }
+
+    // Find the index of the currently playing mix in the feedData array
+    const currentIndex = feedData.findIndex((item) => item._id === currentlyPlayingMixId);
+
+    if (currentIndex !== -1 && currentIndex < feedData.length - 1) {
       const nextIndex = currentIndex + 1;
       const nextMix = feedData[nextIndex];
-  
+
       if (nextMix) {
-        // Pause the currently playing mix if it's playing
-        if (isPlaying) {
-          handlePlayPause(currentlyPlayingMixId);
-        }
-  
         // Set the next mix as the current mix and play it 
-        setCurrentIndex(nextIndex);
         setCurrentMix(nextMix);
         setIsPlaying(true);
         setCurrentlyPlayingMixId(nextMix._id);
-        
       }
     }
   };
   
-  const handlePrevMix = () => {
+  // New callback function to play the previous mix
+  const playPrevMix = () => {
+    // Pause the currently playing mix if it's playing
+    if (isPlaying && currentlyPlayingMixId) {
+      handlePlayPause(currentlyPlayingMixId);
+    }
+
+    // Find the index of the currently playing mix in the feedData array
+    const currentIndex = feedData.findIndex((item) => item._id === currentlyPlayingMixId);
+
     if (currentIndex > 0) {
       const prevIndex = currentIndex - 1;
       const prevMix = feedData[prevIndex];
-  
+
       if (prevMix) {
-        // Pause the currently playing mix if it's playing
-        if (isPlaying) {
-          handlePlayPause(currentlyPlayingMixId);
-        }
-  
         // Set the previous mix as the current mix and play it
-        setCurrentIndex(prevIndex);
         setCurrentMix(prevMix);
         setIsPlaying(true);
         setCurrentlyPlayingMixId(prevMix._id);
@@ -187,8 +193,8 @@ const Feed = () => {
           currentTime={currentMix.currentTime}
           isPlaying={isPlaying}
           onMixPlay={handlePlayPause}
-          onNextMixClick={handleNextMix} 
-          onPrevMixClick={handlePrevMix}
+          onPlayNext={playNextMix} 
+          onPlayPrev={playPrevMix}
 
         />
       )}
