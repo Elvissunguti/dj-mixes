@@ -209,6 +209,34 @@ router.get(
     }
    });
 
+   router.delete("/deleteMix/:mixId",
+   passport.authenticate("jwt", {session: false}), 
+   async(req, res) => {
+    try{
+
+      const userId = req.user._id;
+
+      const mixIdToDelete = req.params.mixId
+
+      const mix = await Mix.findById(mixIdToDelete);
+
+      if(!mix){
+        return res.json({ error: "Mix not found"})
+      }
+
+      if (mix.userId.toString() !== userId.toString()) {
+        return res.status(403).json({ error: "Unauthorized to delete this Mix" });
+      }
+
+      await Mix.deleteOne({ _id: mixIdToDelete });
+      return res.status(200).json({ message: "Mix deleted successfully" });
+
+    } catch(error) {
+      console.error("Error deleting mix", error);
+      return res.status(500).json({error: "Failed to delete Mix"})
+    }
+   });
+
    
 
 
