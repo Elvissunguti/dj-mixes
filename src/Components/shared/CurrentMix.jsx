@@ -33,6 +33,7 @@ const CurrentMix = ({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(null);
   
+  
   const navigate = useNavigate();
 
   useEffect(() => {
