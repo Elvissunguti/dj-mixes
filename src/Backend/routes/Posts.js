@@ -84,4 +84,31 @@ async (req, res) => {
     }
 })
 
+router.delete("/deletePost/:postId", 
+passport.authenticate("jwt", { session: false}),
+async(req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const postIdToDelete = req.params.postId;
+
+        const post = await Post.findById(postIdToDelete);
+
+        if(!post){
+            return res.json({ error: "Post not Found"})
+        };
+
+        if(post.userId.toString() !== userId.toString()){
+            return res.json({ error : "Unauthorized to delete this post"})
+        };
+        
+        await Post.deleteOne({ _id: postIdToDelete})
+        return res.json({ message: "Post deleted Successfully"})
+
+    } catch(error) {
+        console.error("Error deleting post", error);
+        return res.json({ error: "Failed to delete post"})
+    }
+});
+
 module.exports = router;
