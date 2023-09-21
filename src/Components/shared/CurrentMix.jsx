@@ -15,7 +15,6 @@ const CurrentMix = ({
   thumbnail,
   title,
   artist,
-  audioSrc,
   currentSong,
   setCurrentSong,
   isPlaying,
@@ -173,13 +172,13 @@ const CurrentMix = ({
       <div className="mx-auto flex justify-between  max-w-8xl max-w-10xl">
         <div className="flex  w-2/3">
           <div className="flex  ">
-            <img src={imageUrl} alt="thumbnail" className=" w-2/5" />
+            <img src={imageUrl} alt="thumbnail" className="w-2/5 h-22 " />
           </div>
           <div className="flex w-3/5">
-            <div className="font-medium text-lg flex-row mx-2">
-              <p className="hover:text-gray-300 cursor-pointer">{title}</p>
-              <p className="hover:text-gray-300 cursor-pointer" onClick={handleArtistClick}>
-                {artist}
+            <div className="font-medium text-lg flex-row px-4">
+              <p className="flex justify-start font-semibold  text-xl hover:text-gray-300 cursor-pointer" style={{ whiteSpace: 'nowrap' }} >{title}</p>
+              <p className="flex justify-start text-sm hover:text-gray-300  cursor-pointer" style={{ whiteSpace: 'nowrap' }} onClick={handleArtistClick}>
+               By {artist}
               </p>
             </div>
 
@@ -192,7 +191,7 @@ const CurrentMix = ({
             </div>
 
             <div className="flex items-center">
-              <p>{formatTime(currentTime)}</p>
+              <p className="mx-2">{formatTime(currentTime)}</p>
               <input
                 type="range"
                 min="0"
@@ -201,7 +200,7 @@ const CurrentMix = ({
                 onChange={handleTrackProgressChange}
                 className="w-96 bg-gray-300 cursor-pointer"
               />
-              <p>{formatTime(duration)}</p>
+              <p className="mx-2">{formatTime(duration)}</p>
             </div>
 
             <div className="flex flex-row relative space-x-6 items-center">

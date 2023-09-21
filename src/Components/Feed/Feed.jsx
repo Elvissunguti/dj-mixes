@@ -206,10 +206,11 @@ const Feed = () => {
         ) : (
           <p>Loading...</p>
         )}
-      </div>
+      </div>*
       {currentMix && (
         <CurrentMix
           mixId={currentMix._id}
+          userId={currentMix.userId}
           thumbnail={currentMix.thumbnail}
           title={currentMix.title}
           artist={currentMix.artist}
