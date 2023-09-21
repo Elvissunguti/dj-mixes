@@ -123,13 +123,17 @@ const Feed = () => {
         }
   
         // Set the previous mix as the current mix and play it
-        setCurrentMix(prevMix);
+        setCurrentMix({
+          ...prevMix,
+          currentSong: "play", // Set to "play" to indicate it's playing
+          currentTime: 0,
+        });
         setCurrentlyPlayingMixId(prevMix._id);
         const audioElement = document.getElementById(`audio-${prevMix._id}`);
           if (audioElement) {
             audioElement.play();
-            setIsPlaying(true);
           }
+          setIsPlaying(true);
       }
     }
   };
@@ -157,13 +161,17 @@ const Feed = () => {
         }
   
         // Set the next mix as the current mix and play it
-        setCurrentMix(nextMix);
+        setCurrentMix({
+          ...nextMix,
+          currentSong: "play", // Set to "play" to indicate it's playing
+          currentTime: 0,
+        });
         setCurrentlyPlayingMixId(nextMix._id);
         const audioElement = document.getElementById(`audio-${nextMix._id}`);
         if (audioElement) {
           audioElement.play();
-          setIsPlaying(true);
         }
+        setIsPlaying(true);
       }
     }
   };
