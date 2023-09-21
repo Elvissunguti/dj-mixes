@@ -25,6 +25,7 @@ const CurrentMix = ({
   currentSong,
   setCurrentSong,
   isPlaying,
+  setIsPlaying,
   onMixPlay, 
   onPlayNext, 
   onPlayPrev,
@@ -108,18 +109,20 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
     const audioElement = document.getElementById(`audio-${mixId}`);
   
     if (audioElement) {
-      if (currentSong === "play") {
+      if (isPlaying && currentSong === "play") {
         console.log("Pausing mix with mixId:", mixId);
         // If the mix is currently playing, pause it
         audioElement.pause();
         setCurrentSong("pause");
         onMixPlay(mixId, audioElement.currentTime, false); 
+        setIsPlaying(false)
       } else {
         console.log("Playing mix with mixId:", mixId);
         // If the mix is paused, play it
         audioElement.play();
         setCurrentSong("play");
         onMixPlay(mixId, audioElement.currentTime, true); 
+        setIsPlaying(true)
       }
     } else {
       console.error(`Audio element with id "audio-${mixId}" not found.`);
