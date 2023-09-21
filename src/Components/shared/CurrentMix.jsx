@@ -4,15 +4,9 @@ import {
   ImPause,
   ImPlay,
   ImNext,
-  ImWhatsapp,
-  ImFacebook,
 } from "react-icons/im";
-import { FcLike, FcShare } from "react-icons/fc";
-import {
-  AiOutlineTwitter,
-  AiOutlineInstagram,
-  AiOutlineMore,
-} from "react-icons/ai";
+import { AiOutlineMore } from "react-icons/ai";
+import { LuVolume2 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 
 const CurrentMix = ({
@@ -33,6 +27,12 @@ const CurrentMix = ({
   const [trackProgress, setTrackProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(null);
+  const [isVolumeIconHovered, setIsVolumeIconHovered] = useState(false);
+  const [volume, setVolume] = useState(() => {
+    // Initialize volume from localStorage or default to 100
+    return parseFloat(localStorage.getItem("volume")) || 100;
+  });
+
   
   
   const navigate = useNavigate();
@@ -87,16 +87,16 @@ const CurrentMix = ({
   }, [mixId]);
 
 
-  
+  useEffect(() => {
+    // Update the audio element's volume based on the stored volume
+    const audioElement = document.getElementById(`audio-${mixId}`);
+    if (audioElement) {
+      audioElement.volume = volume / 100; // Convert to a range between 0 and 1
+    }
+  }, [mixId, volume])
 
-const thumbnailFilename = thumbnail ? thumbnail.split("\\").pop() : "";
-const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
- 
-
+  const thumbnailFilename = thumbnail ? thumbnail.split("\\").pop() : "";
   const imageUrl = `/MixUploads/Thumbnail/${thumbnailFilename}`;
-  const audioUrl = `/MixUploads/Tracks/${audioFilename}`;
-
-  
 
   // To fetch the profile of an artist in a mix
   const handleArtistClick = () => {
@@ -145,6 +145,28 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
     audioElement.currentTime = newProgress;
   };
 
+  const handleVolumeIconHover = () => {
+    setIsVolumeIconHovered(true);
+  };
+
+  const handleVolumeIconLeave = () => {
+    setIsVolumeIconHovered(false);
+  };
+
+  const handleVolumeChange = (event) => {
+    const newVolume = parseFloat(event.target.value);
+    setVolume(newVolume);
+
+    // Update the audio element's volume based on the new value  for all mixes
+    const audioElements = document.querySelectorAll('[id^="audio-"]');
+    audioElements.forEach((audioElement) => {
+      audioElement.volume = newVolume / 100; 
+    });
+
+    // Save the volume setting to localStorage
+    localStorage.setItem("volume", newVolume);
+  };
+
 
   return (
     <section className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-300">
@@ -183,7 +205,30 @@ const audioFilename = audioSrc ? audioSrc.split("\\").pop() : "";
             </div>
 
             <div className="flex flex-row relative space-x-6 items-center">
-              <FcLike className="cursor-pointer text-4xl" />
+              <div className="bg-gray-300 cursor-pointer px-4 py-4 relative border border-gray-300"
+                            onMouseEnter={handleVolumeIconHover} 
+                            onMouseLeave={handleVolumeIconLeave}
+              >
+                
+            <LuVolume2
+              className="cursor-pointer text-4xl"
+            />
+            {isVolumeIconHovered && (
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={volume}
+                onChange={handleVolumeChange}
+                className="w-16 h-10 bg-gray-300 absolute -top-5 cursor-pointer transform"
+                style={{
+                  transform: "rotate(90deg) rotate(180deg)",
+                  transformOrigin: "left",
+                }}
+              />
+            )}
+            </div>
+
               <AiOutlineMore className="cursor-pointer text-4xl" />
             </div>
           </div>
