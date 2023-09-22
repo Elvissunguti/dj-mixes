@@ -85,8 +85,83 @@ const MyMix = () => {
             ...playingMix,
             currentSong: "play",
             currentTime: 0,
-            duration: playingMix.trackDuration,
           });
+        }
+      };
+
+      const playPrevMix = () => {
+        if (!currentMix) {
+          // If no mix is currently set as the currentMix, return or do nothing
+          return;
+        }
+      
+        const currentIndex = mixData.findIndex((item) => item._id === currentMix._id);
+      
+        if (currentIndex > 0) {
+          const prevIndex = currentIndex - 1;
+          const prevMix = mixData[prevIndex];
+      
+          if (prevMix) {
+            // Pause the current mix if it is playing
+            if (isPlaying) {
+              setIsPlaying(false);
+              const audioElement = document.getElementById(`audio-${currentMix._id}`);
+              if (audioElement) {
+                audioElement.pause();
+              }
+            }
+      
+            // Set the previous mix as the current mix and play it
+            setCurrentMix({
+              ...prevMix,
+              currentSong: "play", 
+              currentTime: 0,
+            });
+            setCurrentlyPlayingMixId(prevMix._id);
+            const audioElement = document.getElementById(`audio-${prevMix._id}`);
+              if (audioElement) {
+                audioElement.play();
+              }
+              setIsPlaying(true);
+          }
+        }
+      };
+      
+      const playNextMix = () => {
+        if (!currentMix) {
+          // If no mix is currently set as the currentMix, return or do nothing
+          return;
+        }
+      
+        const currentIndex = mixData.findIndex((item) => item._id === currentMix._id);
+      
+        if (currentIndex !== -1 && currentIndex < mixData.length - 1) {
+          const nextIndex = currentIndex + 1;
+          const nextMix = mixData[nextIndex];
+      
+          if (nextMix) {
+            // Pause the current mix if it is playing
+            if (isPlaying) {
+              setIsPlaying(false);
+              const audioElement = document.getElementById(`audio-${currentMix._id}`);
+              if (audioElement) {
+                audioElement.pause();
+              }
+            }
+      
+            // Set the next mix as the current mix and play it
+            setCurrentMix({
+              ...nextMix,
+              currentSong: "play", 
+              currentTime: 0,
+            });
+            setCurrentlyPlayingMixId(nextMix._id);
+            const audioElement = document.getElementById(`audio-${nextMix._id}`);
+            if (audioElement) {
+              audioElement.play();
+            }
+            setIsPlaying(true);
+          }
         }
       };
 
@@ -123,6 +198,7 @@ const MyMix = () => {
         {currentMix && (
           <CurrentMix
           mixId={currentMix._id}
+          userId={currentMix.userId}
           thumbnail={currentMix.thumbnail}
           title={currentMix.title}
           artist={currentMix.artist}
@@ -135,6 +211,8 @@ const MyMix = () => {
           duration={currentMix.duration}
           isPlaying={isPlaying}
           onMixPlay={handlePlayPause}
+          onPlayNext={playNextMix} 
+          onPlayPrev={playPrevMix}
 
           />
         )}

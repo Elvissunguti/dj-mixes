@@ -125,7 +125,7 @@ const Feed = () => {
         // Set the previous mix as the current mix and play it
         setCurrentMix({
           ...prevMix,
-          currentSong: "play", // Set to "play" to indicate it's playing
+          currentSong: "play", 
           currentTime: 0,
         });
         setCurrentlyPlayingMixId(prevMix._id);
@@ -163,7 +163,7 @@ const Feed = () => {
         // Set the next mix as the current mix and play it
         setCurrentMix({
           ...nextMix,
-          currentSong: "play", // Set to "play" to indicate it's playing
+          currentSong: "play", 
           currentTime: 0,
         });
         setCurrentlyPlayingMixId(nextMix._id);
@@ -206,7 +206,7 @@ const Feed = () => {
         ) : (
           <p>Loading...</p>
         )}
-      </div>*
+      </div>
       {currentMix && (
         <CurrentMix
           mixId={currentMix._id}

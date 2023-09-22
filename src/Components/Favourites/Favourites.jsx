@@ -3,10 +3,14 @@ import LoggedInContainer from "../Containers/LoggedInContainer";
 import MixCard from "../shared/MixCard";
 import {  makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import { useEffect } from "react";
+import CurrentMix from "../shared/CurrentMix";
 
 const Favourites = () => {
 
     const [ favouriteData, setFavouriteData ] = useState([]);
+    const [currentMix, setCurrentMix] = useState(null);
+    const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -77,6 +81,102 @@ const Favourites = () => {
         }
       };
 
+      const handlePlayPause = (mixId) => {
+        if (currentlyPlayingMixId === mixId) {
+          // Pause the currently playing mix
+          setIsPlaying(false);
+          setCurrentlyPlayingMixId(null);
+        } else {
+          // Play the selected mix
+          setIsPlaying(true);
+          setCurrentlyPlayingMixId(mixId);
+          // Find the playing mix data from feedData and set it as the currentMix
+          const playingMix = favouriteData.find((item) => item._id === mixId);
+          setCurrentMix({
+            ...playingMix,
+            currentSong: "play",
+            currentTime: 0,
+          });
+        }
+      };
+
+
+      const playPrevMix = () => {
+        if (!currentMix) {
+          // If no mix is currently set as the currentMix, return or do nothing
+          return;
+        }
+      
+        const currentIndex = favouriteData.findIndex((item) => item._id === currentMix._id);
+      
+        if (currentIndex > 0) {
+          const prevIndex = currentIndex - 1;
+          const prevMix = favouriteData[prevIndex];
+      
+          if (prevMix) {
+            // Pause the current mix if it is playing
+            if (isPlaying) {
+              setIsPlaying(false);
+              const audioElement = document.getElementById(`audio-${currentMix._id}`);
+              if (audioElement) {
+                audioElement.pause();
+              }
+            }
+      
+            // Set the previous mix as the current mix and play it
+            setCurrentMix({
+              ...prevMix,
+              currentSong: "play", 
+              currentTime: 0,
+            });
+            setCurrentlyPlayingMixId(prevMix._id);
+            const audioElement = document.getElementById(`audio-${prevMix._id}`);
+              if (audioElement) {
+                audioElement.play();
+              }
+              setIsPlaying(true);
+          }
+        }
+      };
+      
+      const playNextMix = () => {
+        if (!currentMix) {
+          // If no mix is currently set as the currentMix, return or do nothing
+          return;
+        }
+      
+        const currentIndex = favouriteData.findIndex((item) => item._id === currentMix._id);
+      
+        if (currentIndex !== -1 && currentIndex < favouriteData.length - 1) {
+          const nextIndex = currentIndex + 1;
+          const nextMix = favouriteData[nextIndex];
+      
+          if (nextMix) {
+            // Pause the current mix if it is playing
+            if (isPlaying) {
+              setIsPlaying(false);
+              const audioElement = document.getElementById(`audio-${currentMix._id}`);
+              if (audioElement) {
+                audioElement.pause();
+              }
+            }
+      
+            // Set the next mix as the current mix and play it
+            setCurrentMix({
+              ...nextMix,
+              currentSong: "play", // Set to "play" to indicate it's playing
+              currentTime: 0,
+            });
+            setCurrentlyPlayingMixId(nextMix._id);
+            const audioElement = document.getElementById(`audio-${nextMix._id}`);
+            if (audioElement) {
+              audioElement.play();
+            }
+            setIsPlaying(true);
+          }
+        }
+      };
+
     return(
         <LoggedInContainer curActiveScreen="favourites">
             <div className="flex items-start mb-6">
@@ -97,12 +197,35 @@ const Favourites = () => {
                  handleToggleFavourite(item._id, item.isFavourite)
                   }
                 favouriteCount={item.favouriteCount}
+                onMixPlay={handlePlayPause}
+                currentlyPlayingMixId={currentlyPlayingMixId}
+                isPlaying={isPlaying}
             />
           ))
         ) : (
           <p>Loading...</p>
         )}
            </div>
+           {currentMix && (
+             <CurrentMix
+              mixId={currentMix._id}
+              userId={currentMix.userId}
+              thumbnail={currentMix.thumbnail}
+              title={currentMix.title}
+              artist={currentMix.artist}
+              audioSrc={currentMix.track}
+              currentSong={currentMix.currentSong}
+              setCurrentSong={(songState) =>
+                setCurrentMix({ ...currentMix, currentSong: songState })
+                }
+              currentTime={currentMix.currentTime}
+              isPlaying={isPlaying}
+              onMixPlay={handlePlayPause}
+              onPlayNext={playNextMix} 
+              onPlayPrev={playPrevMix}
+
+             />
+           )}
         </LoggedInContainer>
     )
 }

@@ -176,8 +176,8 @@ const CurrentMix = ({
           </div>
           <div className="flex w-3/5">
             <div className="font-medium text-lg flex-row px-4">
-              <p className="flex justify-start font-semibold  text-xl hover:text-gray-300 cursor-pointer" style={{ whiteSpace: 'nowrap' }} >{title}</p>
-              <p className="flex justify-start text-sm hover:text-gray-300  cursor-pointer" style={{ whiteSpace: 'nowrap' }} onClick={handleArtistClick}>
+              <p className="flex justify-start font-semibold  text-xl hover:text-gray-300 cursor-pointer whitespace-nowrap">{title}</p>
+              <p className="flex justify-start text-sm hover:text-gray-300  cursor-pointer whitespace-nowrap" onClick={handleArtistClick}>
                By {artist}
               </p>
             </div>
