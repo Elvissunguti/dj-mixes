@@ -12,6 +12,7 @@ const path = require("path");
 const postRoutes = require("./src/Backend/routes/Posts");
 const profileRoutes = require("./src/Backend/routes/Profile");
 const userRoutes = require("./src/Backend/routes/User");
+const searchRoutes = require("./src/Backend/routes/Search");
 
 
 
@@ -79,6 +80,7 @@ mongoose.connect(
  app.use("/mix", mixRoutes);
  app.use("/post", postRoutes);
  app.use("/profile", profileRoutes);
+ app.use("/search", searchRoutes);
 
       
 
