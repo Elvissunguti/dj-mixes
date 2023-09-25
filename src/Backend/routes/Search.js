@@ -19,7 +19,7 @@ async(req, res) => {
             users: userResults,
           };
 
-          res.json(results);
+          res.json({ data: results });
 
     } catch (error) {
         console.error("Error searching text", error);

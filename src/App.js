@@ -18,14 +18,10 @@ import Favourites from './Components/Favourites/Favourites';
 import Historys from './Components/Historys/Historys';
 import Playlists from './Components/Playlists/Playlists';
 import PublicProfile from './Components/Profile/PublicProfile';
-import { useCookies } from 'react-cookie';
-import MixContext from './Components/Contexts/MixContext';
+
+
 
 function App() {
-  const [currentMix, setCurrentMix] = useState(null);
-  const [soundPlayed, setSoundPlayed] = useState(null);
-  const [isPaused, setIsPaused] = useState(true);
-  const [cookie, setCookie] = useCookies(['token']);
   const [loggedIn, setLoggedIn] = useState(false); 
 
   useEffect(() => {
@@ -37,16 +33,6 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <MixContext.Provider
-          value={{
-            currentMix,
-            setCurrentMix,
-            soundPlayed,
-            setSoundPlayed,
-            isPaused,
-            setIsPaused,
-          }}
-        >
           <Routes>
             {/* Public routes */}
             {loggedIn ? (
@@ -79,7 +65,6 @@ function App() {
             </>
             )}
           </Routes>
-        </MixContext.Provider>
       </Router>
     </div>
   );

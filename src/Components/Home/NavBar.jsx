@@ -26,7 +26,6 @@ const NavBar = () => {
                     const response = await makeAuthenticatedGETRequest(
                         `/search/searchText?query=${searchText}`
                     );
-                    console.log("API Response:", response.data);
                     setSearchResults(response.data)  
                 }
 
@@ -37,7 +36,6 @@ const NavBar = () => {
         fetchData();
     }, [searchText]);
 
-    console.log("Search Results:", searchResults);
 
     const handleSearchInputChange = (e) => {
         setSearchText(e.target.value);
@@ -130,29 +128,31 @@ const NavBar = () => {
             </div>
             
                   {/* Display search results */}
-      {searchResults.mixes.length > 0 && (
-        <div className="search-results">
-          <h3>Mixes</h3>
-          <ul>
-            {searchResults.mixes.map((mix) => (
-              <li key={mix._id}>
-                {mix.title}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                  {(searchResults.mixes.length > 0 || searchResults.users.length > 0) && (
+        <div className="search-results-container bg-black text-white p-4 absolute top-0 left-0 w-full z-50">
+          <div className="search-results">
+            {searchResults.mixes.length > 0 && (
+              <div className="search-results-section">
+                <h3>Mixes</h3>
+                <ul>
+                  {searchResults.mixes.map((mix) => (
+                    <li key={mix._id}>{mix.title}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-      {searchResults.users.length > 0 && (
-        <div className="search-results">
-          <h3>Users</h3>
-          <ul>
-            {searchResults.users.map((user) => (
-              <li key={user._id}>
-                {user.userName}
-              </li>
-            ))}
-          </ul>
+            {searchResults.users.length > 0 && (
+              <div className="search-results-section">
+                <h3>Users</h3>
+                <ul>
+                  {searchResults.users.map((user) => (
+                    <li key={user._id}>{user.userName}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       )}
         </nav>
