@@ -35,8 +35,8 @@ const Post = () => {
           
       if (response){
         alert("Post created successfully");  
-        navigate("/my mixes")
-        console.log("Post Created:", response.createdMix);
+        navigate("/post page")
+        console.log("Post Created:", response.createdPost);
       }
 
     } catch(error){

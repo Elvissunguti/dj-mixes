@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import NavBar from "../Home/NavBar";
-import axios from "axios";
 import { makeAuthenticatedMulterPostRequest } from "../Utils/ServerHelpers";
 import { useNavigate } from "react-router-dom";
 
@@ -76,12 +75,13 @@ const UploadMix = () => {
                     <div className=" mb-6">
                     <label htmlFor="title" className="font-medium text-xl mx-4 mb-2">Enter title of the mix</label>
                     <input
-                    type="text"
+                    
                     id="title"
                     name="title"
                     value={title}
                     placeholder="Enter The title of the mix..."
-                    onChange={(e) => setTitle(e.target.value) }
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
                     className="px-6 py-2 text-lg border border-gray-300 placeholder-gray-500 text-gray-900 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500  "
                     />
                     </div>
@@ -92,13 +92,14 @@ const UploadMix = () => {
                         <div className="">
                         <input 
                         type="file"
-                        id="thumbnailImage"
+                        id="thumbnail"
                         name="thumbnail"
                         accept="image/*"
                         className="hidden"
+                        required
                         onChange={handleImageChange}
                         />
-                        <label htmlFor="thumbnailImage" className="px-2 py-2 bg-green-200 cursor-pointer">Choose thumbnail</label>
+                        <label htmlFor="thumbnail" className="px-2 py-2 bg-green-200 cursor-pointer">Choose thumbnail</label>
                         <div className="flex items-center w-56 h-56 justify-center border border-red-500">
                           {thumbnail ? (
                             <img
@@ -122,12 +123,13 @@ const UploadMix = () => {
                         <input
                         type="file"
                         accept="audio/*"
-                        id="audio"
+                        id="track"
                         name="track"
                         onChange={handleMixChange}
                         className="hidden"
+                        required
                         />
-                        <label htmlFor="audio" className="px-2 py-3 bg-green-300 mx-2 cursor-pointer">Choose track</label>
+                        <label htmlFor="track" className="px-2 py-3 bg-green-300 mx-2 cursor-pointer">Choose track</label>
                         { track ? (
                             <div className="px-2 py-3 my-4 bg-gray-300">
                                 <p>{track.name}</p>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../Assets/logo.png";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineClose, AiOutlineSearch } from "react-icons/ai";
 import { MdAddCircleOutline } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
 import { useEffect } from "react";
@@ -15,6 +15,8 @@ const NavBar = () => {
     const [ isOpen, setIsOpen ] = useState(false);
     const [openAvatar, setOpenAvatar] = useState(false);
     const [searchResults, setSearchResults] = useState({ mixes: [], users: [] });
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isSearchInputClicked, setIsSearchInputClicked] = useState(false);
 
 
     useEffect(() => {
@@ -46,6 +48,10 @@ const NavBar = () => {
        
       };
 
+      const handleInputClick = () => {
+        setIsExpanded(true);
+      };
+
       if (searchResults === null) {
         return <div>Loading...</div>;
       };
@@ -63,7 +69,7 @@ const NavBar = () => {
                          className="w-auto h-20 flex cursor-pointer" />
                          </Link>
                     </div>
-                    <div className="flex items-center  px-5 bg-gray-200 space-x-3  ">
+                    <div className="flex items-center  px-5 bg-gray-200 space-x-3 ">
                         <AiOutlineSearch className="text-3xl font-semibold" />
                         <form onSubmit={handleSearchSubmit}>
                         <input
@@ -72,11 +78,24 @@ const NavBar = () => {
                          className="text-xl text-white px-3 py-2 w-full bg-gray-600 rounded-none rounded-b-md border border-gray-300 placeholder-white focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                          value={searchText}
                          onChange={handleSearchInputChange}
+                         onClick={handleInputClick}
                         
                         />
                         </form>
+                        {isExpanded && (
+                          <div className="absolute top-0 right-0 mt-3 mr-3">
+                            <button
+                              className="text-gray-500 text-3xl hover:text-gray-700"
+                              onClick={() => setIsExpanded(false)}
+                            >
+                              <AiOutlineClose />
+                           </button>
+                        </div>
+                        )}
                     </div>
                 </div>
+                { !isExpanded && (
+                 <>
                 <div className="relative flex flex-col items-center justify-center ">
                     <button className="border border-green-300 flex items-center justify-center text-lg  px-2 py-2"
                     onClick={() => setIsOpen(!isOpen)}>
@@ -125,6 +144,9 @@ const NavBar = () => {
                         </div>
                     )}
                 </div>
+                </>
+                )}
+            
             </div>
             
                   {/* Display search results */}
