@@ -13,6 +13,7 @@ const postRoutes = require("./src/Backend/routes/Posts");
 const profileRoutes = require("./src/Backend/routes/Profile");
 const userRoutes = require("./src/Backend/routes/User");
 const searchRoutes = require("./src/Backend/routes/Search");
+const playlistRoutes = require("./src/Backend/routes/Playlist");
 
 
 
@@ -81,6 +82,7 @@ mongoose.connect(
  app.use("/post", postRoutes);
  app.use("/profile", profileRoutes);
  app.use("/search", searchRoutes);
+ app.use("/playlist", playlistRoutes);
 
       
 

@@ -16,7 +16,7 @@ const NavBar = () => {
     const [openAvatar, setOpenAvatar] = useState(false);
     const [searchResults, setSearchResults] = useState({ mixes: [], users: [] });
     const [isExpanded, setIsExpanded] = useState(false);
-    const [isSearchInputClicked, setIsSearchInputClicked] = useState(false);
+    
 
 
     useEffect(() => {
@@ -60,7 +60,7 @@ const NavBar = () => {
 
 
     return(
-        <nav className="">
+        <nav className="relative">
             <div className="mx-auto flex justify-between items-center max-w-4xl max-w-7xl" >
                 <div className="flex ">
                     <div className="">
@@ -75,7 +75,9 @@ const NavBar = () => {
                         <input
                          type="text"
                          placeholder="Search"
-                         className="text-xl text-white px-3 py-2 w-full bg-gray-600 rounded-none rounded-b-md border border-gray-300 placeholder-white focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                         className={`${
+                          isExpanded ? "w-96" : "w-80"
+                        } text-xl text-white px-3 py-2 bg-gray-600 rounded-none rounded-b-md border border-gray-300 placeholder-white focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500`}
                          value={searchText}
                          onChange={handleSearchInputChange}
                          onClick={handleInputClick}
@@ -148,10 +150,11 @@ const NavBar = () => {
                 )}
             
             </div>
-            
+            { isExpanded && (
+              <>
                   {/* Display search results */}
                   {(searchResults.mixes.length > 0 || searchResults.users.length > 0) && (
-        <div className="search-results-container bg-black text-white p-4 absolute top-0 left-0 w-full z-50">
+        <div className="absolute bg-black text-white p-4 absolute left-0 w-full h-screen overflow-auto z-50">
           <div className="search-results">
             {searchResults.mixes.length > 0 && (
               <div className="search-results-section">
@@ -177,6 +180,9 @@ const NavBar = () => {
           </div>
         </div>
       )}
+      </>
+            )}
+              
         </nav>
     )
 }

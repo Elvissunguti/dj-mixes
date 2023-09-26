@@ -6,13 +6,6 @@ const Playlist = new mongoose.Schema({
         type: String,
         required: true,
     },
-   
-    user: {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-    },
-    // 1. Playlist mein songs kaunse hain
-    // 2. Playlist collaborators
     mix: [
         {
             type: mongoose.Types.ObjectId,

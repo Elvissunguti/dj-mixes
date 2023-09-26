@@ -23,7 +23,13 @@ const User = new mongoose.Schema({
     favouredMixes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Mix"
-    }]
+    }],
+    playlists: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Playlist", 
+        },
+    ],
 });
 
 const UserModel = mongoose.model("User", User);
