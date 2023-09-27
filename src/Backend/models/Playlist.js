@@ -6,6 +6,10 @@ const Playlist = new mongoose.Schema({
         type: String,
         required: true,
     },
+    userId:{
+        type: String,
+        required: true
+    },
     mix: [
         {
             type: mongoose.Types.ObjectId,
