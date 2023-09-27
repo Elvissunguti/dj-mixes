@@ -94,9 +94,37 @@ async(req, res) => {
      return res.json({ message: "Mixes fetched successfully", mixes });
 
     } catch(error){
-        console.error("Could not fetch songs from playlist")
+        console.error("Could not fetch songs from playlist", error)
         return res.json({ error: "Error getting mixes from playlist"})
     }
 });
+
+router.delete("/deletePlaylistMixes/:playlistId",
+passport.authenticate("jwt", {session: false}),
+async(req, res) => {
+    try{
+      const userId = req.user._id;
+      const playlistId = req.params.playlistId;
+
+      const playlist = await Playlist.findOne({ _id : playlistId, userId});
+
+      if(!playlist){
+        return res.json({error: "Playlist not found"});
+      }
+      
+      const mixesToDelete = req.body.mixesToDelete;
+
+      await Playlist.updateOne(
+        { _id: playlistId },
+        { $pull: { mix: { $in: mixesToDelete } } }
+      );
+      
+      return res.json({ message: "Mixes deleted from playlist successfully" });
+
+    } catch(error){
+        console.error("Could not delete mixes from playlist", error);
+        return res.json({ error : "Error deleting mixes from playlist"})
+    }
+})
 
 module.exports = router
