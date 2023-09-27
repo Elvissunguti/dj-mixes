@@ -125,6 +125,31 @@ async(req, res) => {
         console.error("Could not delete mixes from playlist", error);
         return res.json({ error : "Error deleting mixes from playlist"})
     }
-})
+});
+
+router.delete("/deletePlaylist/:playlistId",
+passport.authenticate("jwt", {session: false}),
+async(req, res) => {
+    try{
+
+        const userId = req.user._id;
+
+        const playlistId = req.params.playlistId;
+
+        const playlist = await Playlist.findOne({ _id: playlistId, userId});
+
+        if(!playlist){
+            return res.json({ error: "Playlist not found"})
+        };
+
+        await Playlist.deleteOne({ _id: playlistId});
+
+        return res.json({ message: "Playlist deleted successfully" });
+
+    } catch(error){
+        console.error("Could not delete Playlist", error);
+        return res.json({ message: "Error deleting playlist"});
+    }
+});
 
 module.exports = router
