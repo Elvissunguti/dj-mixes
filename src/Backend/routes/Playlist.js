@@ -62,15 +62,24 @@ async(req, res) => {
 
         const userId = req.user._id;
 
-        const playlists = await Playlist.find({ userId });
+        const playlists = await Playlist.find({ userId }).populate("mix");
 
-        return res.json({ message: "Playlists fetched successfully", playlists });
+        const playlistsWithMixCounts = playlists.map((playlist) => {
+            return {
+              _id: playlist._id,
+              name: playlist.name,
+              mixCount: playlist.mix.length,
+              userName: req.user.userName,
+            };
+          })
+
+        return res.json({ data:  playlistsWithMixCounts });
 
     } catch(error){
-        console.error("Could nnot fetch playlist", error);
+        console.error("Could not fetch playlist", error);
         return res.json({error: "Error fetching playlists"});
     }
-})
+});
 
 router.get("/playlistMixes/:playlistId", 
 passport.authenticate("jwt", {session: false}),

@@ -16,6 +16,10 @@ const Playlist = new mongoose.Schema({
             ref: "Mix",
         },
     ],
+    mixCount: {
+        type: Number,
+        default: 0,
+    },
 });
 
 const PlaylistModel = mongoose.model("Playlist", Playlist);

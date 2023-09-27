@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
@@ -48,6 +48,7 @@ function App() {
               <Route path="/uploadMix" element={<UploadMix />} />
               <Route path='/profilepage' element={<ProfilePage />} />
               <Route path="/public profile" element={<PublicProfile /> } />
+              <Route path="/playlists" element={<Playlists />} />
               
               <Route path="/*" element={<NotFound />} />
               
