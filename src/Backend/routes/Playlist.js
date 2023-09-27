@@ -57,6 +57,42 @@ async (req, res) => {
         return res.json({error: "Error adding to playlist"});
     }
 
+});
+
+router.get("/get/playlist",
+passport.authenticate("jwt", {session: false}), 
+async(req, res) => {
+    try{
+
+        const userId = req.user._id;
+
+        const user = await User.findOne(userId).populate("playlists");
+
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+
+        const playlists = user.playlists;
+
+        return res.json({ message: "Playlists fetched successfully", playlists });
+
+    } catch(error){
+        console.error("Could nnot fetch playlist", error);
+        return res.json({error: "Error fetching playlists"});
+    }
+})
+
+router.get("/playlistMixes", 
+passport.authenticate("jwt", {session: false}),
+async(req, res) => {
+    try{
+
+    
+
+    } catch(error){
+        console.error("Could not fetch songs from playlist")
+        return res.json({ error: "Error getting mixes from playlist"})
+    }
 })
 
 module.exports = router
