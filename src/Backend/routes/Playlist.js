@@ -9,7 +9,7 @@ passport.authenticate("jwt", {session: false}),
 async(req, res) => {
     try{
 
-        const userId = req.body._id;
+        const userId = req.user._id;
 
         const newPlaylist = new Playlist({
             name: req.body.name
@@ -34,8 +34,23 @@ async(req, res) => {
 
 router.post("/addPlaylist",
 passport.authenticate("jwt", {session: false}), 
-async ( req, res) => {
+async (req, res) => {
     try{
+
+        const playlistName = req.body.name;
+
+        const mixId = req.body._id;
+
+        const playlist = await Playlist.findOne({ name: playlistName });
+
+        if(!playlist){
+            return res.json({ error: "Playlist not found"})
+        }
+
+        playlist.mix.push(mixId);
+        await playlist.save();
+
+        return res.json({ message: "Mix added to playlist successfully", playlist });
 
     } catch (error){
         console.error("Could not add to playlist", error);
@@ -43,7 +58,5 @@ async ( req, res) => {
     }
 
 })
-
-
 
 module.exports = router
