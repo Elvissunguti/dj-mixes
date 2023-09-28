@@ -11,8 +11,7 @@ import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
 
 const Profile = () => {
     const [displayHistory, setDisplayHistory] = useState(false);
-    const [profileData, setProfileData] = useState(null); // Store fetched profile data
-
+    const [profileData, setProfileData] = useState(null); 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,7 +34,7 @@ const Profile = () => {
     };
 
     if (!profileData) {
-        return <p>Loading...</p>; // or an appropriate error message
+        return <p>Loading...</p>; 
     }
    
 
