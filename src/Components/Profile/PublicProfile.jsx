@@ -56,12 +56,12 @@ const PublicProfile = () => {
 }, [userId]);
 
 if (!profileData) {
-  return <p>Loading...</p>; // or an appropriate error message
+  return <p>Loading...</p>; 
 }
 
 
   const { userName, coverPic, profilePic,  biography } = profileData;
-  console.log("profileData:", profileData)
+ 
 
   const coverImageFilename = coverPic ? coverPic.split("\\").pop() : null;
   const profilePicFilename = profilePic ? profilePic.split("\\").pop() : null;

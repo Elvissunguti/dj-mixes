@@ -8,11 +8,18 @@ import { Link } from "react-router-dom";
 import History from "../shared/History";
 import Favourite from "../shared/Favourite";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
+import Uploads from "../Upload/Uploads";
+import PublicPlaylist from "../Playlists/PublicPlaylist";
+import ListPlaylist from "../Playlists/ListPlaylist";
+
 
 const Profile = () => {
-    const [displayHistory, setDisplayHistory] = useState(false);
+    
     const [profileData, setProfileData] = useState(null); 
+    const [activeTab, setActiveTab] = useState('uploads')
+    const [isPlaylistDropdownOpen, setIsPlaylistDropdownOpen] = useState(false); 
 
+    // Get request to get the Profile of thge current User
     useEffect(() => {
         const fetchData = async () => {
             const response = await makeAuthenticatedGETRequest(
@@ -23,24 +30,25 @@ const Profile = () => {
         fetchData();
     }, []);
 
+    const renderActiveTab = () => {
+        switch (activeTab) {
+          case 'my mixes':
+            return <Uploads />;
+          case 'favorites':
+            return <Favourite />;
+          case 'history':
+            return <History />;
+          default:
+            return null;
+        }
+      };
 
-
-    const handleHistoryButtonClick = () => {
-        setDisplayHistory(true);
-    };
-
-    const handleFavouritesButtonClick = () => {
-        setDisplayHistory(false);
-    };
 
     if (!profileData) {
         return <p>Loading...</p>; 
-    }
-   
+    };
 
-    const { coverPic, profilePic, userName } = profileData;
-    console.log("profileData:", profileData);
-
+    const { userName, coverPic, profilePic } = profileData;
     
     // Convert backslashes to forward slashes and extract filenames
     const coverImageFilename = coverPic ? coverPic.split("\\").pop() : null;
@@ -49,6 +57,10 @@ const Profile = () => {
     const coverImageUrl = coverPic ? `/Profile/CoverImage/${coverImageFilename}` : null;
     const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` : null;
 
+
+    const togglePlaylistDropdown = () => {
+        setIsPlaylistDropdownOpen(!isPlaylistDropdownOpen);
+    };
 
 
     return (
@@ -116,31 +128,52 @@ const Profile = () => {
                             </div>
                         </div>
                     </div>
-                
-                <div className="w-4/5 h-full mt-44 flex flex-col overflow-auto">
-                    <div className="w-full flex flex-start">
+                    <div className="flex flex-col mt-36 relative">
+                    <div className="flex flex  ">
+                      <div className="flex space-x-4 mt-8">
                         <button
-                            className={`px-3 py-2 mx-6 text-white rounded-xl ${
-                                displayHistory ? "bg-gray-800" : "bg-gray-500"
-                                } hover:bg-gray-800 outline-none cursor-pointer`}
-                            onClick={handleHistoryButtonClick}
+                          className={`${
+                          activeTab === 'my mixes' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                          } px-4 py-2 rounded`}
+                          onClick={() => setActiveTab('my mixes')}
                         >
-                            History
+                         Shows
                         </button>
                         <button
-                            className={`px-3 py-2 text-white rounded-xl ${
-                                !displayHistory ? "bg-gray-800" : "bg-gray-500"
-                                } hover:bg-gray-800  outline-none cursor-pointer`}
-                            onClick={handleFavouritesButtonClick}
+                          className={`${
+                          activeTab === 'favorites' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                          } px-4 py-2 rounded`}
+                          onClick={() => setActiveTab('favorites')}
                         >
-                            Favourites
+                        Favorites
                         </button>
+                        <button
+                          className={`${
+                          activeTab === 'history' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                          } px-4 py-2 rounded`}
+                          onClick={() => setActiveTab('history')}
+                        >
+                        History
+                        </button>
+
+                        <button
+                          onClick={togglePlaylistDropdown}
+                          className="bg-blue-500    text-white px-4 py-2 rounded"
+                          
+                        >
+                            Playlist
+                        </button>
+                        
+                        
+                        </div>
+                        <ListPlaylist isDropdownOpen={isPlaylistDropdownOpen} className="absolute left-0 ml-8" />
                     </div>
-                    <div className="mt-4">
-                        { displayHistory ? <History /> : <Favourite />}
-                    </div>
-                    
-                </div>
+                    <div className="">
+                        
+                        <div className="mt-8 ">{renderActiveTab()}</div>
+                        </div>
+                        </div>
+                                    
             </div>
             </div>
         </section>
