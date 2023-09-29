@@ -2,8 +2,9 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
+import PublicPlaylist from "./PublicPlaylist";
 
-const ListPlaylist = ({ isDropdownOpen }) => {
+const ListPlaylist = ({ isDropdownOpen, onPlaylistClick }) => {
 
     const [ playlists, setPlaylist ] = useState([]);
 
@@ -30,10 +31,14 @@ const ListPlaylist = ({ isDropdownOpen }) => {
             {isDropdownOpen && (
                 <div className="dropdown">
                     <ul>
-                        {playlists.map((playlist, index) => (
-                            <li key={index} className="flex  justify-between">
+                        {playlists.map((playlist) => (
+                            <li
+                               key={playlist._id}
+                               className="flex  justify-between"
+                               onClick={() => onPlaylistClick(playlist._id)}>
                                 <p>{playlist.name}</p>
                                 <p className="ml-8">{playlist.mixCount}</p>
+                                
                             </li>
                         ))}
                     </ul>

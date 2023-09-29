@@ -18,6 +18,7 @@ const Profile = () => {
     const [profileData, setProfileData] = useState(null); 
     const [activeTab, setActiveTab] = useState('uploads')
     const [isPlaylistDropdownOpen, setIsPlaylistDropdownOpen] = useState(false); 
+    const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
 
     // Get request to get the Profile of thge current User
     useEffect(() => {
@@ -61,6 +62,12 @@ const Profile = () => {
     const togglePlaylistDropdown = () => {
         setIsPlaylistDropdownOpen(!isPlaylistDropdownOpen);
     };
+
+    
+  const handlePlaylistClick = (playlistId) => {
+    // Set the selected playlist ID when a playlist is clicked
+    setSelectedPlaylistId(playlistId);
+  };
 
 
     return (
@@ -166,7 +173,14 @@ const Profile = () => {
                         
                         
                         </div>
-                        <ListPlaylist isDropdownOpen={isPlaylistDropdownOpen} className="absolute left-0 ml-8" />
+                        <ListPlaylist 
+                           isDropdownOpen={isPlaylistDropdownOpen} 
+                           onPlaylistClick={handlePlaylistClick} 
+                           className="absolute left-0 ml-8" />
+
+                        {selectedPlaylistId && (
+                           <PublicPlaylist playlistId={selectedPlaylistId} />
+                        )}
                     </div>
                     <div className="">
                         

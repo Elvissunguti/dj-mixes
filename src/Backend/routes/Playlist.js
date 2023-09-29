@@ -2,9 +2,9 @@ const express = require("express");
 const passport = require("passport");
 const router = express.Router();
 const Playlist = require("../models/Playlist");
-const User = require("../models/User");
 const Mix = require("../models/Mix");
 
+// create a playlist
 router.post("/createPlaylist",
 passport.authenticate("jwt", {session: false}), 
 async(req, res) => {
@@ -28,6 +28,7 @@ async(req, res) => {
     }
 })
 
+//  add a mix to a playlist
 router.post("/addPlaylist",
 passport.authenticate("jwt", {session: false}), 
 async (req, res) => {
@@ -55,6 +56,7 @@ async (req, res) => {
 
 });
 
+// get playlist of the current user
 router.get("/get/playlist",
 passport.authenticate("jwt", {session: false}), 
 async(req, res) => {
@@ -81,6 +83,7 @@ async(req, res) => {
     }
 });
 
+// Get songs in a playlist
 router.get("/playlistMixes/:playlistId", 
 passport.authenticate("jwt", {session: false}),
 async(req, res) => {
@@ -92,6 +95,8 @@ async(req, res) => {
 
      const playlist = await Playlist.findOne({ _id: playlistId, userId});
 
+     const playlistName = playlist.name;
+
      if(!playlist){
         return res.json({ error: "Playlist not found"})
      }
@@ -100,7 +105,22 @@ async(req, res) => {
 
      const mixes = await Mix.find({ _id: {$in: mixIds}});
 
-     return res.json({ message: "Mixes fetched successfully", mixes });
+     const mixData = mixes.map((mix) => ({
+        thumbnail: mix.thumbnail.replace("../../../public", ""), 
+        track: mix.track.replace("../../../public", ""),
+        title: mix.title,
+        artist: mix.artist,
+        track: mix.track,
+        _id: mix._id,
+        userId: mix.userId,
+    }));
+
+     const playlistInfo = {
+        playlistName, 
+        mixData
+     }
+
+     return res.json({  data: playlistInfo });
 
     } catch(error){
         console.error("Could not fetch songs from playlist", error)
@@ -108,6 +128,8 @@ async(req, res) => {
     }
 });
 
+
+// delete a mix in a playlist
 router.delete("/deletePlaylistMixes/:playlistId",
 passport.authenticate("jwt", {session: false}),
 async(req, res) => {
@@ -136,6 +158,8 @@ async(req, res) => {
     }
 });
 
+
+// delete a playlist
 router.delete("/deletePlaylist/:playlistId",
 passport.authenticate("jwt", {session: false}),
 async(req, res) => {
