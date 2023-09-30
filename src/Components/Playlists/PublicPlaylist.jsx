@@ -6,7 +6,10 @@ import MixCard from "../shared/MixCard";
 
 const PublicPlaylist = ({ playlistId }) => {
 
-    const [ playlistMixes, setPlaylistMixes ] = useState([]);
+  const [playlistData, setPlaylistData] = useState({
+    playlistName: "",
+    mixData: [],
+  });
     const [ currentMix, setCurrentMix ] = useState(null);
     const [ currentlyPlayingMixId, setCurrentlyPlayingMixId ] = useState(null);
     const [ isPlaying, setIsPlaying ] = useState(false);
@@ -17,7 +20,7 @@ const PublicPlaylist = ({ playlistId }) => {
             const response = await makeAuthenticatedGETRequest(
                 `/playlist/playlistMixes/${playlistId}`,
             );
-               setPlaylistMixes(response.data)
+                setPlaylistData(response.data);
             } catch (error){
                 console.error("Error fetching mixes from the playlist", error);
             }
@@ -34,8 +37,8 @@ const PublicPlaylist = ({ playlistId }) => {
             await addFavourite(_id);
           }
           // No need to fetch data again, just update the state with the changed data
-          setPlaylistMixes((prevPlaylistMixes) =>
-            prevPlaylistMixes.map((item) =>
+          setPlaylistData((prevPlaylistData) =>
+            prevPlaylistData.map((item) =>
               item._id === _id ? { ...item, isFavourite: !isFavourite } : item
             )
           );
@@ -84,7 +87,7 @@ const PublicPlaylist = ({ playlistId }) => {
           setIsPlaying(true);
           setCurrentlyPlayingMixId(mixId);
           // Find the playing mix data from feedData and set it as the currentMix
-          const playingMix = playlistMixes.find((item) => item._id === mixId);
+          const playingMix = playlistData.find((item) => item._id === mixId);
           setCurrentMix({
             ...playingMix,
             currentSong: "play",
@@ -100,7 +103,7 @@ const PublicPlaylist = ({ playlistId }) => {
         <section>
             <div>
                 <div>
-                    <h1>{playlistMixes.playlistName}</h1>
+                    <h1>{playlistData.playlistName}</h1>
                 </div>
                 <div>
                     <ul>
@@ -115,40 +118,30 @@ const PublicPlaylist = ({ playlistId }) => {
                 </div>
 
             </div>
-            <div>
-            
-            {playlistMixes.length > 0 ? (
-              playlistMixes.map((item, index) => (
-                <div key={index}>
-                    
-                {item.mixData.length > 0 ? (
-                  item.mixData.map((mixItem, mixIndex) => (
-                    <MixCard
-                      key={mixIndex}
-                      mixId={mixItem._id}
-                      thumbnail={mixItem.thumbnail}
-                      title={mixItem.title}
-                      artist={mixItem.artist}
-                      audioSrc={mixItem.track}
-                      userId={mixItem.userId}
-                      toggleFavourite={() =>
-                        handleToggleFavourite(item._id, item.isFavourite)
-                      }
-                      favouriteCount={item.favouriteCount}
-                      onMixPlay={handlePlayPause}
-                      currentlyPlayingMixId={currentlyPlayingMixId}
-                      isPlaying={isPlaying}
-                    />
-                  ))
-                ) : (
-                  <p>No mixes in this playlist</p>
-                )}
-              </div>
+            <div className="space-y-4 overflow-auto">
+          
+            {playlistData.mixData.length > 0 ? (
+          playlistData.mixData.map((mixItem, mixIndex) => (
+            <MixCard
+              key={mixIndex}
+              mixId={mixItem._id}
+              thumbnail={mixItem.thumbnail}
+              title={mixItem.title}
+              artist={mixItem.artist}
+              audioSrc={mixItem.track}
+              userId={mixItem.userId}
+              toggleFavourite={() =>
+                handleToggleFavourite(mixItem._id, mixItem.isFavourite)
+              }
+              favouriteCount={mixItem.favouriteCount}
+              onMixPlay={handlePlayPause}
+              currentlyPlayingMixId={currentlyPlayingMixId}
+              isPlaying={isPlaying}
+            />
           ))
         ) : (
-          <p>Loading...</p>
-        )}
-                
+          <p>No mixes in this playlist</p>
+        )}   
             </div>
         </section>
     )
