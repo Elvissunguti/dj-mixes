@@ -3,13 +3,14 @@ import { IoCreateOutline } from "react-icons/io5";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import MixCard from "../shared/MixCard";
+import CurrentMix from "../shared/CurrentMix";
 
 const PublicPlaylist = ({ playlistId }) => {
 
-  const [playlistData, setPlaylistData] = useState({
-    playlistName: "",
-    mixData: [],
-  });
+    const [playlistData, setPlaylistData] = useState({
+       playlistName: "",
+       mixData: [],
+     });
     const [ currentMix, setCurrentMix ] = useState(null);
     const [ currentlyPlayingMixId, setCurrentlyPlayingMixId ] = useState(null);
     const [ isPlaying, setIsPlaying ] = useState(false);
@@ -37,11 +38,12 @@ const PublicPlaylist = ({ playlistId }) => {
             await addFavourite(_id);
           }
           // No need to fetch data again, just update the state with the changed data
-          setPlaylistData((prevPlaylistData) =>
-            prevPlaylistData.map((item) =>
+          setPlaylistData((prevPlaylistData) => ({
+            ...prevPlaylistData,
+            mixData: prevPlaylistData.mixData.map((item) =>
               item._id === _id ? { ...item, isFavourite: !isFavourite } : item
-            )
-          );
+            ),
+          }));
         } catch (error) {
           console.error("Error toggling favourite:", error);
         }
@@ -87,7 +89,7 @@ const PublicPlaylist = ({ playlistId }) => {
           setIsPlaying(true);
           setCurrentlyPlayingMixId(mixId);
           // Find the playing mix data from feedData and set it as the currentMix
-          const playingMix = playlistData.find((item) => item._id === mixId);
+          const playingMix = playlistData.mixData.find((item) => item._id === mixId);
           setCurrentMix({
             ...playingMix,
             currentSong: "play",
@@ -95,6 +97,83 @@ const PublicPlaylist = ({ playlistId }) => {
           });
         }
       };
+
+      const playPrevMix = () => {
+        if (!currentMix) {
+          // If no mix is currently set as the currentMix, return or do nothing
+          return;
+        }
+      
+        const currentIndex = playlistData.mixData.findIndex((item) => item._id === currentMix._id);
+      
+        if (currentIndex > 0) {
+          const prevIndex = currentIndex - 1;
+          const prevMix = playlistData.mixData[prevIndex];
+      
+          if (prevMix) {
+            // Pause the current mix if it is playing
+            if (isPlaying) {
+              setIsPlaying(false);
+              const audioElement = document.getElementById(`audio-${currentMix._id}`);
+              if (audioElement) {
+                audioElement.pause();
+              }
+            }
+      
+            // Set the previous mix as the current mix and play it
+            setCurrentMix({
+              ...prevMix,
+              currentSong: "play", 
+              currentTime: 0,
+            });
+            setCurrentlyPlayingMixId(prevMix._id);
+            const audioElement = document.getElementById(`audio-${prevMix._id}`);
+              if (audioElement) {
+                audioElement.play();
+              }
+              setIsPlaying(true);
+          }
+        }
+      };
+      
+      const playNextMix = () => {
+        if (!currentMix) {
+          // If no mix is currently set as the currentMix, return or do nothing
+          return;
+        }
+      
+        const currentIndex = playlistData.mixData.findIndex((item) => item._id === currentMix._id);
+      
+        if (currentIndex !== -1 && currentIndex < playlistData.mixData.length - 1) {
+          const nextIndex = currentIndex + 1;
+          const nextMix = playlistData.mixData[nextIndex];
+      
+          if (nextMix) {
+            // Pause the current mix if it is playing
+            if (isPlaying) {
+              setIsPlaying(false);
+              const audioElement = document.getElementById(`audio-${currentMix._id}`);
+              if (audioElement) {
+                audioElement.pause();
+              }
+            }
+      
+            // Set the next mix as the current mix and play it
+            setCurrentMix({
+              ...nextMix,
+              currentSong: "play", 
+              currentTime: 0,
+            });
+            setCurrentlyPlayingMixId(nextMix._id);
+            const audioElement = document.getElementById(`audio-${nextMix._id}`);
+            if (audioElement) {
+              audioElement.play();
+            }
+            setIsPlaying(true);
+          }
+        }
+      };
+      
 
       
 
@@ -143,6 +222,28 @@ const PublicPlaylist = ({ playlistId }) => {
           <p>No mixes in this playlist</p>
         )}   
             </div>
+            <div>
+            {currentMix && (
+        <CurrentMix
+          mixId={currentMix._id}
+          userId={currentMix.userId}
+          thumbnail={currentMix.thumbnail}
+          title={currentMix.title}
+          artist={currentMix.artist}
+          audioSrc={currentMix.track}
+          currentSong={currentMix.currentSong}
+          setCurrentSong={(songState) =>
+            setCurrentMix({ ...currentMix, currentSong: songState })
+          }
+          currentTime={currentMix.currentTime}
+          isPlaying={isPlaying}
+          onMixPlay={handlePlayPause}
+          onPlayNext={playNextMix} 
+          onPlayPrev={playPrevMix}
+
+        />
+      )}
+      </div>
         </section>
     )
 }
