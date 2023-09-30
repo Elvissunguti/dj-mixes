@@ -9,8 +9,8 @@ import History from "../shared/History";
 import Favourite from "../shared/Favourite";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
 import Uploads from "../Upload/Uploads";
-import PublicPlaylist from "../Playlists/PublicPlaylist";
 import ListPlaylist from "../Playlists/ListPlaylist";
+import PlaylistMix from "../Playlists/PlaylistMix";
 
 
 const Profile = () => {
@@ -20,7 +20,7 @@ const Profile = () => {
     const [isPlaylistDropdownOpen, setIsPlaylistDropdownOpen] = useState(false); 
     const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
 
-    // Get request to get the Profile of thge current User
+    // Get request to get the Profile of the current User
     useEffect(() => {
         const fetchData = async () => {
             const response = await makeAuthenticatedGETRequest(
@@ -39,6 +39,8 @@ const Profile = () => {
             return <Favourite />;
           case 'history':
             return <History />;
+          case 'playlistMix': 
+            return selectedPlaylistId ? <PlaylistMix playlistId={selectedPlaylistId} /> : null;
           default:
             return null;
         }
@@ -163,24 +165,31 @@ const Profile = () => {
                         History
                         </button>
 
-                        <button
-                          onClick={togglePlaylistDropdown}
-                          className="bg-blue-500    text-white px-4 py-2 rounded"
-                          
-                        >
-                            Playlist
-                        </button>
-                        
-                        
-                        </div>
-                        <ListPlaylist 
-                           isDropdownOpen={isPlaylistDropdownOpen} 
-                           onPlaylistClick={handlePlaylistClick} 
-                           className="absolute left-0 ml-8" />
+                        <div className=" relative">
+                         <button className={`${
+                            activeTab === 'playlistMix' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                            } px-4 py-2 rounded`}
+                            onClick={() => {
+                            setActiveTab('playlistMix');
+                            togglePlaylistDropdown();
+                         }}>
+                          Playlist
+                         </button>
+                          {isPlaylistDropdownOpen && (
+                             <div className="absolute left-0 mt-2 bg-green-400 w-36">
+                                <ListPlaylist
+                                    isDropdownOpen={isPlaylistDropdownOpen}
+                                    onPlaylistClick={(playlistId) => {
+                                    togglePlaylistDropdown();
+                                    handlePlaylistClick(playlistId);
+                                     }}
+                                     className="px-6"
 
-                        {selectedPlaylistId && (
-                           <PublicPlaylist playlistId={selectedPlaylistId} />
-                        )}
+                                />
+                             </div>
+                           )}
+                        </div>
+                        </div>
                     </div>
                     <div className="">
                         

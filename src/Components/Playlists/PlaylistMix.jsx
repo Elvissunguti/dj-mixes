@@ -5,7 +5,7 @@ import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Ut
 import MixCard from "../shared/MixCard";
 import CurrentMix from "../shared/CurrentMix";
 
-const PublicPlaylist = ({ playlistId }) => {
+const PlaylistMix = ({ playlistId }) => {
 
     const [playlistData, setPlaylistData] = useState({
        playlistName: "",
@@ -180,18 +180,18 @@ const PublicPlaylist = ({ playlistId }) => {
 
     return(
         <section>
-            <div>
+            <div className="flex justify-between">
                 <div>
-                    <h1>{playlistData.playlistName}</h1>
+                    <h1 className="font-bold text-xl">{playlistData.playlistName}</h1>
                 </div>
-                <div>
-                    <ul>
-                        <li>
-                            <button><MdOutlineDeleteOutline /></button>
+                <div className="flex flex-col">
+                    <ul className="flex space-x-4">
+                        <li className="text-xl">
+                            <button><MdOutlineDeleteOutline /> DELETE</button>
                             
                         </li>
-                        <li>
-                            <button><IoCreateOutline /></button>
+                        <li className="text-xl">
+                            <button><IoCreateOutline /> EDIT</button>
                         </li>
                     </ul>
                 </div>
@@ -247,4 +247,4 @@ const PublicPlaylist = ({ playlistId }) => {
         </section>
     )
 }
-export default PublicPlaylist;
+export default PlaylistMix;
