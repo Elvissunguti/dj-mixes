@@ -160,6 +160,39 @@ async(req, res) => {
     }
 });
 
+// router to delete a single mix from the playlist
+router.delete("/deletePlaylistMix/:playlistId/:mixId",
+passport.authenticate("jwt", {session: false}),
+async (req, res) => {
+    try{
+
+        const playlistId = req.params.playlistId;
+        const mixId = req.params.mixId;
+
+        const playlist = await Playlist.findById(playlistId);
+
+        if (!playlist){
+            return res.json({ error: "Playlist not found"})
+        };
+
+        const mixIndex = playlist.mix.findIndex((mix) => mix.toString() === mixId);
+
+        if (mixIndex === -1){
+            return  res.json({ error: "Mix not found in the playlist"})
+        };
+
+        playlist.mix.splice(mixIndex, 1);
+
+        await playlist.save();
+
+        return res.json({ message: "Mix deleted successfully from the playlist" });
+
+    } catch(error) {
+        console.error("Could not delete the mix from playlist", error);
+        return res.json({ error: "Error deleting a Mix from playlist"})
+    }
+})
+
 
 // delete a playlist
 router.delete("/deletePlaylist/:playlistId",
