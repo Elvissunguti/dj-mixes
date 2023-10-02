@@ -18,6 +18,7 @@ import Favourites from './Components/Favourites/Favourites';
 import Historys from './Components/Historys/Historys';
 import Playlists from './Components/Playlists/Playlists';
 import PublicProfile from './Components/Profile/PublicProfile';
+import Edit from './Components/Edit/Edit';
 
 
 
@@ -49,6 +50,7 @@ function App() {
               <Route path='/profilepage' element={<ProfilePage />} />
               <Route path="/public profile" element={<PublicProfile /> } />
               <Route path="/playlists" element={<Playlists />} />
+              <Route path="edit/:playlistID" element={<Edit />} />
               
               <Route path="/*" element={<NotFound />} />
               

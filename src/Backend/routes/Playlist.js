@@ -96,6 +96,7 @@ async(req, res) => {
      const playlist = await Playlist.findOne({ _id: playlistId, userId});
 
      const playlistName = playlist.name;
+     const playlistID = playlist._id;
 
      if(!playlist){
         return res.json({ error: "Playlist not found"})
@@ -116,7 +117,8 @@ async(req, res) => {
     }));
 
      const playlistInfo = {
-        playlistName, 
+        playlistName,
+        playlistID,
         mixData
      }
 

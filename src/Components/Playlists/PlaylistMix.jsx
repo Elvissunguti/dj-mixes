@@ -4,11 +4,13 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import MixCard from "../shared/MixCard";
 import CurrentMix from "../shared/CurrentMix";
+import { Link } from "react-router-dom";
 
 const PlaylistMix = ({ playlistId }) => {
 
     const [playlistData, setPlaylistData] = useState({
        playlistName: "",
+       playlistID:"",
        mixData: [],
      });
     const [ currentMix, setCurrentMix ] = useState(null);
@@ -191,7 +193,9 @@ const PlaylistMix = ({ playlistId }) => {
                             
                         </li>
                         <li className="text-xl">
+                          <Link to={`/edit/${playlistData.playlistID}`}>
                             <button><IoCreateOutline /> EDIT</button>
+                          </Link>
                         </li>
                     </ul>
                 </div>
