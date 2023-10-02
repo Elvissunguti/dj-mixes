@@ -215,23 +215,26 @@ const PlaylistMix = ({ playlistId }) => {
                     <ul className="flex space-x-4">
                         <li className="text-xl">
                           {!showDeleteConfirmation && (
-                            <button onClick={handleDeleteClick}><MdOutlineDeleteOutline /> DELETE</button>
+                            <button onClick={handleDeleteClick} className="flex  items-center border p-2 rounded-md">
+                              <MdOutlineDeleteOutline /> DELETE</button>
                           )}
               
                         </li>
-                        <li className="text-xl">
+                        <li className="flex text-xl">
                           {showDeleteConfirmation && (
-                            <button onClick={handleConfirmDelete}>CONFIRM</button>
+                            <button onClick={handleConfirmDelete} className="border bg-red-500 hover:bg-red-700 text-white p-2 rounded-md" >
+                              CONFIRM</button>
                           )}
                         </li>
                         <li className="text-xl">
                           { showDeleteConfirmation && (
-                            <button onClick={handleCancelDelete}>CANCEL</button>
+                            <button onClick={handleCancelDelete} className="border hover:text-blue-500 p-2 rounded-md">CANCEL</button>
                           )}
                         </li>
                         <li className="text-xl">
                           <Link to={`/edit/${playlistData.playlistID}`}>
-                            <button><IoCreateOutline /> EDIT</button>
+                            <button className="flex items-center  border p-2 rounded-md">
+                              <IoCreateOutline  /> EDIT</button>
                           </Link>
                         </li>
                     </ul>

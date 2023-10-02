@@ -28,12 +28,12 @@ const ListPlaylist = ({ isDropdownOpen, onPlaylistClick }) => {
                     
             {/* Check if isDropdownOpen is true before rendering the dropdown */}
             {isDropdownOpen && (
-                <div className="px-2">
+                <div className="px-2 ">
                     <ul>
                         {playlists.map((playlist) => (
                             <li
                                key={playlist._id}
-                               className="flex py-5 items-center justify-between overflow-auto"
+                               className="flex py-5 px-3 no-wrap items-center justify-between  bg-green-400 hover:bg-green-600 cursor-pointer"
                                onClick={() => onPlaylistClick(playlist._id)}>
                                 <p>{playlist.name}</p>
                                 <p className="ml-8">{playlist.mixCount}</p>

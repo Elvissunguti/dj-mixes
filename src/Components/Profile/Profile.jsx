@@ -16,7 +16,7 @@ import PlaylistMix from "../Playlists/PlaylistMix";
 const Profile = () => {
     
     const [profileData, setProfileData] = useState(null); 
-    const [activeTab, setActiveTab] = useState('uploads')
+    const [activeTab, setActiveTab] = useState('my mixes')
     const [isPlaylistDropdownOpen, setIsPlaylistDropdownOpen] = useState(false); 
     const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
 
@@ -176,7 +176,7 @@ const Profile = () => {
                           Playlist
                          </button>
                           {isPlaylistDropdownOpen && (
-                             <div className="absolute left-0 mt-2 bg-green-400 w-36">
+                             <div className="absolute left-0 mt-2 w-64 max-h-60 overflow-y-auto z-50 ">
                                 <ListPlaylist
                                     isDropdownOpen={isPlaylistDropdownOpen}
                                     onPlaylistClick={(playlistId) => {
@@ -192,7 +192,6 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className="">
-                        
                         <div className="mt-8 ">{renderActiveTab()}</div>
                         </div>
                         </div>
