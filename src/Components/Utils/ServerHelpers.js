@@ -80,6 +80,30 @@ export const makeAuthenticatedPUTRequest = async (route, body) => {
     return formattedResponse;
 };
 
+export const makeAuthenticatedDELETERequest = async (route) => {
+    const token = getToken();
+    try {
+        const response = await fetch(backendUrl + route, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Request failed with status: ${response.status}`);
+        }
+
+        return { message: "DELETE request successful" };
+    } catch (error) {
+        console.error("Request error:", error);
+        const responseText = await error.text(); 
+        console.log("Response text:", responseText);
+        return { error: "Request failed" };
+    }
+};
+
 
 const getToken = () => {
     const accessToken = document.cookie.replace(

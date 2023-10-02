@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import NavBar from "../Home/NavBar";
 import { useState } from "react";
-import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
+import { makeAuthenticatedDELETERequest, makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
 import { useParams } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import EditMixCard from "./EditMixCard";
@@ -28,6 +28,22 @@ const Edit = () => {
         fetchData();
     }, [playlistID])
 
+    const deleteMix = async (mixId) => {
+        try{
+            await makeAuthenticatedDELETERequest(
+                `/playlist/deletePlaylistMix/${playlistID}/${mixId}`
+            );
+
+            setMixPlaylist((prevMixPlaylist) => ({
+                ...prevMixPlaylist,
+                mixData: prevMixPlaylist.mixData.filter((mix) => mix._id !== mixId),
+            }))
+
+        } catch (error) {
+            console.error("Error deleting the Mix from playlist", error)
+        }
+    };
+
 
     return(
         <section>
@@ -45,8 +61,7 @@ const Edit = () => {
             <div className="mt-5 w-full">
             <ol className="list-decimal text-center list-outside">
                 { mixPlaylist.mixData.map((mix) => (
-                    
-                    <li className="my-6 text-center">
+                    <li className="my-6 text-center" key={mix._id}>
                       <div className="flex justify-between">
                         <EditMixCard
                           thumbnail={mix.thumbnail}
@@ -54,7 +69,9 @@ const Edit = () => {
                           artist={mix.artist}
                         />
                         <div className="grid content-center">
-                           <AiOutlineClose className="text-4xl"/>
+                           <AiOutlineClose
+                               className="text-4xl cursor-pointer"
+                               onClick={() => deleteMix(mix._id)}/>
                        </div>
                        </div>
                     </li>
