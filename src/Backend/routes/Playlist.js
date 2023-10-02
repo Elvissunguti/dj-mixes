@@ -131,35 +131,6 @@ async(req, res) => {
 });
 
 
-// delete a mix in a playlist
-router.delete("/deletePlaylistMixes/:playlistId",
-passport.authenticate("jwt", {session: false}),
-async(req, res) => {
-    try{
-      const userId = req.user._id;
-      const playlistId = req.params.playlistId;
-
-      const playlist = await Playlist.findOne({ _id : playlistId, userId});
-
-      if(!playlist){
-        return res.json({error: "Playlist not found"});
-      }
-      
-      const mixesToDelete = req.body.mixesToDelete;
-
-      await Playlist.updateOne(
-        { _id: playlistId },
-        { $pull: { mix: { $in: mixesToDelete } } }
-      );
-      
-      return res.json({ message: "Mixes deleted from playlist successfully" });
-
-    } catch(error){
-        console.error("Could not delete mixes from playlist", error);
-        return res.json({ error : "Error deleting mixes from playlist"})
-    }
-});
-
 // router to delete a single mix from the playlist
 router.delete("/deletePlaylistMix/:playlistId/:mixId",
 passport.authenticate("jwt", {session: false}),

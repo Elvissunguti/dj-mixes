@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IoCreateOutline } from "react-icons/io5";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
+import { makeAuthenticatedDELETERequest, makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import MixCard from "../shared/MixCard";
 import CurrentMix from "../shared/CurrentMix";
 import { Link } from "react-router-dom";
@@ -16,6 +16,7 @@ const PlaylistMix = ({ playlistId }) => {
     const [ currentMix, setCurrentMix ] = useState(null);
     const [ currentlyPlayingMixId, setCurrentlyPlayingMixId ] = useState(null);
     const [ isPlaying, setIsPlaying ] = useState(false);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -176,6 +177,30 @@ const PlaylistMix = ({ playlistId }) => {
         }
       };
       
+      const handleDeleteClick = () => {
+        setShowDeleteConfirmation(true);
+      };
+
+      const handleConfirmDelete = async () => {
+        try{
+          const response = await makeAuthenticatedDELETERequest(
+            `/playlist/deletePlaylist/${playlistId}`
+          );
+          if (response.message === "Playlist deleted successfully"){
+
+          } else {
+            console.error("Error deleting playlist:", response.message);
+          }
+        } catch (error) {
+          console.error("Error deleting playlist:", error);
+        }
+        setShowDeleteConfirmation(false);
+      }
+
+      const handleCancelDelete = () => {
+        // Close the confirmation dialog without deleting
+        setShowDeleteConfirmation(false);
+      };
 
       
 
@@ -189,8 +214,20 @@ const PlaylistMix = ({ playlistId }) => {
                 <div className="flex flex-col">
                     <ul className="flex space-x-4">
                         <li className="text-xl">
-                            <button><MdOutlineDeleteOutline /> DELETE</button>
-                            
+                          {!showDeleteConfirmation && (
+                            <button onClick={handleDeleteClick}><MdOutlineDeleteOutline /> DELETE</button>
+                          )}
+              
+                        </li>
+                        <li className="text-xl">
+                          {showDeleteConfirmation && (
+                            <button onClick={handleConfirmDelete}>CONFIRM</button>
+                          )}
+                        </li>
+                        <li className="text-xl">
+                          { showDeleteConfirmation && (
+                            <button onClick={handleCancelDelete}>CANCEL</button>
+                          )}
                         </li>
                         <li className="text-xl">
                           <Link to={`/edit/${playlistData.playlistID}`}>
