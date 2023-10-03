@@ -175,6 +175,19 @@ const Feed = () => {
       }
     }
   };
+
+
+  const  createPlaylistAndAddMix = async ({mixId, name}) => {
+    try{
+      const response = await makeAuthenticatedPOSTRequest(
+        "/playlist/createPlaylist", { mixId, name}
+      );
+      return response;
+
+    } catch (error) {
+      console.error("Error creating playlist and adding mix:", error);
+    }
+  };
   
 
   return (
@@ -200,6 +213,7 @@ const Feed = () => {
               onMixPlay={handlePlayPause}
               currentlyPlayingMixId={currentlyPlayingMixId}
               isPlaying={isPlaying}
+              createPlaylistAndAddMix={createPlaylistAndAddMix}
               
             />
           ))

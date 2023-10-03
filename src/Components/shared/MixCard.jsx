@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import { ImFacebook, ImPause, ImPlay, ImWhatsapp } from "react-icons/im";
 import { AiFillHeart, AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } from "react-icons/ai";
+import { PiMusicNotesPlusFill, PiMusicNotesPlusThin } from "react-icons/pi";
 import { FcShare } from "react-icons/fc";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { LuListMusic } from "react-icons/lu";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, createPlaylistAndAddMix }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ isFavourite, setIsFavourite ] = useState(initialIsFavourite);
     const [ currentTime, setCurrentTime ] = useState(0);
     const [ duration, setDuration ] = useState({});
+    const [addToPlaylist, setAddToPlaylist] = useState(false);
+    const [ playlistName, setPlaylistName ] = useState("");
+    const [ existingPlayList, setExistingPlaylist ] = useState([]);
     
     const navigate = useNavigate();
       
@@ -127,9 +132,44 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     audioElement.currentTime = newTime;
   };
 
+  const handleAddToPlaylistClick = () => {
+    setAddToPlaylist(!addToPlaylist);
+  };
+
+
+    const handleCreatePlaylistAndAddMix = async () => {
+    
+      try {
+        const response = await createPlaylistAndAddMix({
+          mixId,
+          name: playlistName, 
+        });
+  
+        if (response && response.playlist) {
+          console.log('Playlist created successfully:', response.playlist);
+        } else {
+          console.error('Failed to create playlist:', response.error);
+        }
+      } catch (error) {
+        console.error('Error creating playlist:', error);
+      }
+  
+      // Reset the input field and hide it
+      setPlaylistName('');
+      setAddToPlaylist(false);
+    };
+  
+    // Function to handle pressing the "Enter" key in the input field
+    const handleInputKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        // If the "Enter" key is pressed, create the playlist and add the mix
+        handleCreatePlaylistAndAddMix();
+      }
+    };
+
   const isCurrentMixPlaying = currentlyPlayingMixId === mixId;
 
-  
+
     return(
         <section className={`relative ${isCurrentMixPlaying ? "bg-gray-200" : ""}`}>
             <div className="flex border-b border-green-500  w-2/3">
@@ -174,7 +214,33 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                             <AiOutlineHeart className="text-black text-4xl cursor-pointer" />
                         )}
                         <span className="text-green-600">{favouriteCount}</span>
-                    </div>    
+                    </div>  
+                    <div>
+                      <PiMusicNotesPlusFill
+                          className="text-4xl cursor-pointer" 
+                          onClick={handleAddToPlaylistClick} 
+                      />
+                      { addToPlaylist && (
+                        <div className="relative">
+                        <input 
+                          type="text"
+                          placeholder="NEW PLAYLIST"
+                          value={playlistName}
+                          onChange={(e) => setPlaylistName(e.target.value)}
+                          onKeyPress={handleInputKeyPress}
+                          className="px-10 py-2 border border-gray-300 rounded-lg w-full z-0"
+                        />
+                          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 Z-10">
+                              <PiMusicNotesPlusThin className="w-6 h-6 text-gray-400" />
+                          </div>
+                        <div>
+                          { existingPlayList.map((playlist) => (
+                           <p><LuListMusic /> {playlist.name}</p>
+                          ))}
+                        </div>
+                        </div>
+                      )}
+                    </div>  
                         <FcShare className="cursor-pointer text-4xl" onClick={() => setOpen(!open)}/>
                     { open && (
                         <div className="absolute bg-green-500 top-full mt-2 px-2 py-3 ">

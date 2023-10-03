@@ -6,27 +6,30 @@ const Mix = require("../models/Mix");
 
 // create a playlist
 router.post("/createPlaylist",
-passport.authenticate("jwt", {session: false}), 
-async(req, res) => {
-    try{
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const mixId = req.body.mixId; 
+      const playlistName = req.body.name
 
-        const userId = req.user._id;
+      const newPlaylist = new Playlist({
+        name: playlistName,
+        userId: userId,
+        mix: [mixId],
+        
+      });
 
-        const newPlaylist = new Playlist({
-            name: req.body.name,
-            userId: userId,
-        });
+      await newPlaylist.save();
 
-        newPlaylist.mix = [];
-        await newPlaylist.save();
-
-        return res.json({ message: "Playlist created successfully", playlist: newPlaylist });
-
-    } catch (error){
-        console.error("Could not create playlist", error);
-        return res.json({ error: "Error creating a playlist"});
+      return res.json({ message: "Playlist created successfully", playlist: newPlaylist });
+    } catch (error) {
+      console.error("Could not create playlist", error);
+      return res.json({ error: "Error creating a playlist" });
     }
-})
+  }
+);
+
 
 //  add a mix to a playlist
 router.post("/addPlaylist",
