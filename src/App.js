@@ -19,6 +19,7 @@ import Historys from './Components/Historys/Historys';
 import Playlists from './Components/Playlists/Playlists';
 import PublicProfile from './Components/Profile/PublicProfile';
 import Edit from './Components/Edit/Edit';
+import UploadEdit from './Components/Upload/UploadEdit';
 
 
 
@@ -51,6 +52,7 @@ function App() {
               <Route path="/public profile" element={<PublicProfile /> } />
               <Route path="/playlists" element={<Playlists />} />
               <Route path="edit/:playlistID" element={<Edit />} />
+              <Route path="/upload edit" element={<UploadEdit />} />
               
               <Route path="/*" element={<NotFound />} />
               

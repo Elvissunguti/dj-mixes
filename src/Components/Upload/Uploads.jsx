@@ -3,6 +3,8 @@ import { useState } from "react";
 import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import MixCard from "../shared/MixCard";
 import CurrentMix from "../shared/CurrentMix";
+import { Link } from "react-router-dom";
+import { IoCreateOutline } from "react-icons/io5";
 
 const Uploads = () => {
 
@@ -168,8 +170,14 @@ const Uploads = () => {
 
     return(
         <section>
-        <div className="flex items-start mb-6">
+        <div className="flex items-start justify-between mb-6">
             <h1 className="font-bold text-xl">MY MIXES</h1>
+            <div className="text-xl">
+              <Link to="/upload edit">
+                 <button className="flex items-center  border p-2 rounded-md">
+                    <IoCreateOutline  /> EDIT</button>
+              </Link>
+            </div>
         </div>
         <div className="space-y-4 overflow-auto  ">
             {mixData.length > 0 ? (
