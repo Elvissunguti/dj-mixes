@@ -194,13 +194,13 @@ const Feed = () => {
     try{
       const response = await makeAuthenticatedGETRequest(
         "/playlist/get/playlist"
-      )
+      );
       console.log(response.data);
       setExistingPlaylists(response.data);
     } catch (error) {
       console.error("Error fetching Playlist", error)
     }
-  }
+  };
   
 
   return (

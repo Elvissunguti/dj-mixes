@@ -6,6 +6,7 @@ import { FcShare } from "react-icons/fc";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LuListMusic } from "react-icons/lu";
+import { makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
  
 
 const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, createPlaylistAndAddMix, fetchPlaylists, existingPlaylists }) => {
@@ -52,6 +53,20 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
         audioElement.removeEventListener("loadedmetadata", () => {});
       };
     }, [mixId]);
+
+
+    useEffect(() => {
+      let timeoutId;
+      if (addToPlaylist) {
+        timeoutId = setTimeout(() => {
+          setAddToPlaylist(false);
+        }, 20000); 
+      }
+  
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }, [addToPlaylist]);
 
 
 
@@ -139,7 +154,6 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     }
   };
 
-
     const handleCreatePlaylistAndAddMix = async () => {
     
       try {
@@ -173,6 +187,33 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
         handleCreatePlaylistAndAddMix();
       }
     };
+
+    const addMixToPlaylist = async (playlistId, mixId) => {
+      try {
+          // Prepare the data to be sent in the request body
+          const requestData = {
+              mixId,
+              playlistId,
+          };
+  
+          // Make a POST request to the backend route with the data in the request body
+          const response = await makeAuthenticatedPOSTRequest(
+            "/playlist/addPlaylist", requestData
+            );
+  
+          if (response && response.success) {
+
+            alert("Error adding mix to playlist");
+          } else {
+            alert("Mix added to playlist successfully"); 
+            setAddToPlaylist(false);
+
+          }
+      } catch (error) {
+          console.error("Error adding mix to playlist:", error);
+      }
+  };
+  
 
   const isCurrentMixPlaying = currentlyPlayingMixId === mixId;
 
@@ -222,34 +263,39 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                         )}
                         <span className="text-green-600">{favouriteCount}</span>
                     </div>  
-                    <div>
-                      <PiMusicNotesPlusFill
-                          className="text-4xl cursor-pointer" 
-                          onClick={handleAddToPlaylistClick} 
-                      />
-                      { addToPlaylist && (
+                    <div className="relative" >
+                       <PiMusicNotesPlusFill className="text-4xl cursor-pointer" onClick={handleAddToPlaylistClick} />
+                    {addToPlaylist && (
+                    <div className="absolute z-10 left-0 mt-2 w-60 bg-white border border-gray-300 rounded-lg shadow-lg">
                         <div className="relative">
-                        <input 
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <PiMusicNotesPlusThin className="w-6 h-6 text-gray-400" />
+                        </div>
+                        <input
                           type="text"
                           placeholder="NEW PLAYLIST"
                           value={playlistName}
                           onChange={(e) => setPlaylistName(e.target.value)}
                           onKeyPress={handleInputKeyPress}
-                          className="px-10 py-2 border border-gray-300 rounded-lg w-full z-0"
+                          className="pl-10 px-4 py-2 border-b border-gray-300 rounded-t-lg w-full focus:outline-none"
                         />
-                          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 Z-10">
-                              <PiMusicNotesPlusThin className="w-6 h-6 text-gray-400" />
-                          </div>
-                        <div>
-                          { existingPlaylists.map((playlist) => (
-                           <p key={playlist._id} className="flex  cursor-pointer">
-                            <LuListMusic /> {playlist.name}
-                            </p>
-                          ))}
+                       </div>
+                         <div className="max-h-32 overflow-y-auto">
+                             <ul>
+                               {existingPlaylists.map((playlist) => (
+                                 <li
+                                    key={playlist._id}
+                                    className="flex cursor-pointer py-2 px-4 hover:bg-gray-100"
+                                    onClick={() => addMixToPlaylist(playlist._id, mixId)}
+                                 >
+                                   <LuListMusic className="mr-2" /> {playlist.name}
+                                 </li>
+                               ))}
+                             </ul>
                         </div>
                         </div>
-                      )}
-                    </div>  
+                       )}
+                     </div>
                         <FcShare className="cursor-pointer text-4xl" onClick={() => setOpen(!open)}/>
                     { open && (
                         <div className="absolute bg-green-500 top-full mt-2 px-2 py-3 ">

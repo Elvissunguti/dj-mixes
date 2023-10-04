@@ -39,7 +39,7 @@ async (req, res) => {
 
         const playlistId = req.body.playlistId;
 
-        const mixId = req.body._id;
+        const mixId = req.body.mixId;
 
         const playlist = await Playlist.findOne({ _id: playlistId });
 
