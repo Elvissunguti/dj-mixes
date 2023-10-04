@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { LuListMusic } from "react-icons/lu";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, createPlaylistAndAddMix }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, createPlaylistAndAddMix, fetchPlaylists, existingPlaylists }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ isFavourite, setIsFavourite ] = useState(initialIsFavourite);
@@ -16,7 +16,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     const [ duration, setDuration ] = useState({});
     const [addToPlaylist, setAddToPlaylist] = useState(false);
     const [ playlistName, setPlaylistName ] = useState("");
-    const [ existingPlayList, setExistingPlaylist ] = useState([]);
+    const [ existingPlaylist, setExistingPlaylist ] = useState([]);
     
     const navigate = useNavigate();
       
@@ -134,6 +134,9 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
 
   const handleAddToPlaylistClick = () => {
     setAddToPlaylist(!addToPlaylist);
+    if(!addToPlaylist){
+      fetchPlaylists();
+    }
   };
 
 
@@ -147,6 +150,10 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
   
         if (response && response.playlist) {
           console.log('Playlist created successfully:', response.playlist);
+          setExistingPlaylist((prevPlaylists) => [
+            ...prevPlaylists,
+            response.playlist,
+          ]);
         } else {
           console.error('Failed to create playlist:', response.error);
         }
@@ -234,8 +241,10 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                               <PiMusicNotesPlusThin className="w-6 h-6 text-gray-400" />
                           </div>
                         <div>
-                          { existingPlayList.map((playlist) => (
-                           <p><LuListMusic /> {playlist.name}</p>
+                          { existingPlaylists.map((playlist) => (
+                           <p key={playlist._id} className="flex  cursor-pointer">
+                            <LuListMusic /> {playlist.name}
+                            </p>
                           ))}
                         </div>
                         </div>
