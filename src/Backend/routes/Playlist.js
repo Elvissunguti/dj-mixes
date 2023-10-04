@@ -37,11 +37,11 @@ passport.authenticate("jwt", {session: false}),
 async (req, res) => {
     try{
 
-        const playlistName = req.body.name;
+        const playlistId = req.body.playlistId;
 
         const mixId = req.body._id;
 
-        const playlist = await Playlist.findOne({ name: playlistName });
+        const playlist = await Playlist.findOne({ _id: playlistId });
 
         if(!playlist){
             return res.json({ error: "Playlist not found"})
