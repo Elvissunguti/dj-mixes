@@ -12,6 +12,7 @@ const NewUpload = () => {
     const [currentMix, setCurrentMix] = useState(null);
     const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [existingPlaylists, setExistingPlaylists] = useState([]);
 
 
     useEffect(() => {
@@ -171,6 +172,31 @@ const NewUpload = () => {
       };
 
 
+      const  createPlaylistAndAddMix = async ({mixId, name}) => {
+        try{
+          const response = await makeAuthenticatedPOSTRequest(
+            "/playlist/createPlaylist", { mixId, name}
+          );
+          return response;
+    
+        } catch (error) {
+          console.error("Error creating playlist and adding mix:", error);
+        }
+      };
+    
+      const fetchPlaylists = async () => {
+        try{
+          const response = await makeAuthenticatedGETRequest(
+            "/playlist/get/playlist"
+          );
+          console.log(response.data);
+          setExistingPlaylists(response.data);
+        } catch (error) {
+          console.error("Error fetching Playlist", error)
+        }
+      };
+
+
     return(
         <LoggedInContainer curActiveScreen="new uploads">
             <div>
@@ -194,6 +220,9 @@ const NewUpload = () => {
                   onMixPlay={handlePlayPause}
                   currentlyPlayingMixId={currentlyPlayingMixId}
                   isPlaying={isPlaying}
+                  createPlaylistAndAddMix={createPlaylistAndAddMix}
+                  fetchPlaylists={fetchPlaylists}
+                  existingPlaylists={existingPlaylists}
                 />
                 ))
              ) : (
