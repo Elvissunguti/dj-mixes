@@ -5,6 +5,7 @@ import EditPostCard from "./EditPostCard";
 import { AiOutlineClose } from "react-icons/ai";
 import { useEffect } from "react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const EditPost = () => {
 
@@ -40,7 +41,7 @@ const EditPost = () => {
                 <p className="text-xl font-light">Editing</p> 
             </div>
             <div>
-                <button className="text-xl">Back to posts</button>
+                <Link to="/profile" className="text-xl">Back to Profile</Link>
             </div>
         </div>
             <div className="mt-5 w-full">

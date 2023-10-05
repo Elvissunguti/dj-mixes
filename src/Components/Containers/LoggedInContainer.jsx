@@ -22,7 +22,7 @@ const LoggedInContainer = ({ children, curActiveScreen, }) => {
     return(
         <section>
             <NavBar />
-            <div className="mx-auto flex">
+            <div className="flex mx-auto mt-4">
                 <div className="h-full w-1/5 flex flex-col  pb-10  ">
                 <ul className="flex flex-col px-6 space-y-6 ">
                         <li>
@@ -45,10 +45,6 @@ const LoggedInContainer = ({ children, curActiveScreen, }) => {
                             <Link to="/favourites" onClick={() => handleClick(4)}  className={`flex items-center space-x-4 cursor-pointer ${active || curActiveScreen === "favourites" ? "text-green-500" : "text-blue-400"}`}>
                                 <AiOutlineHeart /><p>FAVOURITES</p></Link>
                         </li>
-                        <li>
-                            <Link to="/historys"onClick={() => handleClick(5)} className={`flex items-center space-x-4 cursor-pointer ${active === 5 || curActiveScreen === "historys" ? "text-green-500" : "text-blue-400"}`}>
-                                <SlCalender /><p>HISTORY</p></Link>
-                            </li>
                         <li>
                             <Link to="/playlists" onClick={() => handleClick(6)} className={`flex items-center space-x-4 cursor-pointer ${active === 6 || curActiveScreen === "playlists" ? "text-green-500" : "text-blue-400"}`}>
                                 <SlPlaylist /><p>PLAYLISTS</p></Link>

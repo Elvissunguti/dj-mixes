@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { makeAuthenticatedDELETERequest, makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
 import { useState } from "react";
 import NavBar from "../Home/NavBar";
+import { Link } from "react-router-dom";
 
 const UploadEdit = () => {
 
@@ -40,7 +41,7 @@ const UploadEdit = () => {
                     <p className="text-xl font-light">Editing</p> 
                 </div>
                 <div>
-                    <button className="text-xl">Back to upload</button>
+                    <Link to="/profile" className="text-xl">Back to Profile</Link>
                 </div>
             </div>
                 <div className="mt-5 w-full">

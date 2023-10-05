@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import NavBar from "../Home/NavBar";
 import { useState } from "react";
 import { makeAuthenticatedDELETERequest, makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import EditMixCard from "./EditMixCard";
 
@@ -55,7 +55,7 @@ const Edit = () => {
                     <p className="text-xl font-light ml-4">{mixPlaylist.playlistName}</p>
                 </div>
                 <div>
-                    <button className="text-xl">Back to playlist</button>
+                    <Link to="/profile" className="text-xl">Back to Profile</Link>
                 </div>
             </div>
             <div className="mt-5 w-full">
