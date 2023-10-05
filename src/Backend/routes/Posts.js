@@ -41,6 +41,47 @@ router.post("/create",
  });
 
 
+ // get all the posts of the current user
+ router.get("/get/myposts",
+ passport.authenticate("jwt", {session: false}),
+ async (req, res) => {
+    try{
+
+        const userId = req.user._id;
+
+        const posts = await Post.find({userId});
+
+        const postData = [];
+
+        // Iterate through posts and retrieve profilePics
+        for (const post of posts) {
+            // Find the profile for the user who made the post
+            const userProfile = await Profile.findOne({ userId: post.userId });
+            console.log("User Profile:", userProfile);
+
+            // Get the profilePic from the user's profile
+            const profilePic = userProfile ? userProfile.profilePic : null;
+
+            postData.push({
+                user: post.user,
+                image: post.image.replace("../../../public", ""),
+                description: post.description,
+                postDate: post.postDate,
+                postTime: post.postTime,
+                profilePic: profilePic ? profilePic.replace("../../../public", "") : null,
+            });
+        }
+        
+
+          res.json({ data: postData})
+
+    } catch (error) {
+        console.error("Error fetching my posts:", error);
+        res.json({ error: "Failed to fetch posts"})
+    }
+ });
+
+
 // get all the posts posted by anyone
 router.get("/get/posts",
 passport.authenticate("jwt", {session: false}),
@@ -73,11 +114,9 @@ async (req, res) => {
                 profilePic: profilePic ? profilePic.replace("../../../public", "") : null,
             });
         }
-        console.log(postData);
+        
         return res.json({ data: postData });
         
-
-
     } catch(error) {
         console.log(error);
         res.json({ error: "Could not fetch the posts"})

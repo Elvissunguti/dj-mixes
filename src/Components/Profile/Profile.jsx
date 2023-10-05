@@ -5,12 +5,12 @@ import { IoCreateOutline } from "react-icons/io5";
 import { BsLink45Deg } from "react-icons/bs";
 import { AiOutlineMore, AiOutlineCamera } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import History from "../shared/History";
 import Favourite from "../shared/Favourite";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
 import Uploads from "../Upload/Uploads";
 import ListPlaylist from "../Playlists/ListPlaylist";
 import PlaylistMix from "../Playlists/PlaylistMix";
+import MyPost from "../Post/MyPost";
 
 
 const Profile = () => {
@@ -37,8 +37,8 @@ const Profile = () => {
             return <Uploads />;
           case 'favorites':
             return <Favourite />;
-          case 'history':
-            return <History />;
+          case 'post':
+            return <MyPost />;
           case 'playlistMix': 
             return selectedPlaylistId ? <PlaylistMix playlistId={selectedPlaylistId} /> : null;
           default:
@@ -158,11 +158,11 @@ const Profile = () => {
                         </button>
                         <button
                           className={`${
-                          activeTab === 'history' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                          activeTab === 'post' ? 'bg-blue-500 text-white' : 'bg-white text-black'
                           } px-4 py-2 rounded`}
-                          onClick={() => setActiveTab('history')}
+                          onClick={() => setActiveTab('post')}
                         >
-                        History
+                         Posts
                         </button>
 
                         <div className=" relative">

@@ -15,7 +15,6 @@ import NewUpload from './Components/Upload/newUploads';
 import MyMix from './Components/My Mix/MyMix';
 import PostPage from './Components/Post/PostPage';
 import Favourites from './Components/Favourites/Favourites';
-import Historys from './Components/Historys/Historys';
 import Playlists from './Components/Playlists/Playlists';
 import PublicProfile from './Components/Profile/PublicProfile';
 import Edit from './Components/Edit/Edit';
@@ -45,7 +44,6 @@ function App() {
               <Route path="/post page" element={<PostPage />} />
               <Route path="/posts" element={<Post />} />
               <Route path="/favourites" element={<Favourites />} />
-              <Route path="/historys" element={<Historys />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/uploadMix" element={<UploadMix />} />
               <Route path='/profilepage' element={<ProfilePage />} />
