@@ -10,6 +10,8 @@ const MyMix = () => {
     const [currentMix, setCurrentMix] = useState(null);
     const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [existingPlaylists, setExistingPlaylists] = useState([]);
+
 
     useEffect(() => {
         const getData = async () => {
@@ -166,12 +168,37 @@ const MyMix = () => {
       };
 
 
+      const  createPlaylistAndAddMix = async ({mixId, name}) => {
+        try{
+          const response = await makeAuthenticatedPOSTRequest(
+            "/playlist/createPlaylist", { mixId, name}
+          );
+          return response;
+    
+        } catch (error) {
+          console.error("Error creating playlist and adding mix:", error);
+        }
+      };
+    
+      const fetchPlaylists = async () => {
+        try{
+          const response = await makeAuthenticatedGETRequest(
+            "/playlist/get/playlist"
+          );
+          console.log(response.data);
+          setExistingPlaylists(response.data);
+        } catch (error) {
+          console.error("Error fetching Playlist", error)
+        }
+      };
+
+
     return(
        <LoggedInContainer curActiveScreen="my mixes">
-        <div className="flex items-start mb-6">
+        <div className="flex items-start  mb-6">
             <h1 className="font-bold text-xl">MY MIXES</h1>
         </div>
-        <div className="space-y-4 overflow-auto  ">
+        <div className="space-y-4  overflow-auto  ">
             {mixData.length > 0 ? (
               mixData.map((item, index) => (
                  <MixCard 
@@ -188,7 +215,10 @@ const MyMix = () => {
                     favouriteCount={item.favouriteCount}
                     onMixPlay={handlePlayPause}
                     currentlyPlayingMixId={currentlyPlayingMixId}
-                     isPlaying={isPlaying}
+                    isPlaying={isPlaying}
+                    createPlaylistAndAddMix={createPlaylistAndAddMix}
+                    fetchPlaylists={fetchPlaylists}
+                    existingPlaylists={existingPlaylists}
                          />
                 ))
                 ) : (

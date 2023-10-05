@@ -219,7 +219,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
 
 
     return(
-        <section className={`relative ${isCurrentMixPlaying ? "bg-gray-200" : ""}`}>
+        <section className={`relative  ${isCurrentMixPlaying ? "bg-gray-200" : ""}`}>
             <div className="flex border-b border-green-500  w-2/3">
                 <div className="w-1/5">
                     <img src={imageUrl} alt=""

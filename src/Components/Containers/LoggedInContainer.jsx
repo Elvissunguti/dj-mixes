@@ -22,8 +22,8 @@ const LoggedInContainer = ({ children, curActiveScreen, }) => {
     return(
         <section>
             <NavBar />
-            <div className="flex mx-auto mt-4">
-                <div className="h-full w-1/5 flex flex-col  pb-10  ">
+            <div className="flex mx-auto  mt-4">
+                <div className=" w-1/5 flex flex-col  pb-10  ">
                 <ul className="flex flex-col px-6 space-y-6 ">
                         <li>
                             <Link to="/feed" onClick={() => handleClick(0)}  className={`flex items-center space-x-4 cursor-pointer ${active === 0 || curActiveScreen === "feed" ? "text-green-500" : "text-blue-400"}`}>
