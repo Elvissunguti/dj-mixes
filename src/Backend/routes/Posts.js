@@ -57,13 +57,12 @@ router.post("/create",
         for (const post of posts) {
             // Find the profile for the user who made the post
             const userProfile = await Profile.findOne({ userId: post.userId });
-            console.log("User Profile:", userProfile);
-
-            // Get the profilePic from the user's profile
+            
             const profilePic = userProfile ? userProfile.profilePic : null;
 
             postData.push({
                 user: post.user,
+                _id: post._id,
                 image: post.image.replace("../../../public", ""),
                 description: post.description,
                 postDate: post.postDate,
@@ -71,8 +70,6 @@ router.post("/create",
                 profilePic: profilePic ? profilePic.replace("../../../public", "") : null,
             });
         }
-        
-
           res.json({ data: postData})
 
     } catch (error) {
