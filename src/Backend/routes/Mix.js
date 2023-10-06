@@ -179,19 +179,21 @@ router.get(
 
 
    // get route to get any mix anybody has posted
-   router.get("/get/artist/:artistId",
+   router.get("/get/artist/:userId",
    passport.authenticate("jwt", {session: false}), 
    async (req, res) => {
-    const artistId = req.user._id;
+    try{
 
-    const artist = await User.findOne({ _id: artistId});
+      const userId = req.params.userId;
 
-    if(!artist){
-      return res.json({err: "Artist does not exist"})
+      const mixes = await Mix.find({userId});
+
+      return res.json({ data: mixes});
+
+    } catch (error) {
+      console.error("Error Fetching Mixes:", error);
+      return res.json({ error: "Failed to fetch mixes"});
     }
-
-    const mixes = await Mix.find({ artist: artistId});
-    return res.json({data: mixes})
    });
    
    // get router to get a mix by name
