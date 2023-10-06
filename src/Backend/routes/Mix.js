@@ -128,7 +128,7 @@ router.get("/favourited",
 passport.authenticate("jwt", {session: false}),
 async (req, res) => {
   try {
-    const userId = req.user._id; // Assuming you have user information in req.user
+    const userId = req.user._id; 
     const likedMixes = await Mix.find({ favouritedBy: userId }).exec();
     
     const mixData = likedMixes.map((mix) => ({
@@ -147,6 +147,34 @@ async (req, res) => {
     res.status(500).json({ error: "Failed to fetch liked mixes" });
   }
 });
+
+//route to get all the mixes favourited by a user
+router.get("/get/userfavourite/:userId",
+passport.authenticate("jwt", { session: false}),
+async (req, res) => {
+  try{
+
+    const userId = req.params.userId;
+
+    const favouritedMixes = await Mix.find({ favouritedBy: userId}).exec();
+
+    const mixData = favouritedMixes.map((mix) => ({
+      thumbnail: mix.thumbnail.replace("../../../public", ""), 
+      track: mix.track.replace("../../../public", ""),
+      title: mix.title,
+      artist: mix.artist,
+      track: mix.track,
+      _id: mix._id,
+      userId: mix.userId,
+  }));
+
+  return res.json({ data: mixData })
+
+  } catch (error){
+    console.error("Error fetching favourited mix of a user:", error);
+    return res.json({ error: "Failed to fetch favourited mixes"})
+  }
+})
 
 
 // get route to get all the mix i have posted
