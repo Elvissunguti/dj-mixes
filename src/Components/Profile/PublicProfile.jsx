@@ -4,11 +4,11 @@ import { Link, useLocation } from "react-router-dom";
 import NavBar from "../Home/NavBar";
 import avatar from "../Assets/avatar.png";
 import { BiLogoFacebookCircle, BiLogoInstagram, BiLogoTwitter } from "react-icons/bi";
-import Favourite from "../shared/Favourite";
 import History from "../shared/History";
 import { useEffect } from "react";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
 import PublicUploads from "../Upload/PublicUploads";
+import PublicFavourites from "../Favourites/PublicFavourites";
 
 const PublicProfile = () => {
   
@@ -32,7 +32,7 @@ const PublicProfile = () => {
       case 'my mixes':
         return <PublicUploads />;
       case 'favorites':
-        return <Favourite />;
+        return <PublicFavourites />;
       case 'history':
         return <History />;
       default:
