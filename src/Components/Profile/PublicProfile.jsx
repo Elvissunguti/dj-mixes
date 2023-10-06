@@ -6,9 +6,9 @@ import avatar from "../Assets/avatar.png";
 import { BiLogoFacebookCircle, BiLogoInstagram, BiLogoTwitter } from "react-icons/bi";
 import Favourite from "../shared/Favourite";
 import History from "../shared/History";
-import Uploads from "../Upload/Uploads";
 import { useEffect } from "react";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
+import PublicUploads from "../Upload/PublicUploads";
 
 const PublicProfile = () => {
   
@@ -30,7 +30,7 @@ const PublicProfile = () => {
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'my mixes':
-        return <Uploads />;
+        return <PublicUploads />;
       case 'favorites':
         return <Favourite />;
       case 'history':
