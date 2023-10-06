@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import avatar from "../Assets/avatar.png"
 import Logout from "../Logout/Logout";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
+import SearchMix from "../shared/SearchMix";
+import SearchUser from "../shared/SearchUser";
 
 const NavBar = () => {
 
@@ -69,21 +71,25 @@ const NavBar = () => {
                          className="w-auto h-20 flex cursor-pointer" />
                          </Link>
                     </div>
-                    <div className="flex items-center  px-5 bg-gray-200 space-x-3 ">
-                        <AiOutlineSearch className="text-3xl font-semibold" />
+                    <div className="flex items-center  px-5 space-x-3 ">
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                        <AiOutlineSearch className="text-3xl text-white font-semibold" />
+                        </div>
                         <form onSubmit={handleSearchSubmit}>
                         <input
                          type="text"
                          placeholder="Search"
                          className={`${
                           isExpanded ? "w-96" : "w-80"
-                        } text-xl text-white px-3 py-2 bg-gray-600 rounded-none rounded-b-md border border-gray-300 placeholder-white focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500`}
+                        } text-xl text-white pl-12 px-3 py-2 bg-gray-600 rounded-none rounded-b-md border border-gray-300 placeholder-white focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500`}
                          value={searchText}
                          onChange={handleSearchInputChange}
                          onClick={handleInputClick}
                         
                         />
                         </form>
+                        </div>
                         {isExpanded && (
                           <div className="absolute top-0 right-0 mt-3 mr-3">
                             <button
@@ -151,28 +157,45 @@ const NavBar = () => {
             
             </div>
             { isExpanded && (
-              <>
+              <div className=" ">
                   {/* Display search results */}
-                  {(searchResults.mixes.length > 0 || searchResults.users.length > 0) && (
-        <div className="absolute bg-black text-white p-4 absolute left-0 w-full h-screen overflow-auto z-50">
-          <div className="search-results">
+
+           {(searchResults.mixes.length > 0 || searchResults.users.length > 0) && (
+        <div className="absolute bg-black text-white p-4 absolute left-0 w-full h-fit overflow-auto z-50">
+          <div className="flex w-full">
             {searchResults.mixes.length > 0 && (
-              <div className="search-results-section">
-                <h3>Mixes</h3>
+              <div className="w-2/3 p-4">
+                <h3 className="text-xl">Mixes</h3>
                 <ul>
                   {searchResults.mixes.map((mix) => (
-                    <li key={mix._id}>{mix.title}</li>
+                    <li>
+                      <div className="my-5">
+                        <SearchMix
+                        thumbnail={mix.thumbnail}
+                        title={mix.title}
+                        artist={mix.artist}
+                        userId={mix.userId}
+                        />
+                      </div>
+                    </li>
                   ))}
                 </ul>
               </div>
             )}
 
             {searchResults.users.length > 0 && (
-              <div className="search-results-section">
-                <h3>Users</h3>
+              <div className="w-1/3 p-4">
+                <h3 className="text-xl">Users</h3>
                 <ul>
                   {searchResults.users.map((user) => (
-                    <li key={user._id}>{user.userName}</li>
+                    <li>
+                      <div className="my-5">
+                        <SearchUser 
+                        profilePic={user.profilePic}
+                        userName={user.userName}
+                        />
+                      </div>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -180,7 +203,7 @@ const NavBar = () => {
           </div>
         </div>
       )}
-      </>
+      </div>
             )}
               
         </nav>

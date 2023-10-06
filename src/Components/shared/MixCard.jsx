@@ -220,7 +220,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
 
     return(
         <section className={`relative  ${isCurrentMixPlaying ? "bg-gray-200" : ""}`}>
-            <div className="flex border-b border-green-500  w-2/3">
+            <div className="flex border-b border-green-500 mt-5  w-2/3">
                 <div className="w-1/5">
                     <img src={imageUrl} alt=""
                     className="h-full w-full rounded object-cover" />
@@ -266,7 +266,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                     <div className="relative" >
                        <PiMusicNotesPlusFill className="text-4xl cursor-pointer" onClick={handleAddToPlaylistClick} />
                     {addToPlaylist && (
-                    <div className="absolute z-10 left-0 mt-2 w-60 bg-white border border-gray-300 rounded-lg shadow-lg">
+                    <div className="absolute z-10 left-0 bottom-0 mb-7 w-60 bg-white border border-gray-300 rounded-lg shadow-lg">
                         <div className="relative">
                         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
                             <PiMusicNotesPlusThin className="w-6 h-6 text-gray-400" />
