@@ -138,7 +138,7 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className="flex flex-col mt-36 relative">
-                    <div className="flex flex  ">
+                    <div className="flex">
                       <div className="flex space-x-4 mt-8">
                         <button
                           className={`${
@@ -192,7 +192,7 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className="">
-                        <div className="mt-8 ">{renderActiveTab()}</div>
+                        <div className="mt-4">{renderActiveTab()}</div>
                         </div>
                         </div>
                                     

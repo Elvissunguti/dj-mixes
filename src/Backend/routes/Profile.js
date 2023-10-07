@@ -73,28 +73,22 @@ router.post("/create",
      });
 
 
-router.get("/get/artistProfile",
+router.get("/get/artistProfile/:userId",
   passport.authenticate("jwt", {session: false}),
      async (req, res) => {
         try{
 
-            const artistId = req.query.userId;
+            const userId = req.params.userId;
 
-            const artistProfile = await Profile.findOne({ userId: artistId })
+            const artistProfile = await Profile.findOne({ userId: userId })
 
-           
-
-            if (!artistProfile){
-                return res.status(404).json({ error: "Artist profile not found" });
-            };
-
-            const usersUserName = await User.findOne({ _id: artistId})
+            const usersUserName = await User.findOne({ _id: userId })
 
             const profileData = {
-                userName: usersUserName.userName,
-                coverPic: artistProfile.coverPic.replace("../../public"),
-                profilePic: artistProfile.profilePic.replace("../../public"),
-                biography: artistProfile.biography,
+                userName: usersUserName ? usersUserName.userName : null, 
+                coverPic: artistProfile ? artistProfile.coverPic.replace("../../public") : null, 
+                profilePic: artistProfile ? artistProfile.profilePic.replace("../../public") : null, 
+                biography: artistProfile ? artistProfile.biography : null,
             }
             return res.json({ data: profileData });
 

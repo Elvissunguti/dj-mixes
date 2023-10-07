@@ -188,6 +188,7 @@ const Favourite = () => {
                <MixCard
                  key={index}
                  mixId={item._id}
+                 userId={item.userId}
                  thumbnail={item.thumbnail}
                  title={item.title}
                  artist={item.artist}

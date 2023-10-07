@@ -50,8 +50,9 @@ const PublicProfile = () => {
     const fetchData = async () => {
         try {
           const response =  await makeAuthenticatedGETRequest(
-            `/profile/get/artistProfile?userId=${userId}`
+            `/profile/get/artistProfile/${userId}`
           );
+          console.log(response.data)
           setProfileData(response.data);
         } catch (error){
             console.error("Error fetching artistProfile :", error);
@@ -100,7 +101,7 @@ setSelectedPlaylistId(playlistId);
                         </div>   
                     ) : (
                         <div className="flex items-center justify-center space-x-1">
-                        <AiOutlineCamera /><Link to="/profilepage"><p className="text-gray-800 hover:text-blue-400">Upload cover image</p></Link>
+                        <AiOutlineCamera /><p className="text-gray-800 hover:text-blue-400">cover image not yet uploaded</p>
                      </div>
                     )}
 
@@ -152,8 +153,8 @@ setSelectedPlaylistId(playlistId);
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col items-center">
-                      <div className="flex space-x-4 mt-8">
+                    <div className="flex flex-col mt-40 items-start">
+                      <div className="flex space-x-2 mt-2">
                         <button
                           className={`${
                           activeTab === 'my mixes' ? 'bg-blue-500 text-white' : 'bg-white text-black'
@@ -203,7 +204,7 @@ setSelectedPlaylistId(playlistId);
                            )}
                         </div>
                         </div>
-                        <div className="mt-8">{renderActiveTab()}</div>
+                        <div className="mt-4">{renderActiveTab()}</div>
                     </div>
                 </div>
 
