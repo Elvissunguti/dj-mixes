@@ -3,8 +3,8 @@ import { useState } from "react";
 import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import MixCard from "../shared/MixCard";
 import CurrentMix from "../shared/CurrentMix";
-import { Link, useLocation } from "react-router-dom";
-import { IoCreateOutline } from "react-icons/io5";
+import { useLocation } from "react-router-dom";
+
 
 const PublicUploads = () => {
 
@@ -12,6 +12,8 @@ const PublicUploads = () => {
     const [currentMix, setCurrentMix] = useState(null);
     const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [existingPlaylists, setExistingPlaylists] = useState([]);
+
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -171,17 +173,35 @@ const PublicUploads = () => {
         }
       };
 
+      const  createPlaylistAndAddMix = async ({mixId, name}) => {
+        try{
+          const response = await makeAuthenticatedPOSTRequest(
+            "/playlist/createPlaylist", { mixId, name}
+          );
+          return response;
+    
+        } catch (error) {
+          console.error("Error creating playlist and adding mix:", error);
+        }
+      };
+    
+      const fetchPlaylists = async () => {
+        try{
+          const response = await makeAuthenticatedGETRequest(
+            "/playlist/get/playlist"
+          );
+          console.log(response.data);
+          setExistingPlaylists(response.data);
+        } catch (error) {
+          console.error("Error fetching Playlist", error)
+        }
+      };
+
 
     return(
         <section>
         <div className="flex items-start justify-between mb-6">
             <h1 className="font-bold text-xl">MY MIXES</h1>
-            <div className="text-xl">
-              <Link to="/upload edit">
-                 <button className="flex items-center  border p-2 rounded-md">
-                    <IoCreateOutline  /> EDIT</button>
-              </Link>
-            </div>
         </div>
         <div className="space-y-4 overflow-auto  ">
             {mixData.length > 0 ? (
@@ -200,8 +220,12 @@ const PublicUploads = () => {
                     favouriteCount={item.favouriteCount}
                     onMixPlay={handlePlayPause}
                     currentlyPlayingMixId={currentlyPlayingMixId}
-                     isPlaying={isPlaying}
-                         />
+                    isPlaying={isPlaying}
+                    createPlaylistAndAddMix={createPlaylistAndAddMix}
+                    fetchPlaylists={fetchPlaylists}
+                    existingPlaylists={existingPlaylists}
+                        
+                     />
                 ))
                 ) : (
                  <p>Loading...</p>
