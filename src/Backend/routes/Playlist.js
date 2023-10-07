@@ -86,6 +86,32 @@ async(req, res) => {
     }
 });
 
+// router to get playlist of a user
+router.get("/get/playlist/:userId",
+passport.authenticate("jwt", {session: false}),
+async (req, res) => {
+    try{
+
+        const userId = req.params.userId;
+
+        const playlists = await Playlist.find({ userId }).populate("mix");
+
+        const playlistsWithMixCounts = playlists.map((playlist) => {
+            return{
+                _id: playlist._id,
+                name: playlist.name,
+                mixCount: playlist.mixCount,
+            }
+        })
+
+        return res.json({ data: playlistsWithMixCounts})
+
+    } catch (error){
+        console.error("Could not fetch playlist", error);
+        return res.json({ error: "Error fetching Playlist of a user"})
+    }
+})
+
 // Get songs in a playlist
 router.get("/playlistMixes/:playlistId", 
 passport.authenticate("jwt", {session: false}),
