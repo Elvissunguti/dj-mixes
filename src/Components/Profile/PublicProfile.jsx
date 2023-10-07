@@ -4,20 +4,23 @@ import { Link, useLocation } from "react-router-dom";
 import NavBar from "../Home/NavBar";
 import avatar from "../Assets/avatar.png";
 import { BiLogoFacebookCircle, BiLogoInstagram, BiLogoTwitter } from "react-icons/bi";
-import History from "../shared/History";
 import { useEffect } from "react";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
 import PublicUploads from "../Upload/PublicUploads";
 import PublicFavourites from "../Favourites/PublicFavourites";
 import PublicPost from "../Post/PublicPost";
+import PublicListPlaylist from "../Playlists/PublicListPlaylist";
+import PublicPlaylistMix from "../Playlists/PublicPlaylistMix";
 
 const PublicProfile = () => {
   
   
   const [isFollowing, setIsFollowing] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [activeTab, setActiveTab] = useState('uploads')
+  const [activeTab, setActiveTab] = useState('my mixes')
   const [ profileData, setProfileData ] = useState(null);
+  const [isPlaylistDropdownOpen, setIsPlaylistDropdownOpen] = useState(false); 
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -36,6 +39,8 @@ const PublicProfile = () => {
         return <PublicFavourites />;
       case 'post':
         return <PublicPost />;
+        case 'playlist':
+          return selectedPlaylistId ? <PublicPlaylistMix playlistId={selectedPlaylistId} /> : null;
       default:
         return null;
     }
@@ -47,7 +52,6 @@ const PublicProfile = () => {
           const response =  await makeAuthenticatedGETRequest(
             `/profile/get/artistProfile?userId=${userId}`
           );
-          console.log(response);
           setProfileData(response.data);
         } catch (error){
             console.error("Error fetching artistProfile :", error);
@@ -69,6 +73,16 @@ if (!profileData) {
 
   const coverImageUrl = coverPic ? `/Profile/CoverImage/${coverImageFilename}` : null;
   const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` : null;
+
+  const togglePlaylistDropdown = () => {
+    setIsPlaylistDropdownOpen(!isPlaylistDropdownOpen);
+ };
+
+
+const handlePlaylistClick = (playlistId) => {
+// Set the selected playlist ID when a playlist is clicked
+setSelectedPlaylistId(playlistId);
+};
 
     return(
         <section>
@@ -164,6 +178,30 @@ if (!profileData) {
                         >
                         Post
                         </button>
+                        <div className=" relative">
+                         <button className={`${
+                            activeTab === 'playlist' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                            } px-4 py-2 rounded`}
+                            onClick={() => {
+                            setActiveTab('playlist');
+                            togglePlaylistDropdown();
+                         }}>
+                          Playlist
+                         </button>
+                          {isPlaylistDropdownOpen && (
+                             <div className="absolute left-0 mt-2 w-64 max-h-60 overflow-y-auto z-50 ">
+                                <PublicListPlaylist
+                                    isDropdownOpen={isPlaylistDropdownOpen}
+                                    onPlaylistClick={(playlistId) => {
+                                    togglePlaylistDropdown();
+                                    handlePlaylistClick(playlistId);
+                                     }}
+                                     className="px-6"
+
+                                />
+                             </div>
+                           )}
+                        </div>
                         </div>
                         <div className="mt-8">{renderActiveTab()}</div>
                     </div>

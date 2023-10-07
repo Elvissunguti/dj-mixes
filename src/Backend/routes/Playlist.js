@@ -100,7 +100,7 @@ async (req, res) => {
             return{
                 _id: playlist._id,
                 name: playlist.name,
-                mixCount: playlist.mixCount,
+                mixCount: playlist.mix.length,
             }
         })
 
@@ -158,6 +158,53 @@ async(req, res) => {
         return res.json({ error: "Error getting mixes from playlist"})
     }
 });
+
+// router to get mixes in a playlist of a user
+router.get("/playlistMixes/:userId/:playlistId",
+passport.authenticate("jwt", {session: false}),
+async (req, res) => {
+    try{
+
+        const userId = req.params.userId;
+
+        const playlistId = req.params.playlistId;
+
+        const playlist = await Playlist.findOne({ _id: playlistId, userId})
+
+        const playlistName= playlist.name;
+        const playlistID = playlist._id;
+
+        if(!playlist){
+            return res.json({ error: "Playlist not found"})
+         }
+
+         const mixIds = playlist.mix;
+
+         const mixes = await Mix.find({ _id: {$in: mixIds}});
+
+         const mixData = mixes.map((mix) => ({
+            thumbnail: mix.thumbnail.replace("../../../public", ""), 
+            track: mix.track.replace("../../../public", ""),
+            title: mix.title,
+            artist: mix.artist,
+            track: mix.track,
+            _id: mix._id,
+            userId: mix.userId,
+        }));
+    
+         const playlistInfo = {
+            playlistName,
+            playlistID,
+            mixData
+         }
+    
+         return res.json({  data: playlistInfo });
+
+    } catch (error) {
+        console.error("Could not fetch Mixes from the playlist", error);
+        return res.json({ error: "Error getting mixes from playlist"});
+    }
+})
 
 
 // router to delete a single mix from the playlist
