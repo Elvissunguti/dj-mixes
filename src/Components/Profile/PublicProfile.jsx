@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
 import PublicUploads from "../Upload/PublicUploads";
 import PublicFavourites from "../Favourites/PublicFavourites";
+import PublicPost from "../Post/PublicPost";
 
 const PublicProfile = () => {
   
@@ -33,8 +34,8 @@ const PublicProfile = () => {
         return <PublicUploads />;
       case 'favorites':
         return <PublicFavourites />;
-      case 'history':
-        return <History />;
+      case 'post':
+        return <PublicPost />;
       default:
         return null;
     }
@@ -157,11 +158,11 @@ if (!profileData) {
                         </button>
                         <button
                           className={`${
-                          activeTab === 'history' ? 'bg-blue-500 text-white' : 'bg-white text-black'
+                          activeTab === 'post' ? 'bg-blue-500 text-white' : 'bg-white text-black'
                           } px-4 py-2 rounded`}
-                          onClick={() => setActiveTab('history')}
+                          onClick={() => setActiveTab('post')}
                         >
-                        History
+                        Post
                         </button>
                         </div>
                         <div className="mt-8">{renderActiveTab()}</div>
