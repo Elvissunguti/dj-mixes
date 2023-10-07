@@ -118,7 +118,43 @@ async (req, res) => {
         console.log(error);
         res.json({ error: "Could not fetch the posts"})
     }
-})
+});
+
+router.get("/get/posts/:userId",
+passport.authenticate("jwt", { session: false}),
+async (req, res) => {
+
+    try{
+
+        const userId = req.params.userId;
+
+        const posts = await Post.find({ userId })
+
+        const postData = [];
+
+        for (const post of posts) {
+            
+            const userProfile = await Profile.findOne({ userId: post.userId });
+
+            const profilePic = userProfile ? userProfile.profilePic : null;
+
+            postData.push({
+                user: post.user,
+                image: post.image.replace("../../../public", ""),
+                description: post.description,
+                postDate: post.postDate,
+                postTime: post.postTime,
+                profilePic: profilePic ? profilePic.replace("../../../public", "") : null,
+            });
+        }
+        
+        return res.json({ data: postData });
+        
+    } catch(error) {
+        console.log(error);
+        res.json({ error: "Could not fetch the posts"})
+    }
+});
 
 router.delete("/deletePost/:postId", 
 passport.authenticate("jwt", { session: false}),
