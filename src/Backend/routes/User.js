@@ -6,20 +6,15 @@ const Mix = require("../models/Mix");
 
 
 // router to follow a user
-router.post("/follow/:userNameToFollow",
+router.post("/follow/:userId",
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
         try {
-            const currentUser = req.user; // Assuming you have middleware to get the entire authenticated user
-            const userNameToFollow = req.params.userNameToFollow;
-
-            console.log("Current User:", currentUser); // Add this line to log currentUser
-            console.log("User to Follow:", userNameToFollow); // Add this line to log userNameToFollow
+            const currentUser = req.user; 
+            const userId = req.params.userId;
 
             // Find the user to follow by their userName
-            const userToFollow = await User.findOne({ userName: userNameToFollow });
-
-            console.log("User to Follow Document:", userToFollow); // Add this line to log userToFollow
+            const userToFollow = await User.findOne({ _id: userId });
 
             if (!userToFollow) {
                 return res.status(404).json({ message: "User not found" });
@@ -43,21 +38,16 @@ router.post("/follow/:userNameToFollow",
 
     // router to unfollow a user
 
-    router.post("/unfollow/:userNameToUnfollow",
+    router.post("/unfollow/:userId",
     passport.authenticate("jwt", {session: false}),
     async (req, res) => {
         try{
 
             const currentUser = req.user;
-            const userNameToUnfollow = req.params.userNameToUnfollow;
-
-            console.log("Current User:", currentUser);
-            console.log("User to unfollow:", userNameToUnfollow);
+            const userId = req.params.userId;
 
             // find the user to unfollow by their username
-            const userToUnfollow = await User.findOne({ userName: userNameToUnfollow});
-
-            console.log("User to Unfollow Document:", userToUnfollow);
+            const userToUnfollow = await User.findOne({ _id: userId });
 
             if (!userToUnfollow) {
                 return res.status(404).json({ message: "User not found" });
