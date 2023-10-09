@@ -14,13 +14,11 @@ import PublicPlaylistMix from "../Playlists/PublicPlaylistMix";
 
 const PublicProfile = () => {
   
-  
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [activeTab, setActiveTab] = useState('my mixes')
   const [ profileData, setProfileData ] = useState(null);
   const [isPlaylistDropdownOpen, setIsPlaylistDropdownOpen] = useState(false); 
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
+  const [isUserFollowed, setIsUserFollowed] = useState(false);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -32,6 +30,7 @@ const PublicProfile = () => {
           const response =  await makeAuthenticatedGETRequest(
             `/profile/get/artistProfile/${userId}`, {}
           );
+      
           setProfileData(response.data);
         } catch (error){
             console.error("Error fetching artistProfile :", error);
@@ -41,13 +40,34 @@ const PublicProfile = () => {
 }, [userId]);
 
 
+useEffect(() => {
+  const checkFollowsStatus = async () => {
+    try{
+      const response = await makeAuthenticatedGETRequest(
+        `/user/checkfollow/${userId}`
+      );
+
+      if (response && response.message === "You are following this artist") {
+        setIsUserFollowed(true);
+      } else {
+        setIsUserFollowed(false);
+      }
+
+    } catch(error){
+      console.error("Error checking follow status:", error)
+    }
+  }
+  checkFollowsStatus();
+}, [userId]);
+
+
 const handleFollowButton = async() => {
   try{
   const response = await makeAuthenticatedPOSTRequest(
     `/user/follow/${userId}`, {}
   );
   if (response && response.message === "You are now following the artist") {
-    setIsFollowing(true);
+    setIsUserFollowed(true);
   }
   } catch(error) {
     console.error("Error unfollowing artist:", error)
@@ -60,18 +80,13 @@ const handleUnfollowButton = async () => {
       `/user/unfollow/${userId}`
     );
     if (response && response.message === "You have unfollowed the artist") {
-      setIsFollowing(false);
+      setIsUserFollowed(false);
     }
 
   } catch (error){
     console.error("Error unfollowing artist", error)
   }
 }
-
-  const handleButtonClick = () => {
-    setIsFollowing((prevIsFollowing) => !prevIsFollowing);
-    setShowDropdown(false);
-  };
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -153,15 +168,15 @@ setSelectedPlaylistId(playlistId);
                                     </div>    
                                 )}
                             </div>
-                                <h1 className="text-xl font-bold">{userName}</h1>
+                                <h1 className="text-xl my-4 font-bold">{userName}</h1>
                             <div>
                                 <div>
-                                {isFollowing ? (
-                                  <button onClick={handleFollowButton}>
+                                {!isUserFollowed ? (
+                                  <button className="px-4 py-2 rounded font-semibold text-white bg-blue-500 hover:bg-blue-600 shadow-lg" onClick={handleFollowButton}>
                                     FOLLOW
                                   </button>
                                 ) : (
-                                  <button onClick={handleUnfollowButton}>
+                                  <button className="px-4 py-2 rounded font-semibold text-white bg-blue-500 hover:bg-blue-600 shadow-lg" onClick={handleUnfollowButton}>
                                     UNFOLLOW
                                   </button>
                                 )}
@@ -169,7 +184,7 @@ setSelectedPlaylistId(playlistId);
                                 </div>
                                 
                             </div>
-                            <div>
+                            <div className="mt-2">
                                 <p>{biography}</p>
                             </div>
                             <div>

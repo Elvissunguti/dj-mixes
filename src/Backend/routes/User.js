@@ -13,9 +13,6 @@ router.post("/follow/:userId",
             const currentUser = req.user; 
             const userId = req.params.userId;
 
-            console.log("Received follow request for userId:", userId);
-            console.log("User data from JWT token:", currentUser);
-
             // Find the user to follow by their userName
             const userToFollow = await User.findOne({ _id: userId });
 
@@ -49,9 +46,6 @@ router.post("/follow/:userId",
             const currentUser = req.user;
             const userId = req.params.userId;
 
-            console.log("Received follow request for userId:", userId);
-            console.log("User data from JWT token:", currentUser);
-
             // find the user to unfollow by their username
             const userToUnfollow = await User.findOne({ _id: userId });
 
@@ -77,6 +71,27 @@ router.post("/follow/:userId",
             res.json({ message: "Error unfollowing artist" });
         }
     })
+
+    //router to check if a user is followed
+    router.get("/checkfollow/:userId",
+    passport.authenticate("jwt", { session: false}),
+    async (req, res) => {
+        try{
+
+            const currentUser = req.user;
+            const userId = req.params.userId;
+
+            if (currentUser.followedArtist.includes(userId)) {
+                return res.status(200).json({ message: "You are following this artist" });
+              } else {
+                return res.status(200).json({ message: "You are not following this artist" });
+              }
+
+        } catch(error) {
+            console.error("Failed to check if the user is followed", error);
+            res.json({ message: "Error checking if user is followed"});
+        }
+    });
 
     // router to get mixes posted by a followed user
     router.get("/followed-mixes",
@@ -117,7 +132,6 @@ router.post("/follow/:userId",
             const currentUser = req.user;
 
             const followedUserIds = currentUser.followedArtist.map(artist => artist._id);
-            console.log("Followed User IDs:", followedUserIds);
 
             const latestMix = new Date();
             latestMix.setMonth(latestMix.getMonth() -3);
@@ -125,7 +139,6 @@ router.post("/follow/:userId",
             const latestMixes = await Mix.find({
                  userId: { $in: followedUserIds},
                  createdAt: { $gte: latestMix}}).sort({ createdAt: -1}).populate("artist");
-
 
                  const latestData = latestMixes.map((mix) => ({
                     thumbnail: mix.thumbnail.replace("../../../public",""),
