@@ -13,6 +13,9 @@ router.post("/follow/:userId",
             const currentUser = req.user; 
             const userId = req.params.userId;
 
+            console.log("Received follow request for userId:", userId);
+            console.log("User data from JWT token:", currentUser);
+
             // Find the user to follow by their userName
             const userToFollow = await User.findOne({ _id: userId });
 
@@ -28,7 +31,7 @@ router.post("/follow/:userId",
             // Add the artist to the list of followed artists
             currentUser.followedArtist.push(userToFollow._id);
             await currentUser.save();
-
+            console.log({ message: "You are now following the artist"})
             return res.status(200).json({ message: "You are now following the artist" });
         } catch (error) {
             console.error(error);
@@ -46,6 +49,9 @@ router.post("/follow/:userId",
             const currentUser = req.user;
             const userId = req.params.userId;
 
+            console.log("Received follow request for userId:", userId);
+            console.log("User data from JWT token:", currentUser);
+
             // find the user to unfollow by their username
             const userToUnfollow = await User.findOne({ _id: userId });
 
@@ -53,16 +59,18 @@ router.post("/follow/:userId",
                 return res.status(404).json({ message: "User not found" });
             }
 
-            // Check if the user is being followed
-            if (!currentUser.followedArtist.includes(userToUnfollow._id)) {
-                return res.status(400).json({ message: "You are not following this artist" });
-            }
-
-            // Remove the artist from the list of followed artists
-            currentUser.followedArtist = currentUser.followedArtist.filter(id => id !== userToUnfollow._id);
-            await currentUser.save();
-
-            return res.status(200).json({ message: "You have unfollowed the artist" });
+                  // Check if the user is being followed
+      const artistIndex = currentUser.followedArtist.indexOf(userToUnfollow._id);
+      if (artistIndex !== -1) {
+        // Remove the artist from the list of followed artists
+        currentUser.followedArtist.splice(artistIndex, 1);
+        await currentUser.save();
+        console.log("You have unfollowed the artist");
+        return res.status(200).json({ message: "You have unfollowed the artist" });
+      } else {
+        return res.status(400).json({ message: "You are not following this artist" });
+      }
+           
 
         } catch (error) {
             console.error(error);

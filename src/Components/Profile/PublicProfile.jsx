@@ -5,7 +5,7 @@ import NavBar from "../Home/NavBar";
 import avatar from "../Assets/avatar.png";
 import { BiLogoFacebookCircle, BiLogoInstagram, BiLogoTwitter } from "react-icons/bi";
 import { useEffect } from "react";
-import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
+import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import PublicUploads from "../Upload/PublicUploads";
 import PublicFavourites from "../Favourites/PublicFavourites";
 import PublicPost from "../Post/PublicPost";
@@ -26,6 +26,48 @@ const PublicProfile = () => {
   const queryParams = new URLSearchParams(location.search);
   const userId = queryParams.get("userId");
 
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+          const response =  await makeAuthenticatedGETRequest(
+            `/profile/get/artistProfile/${userId}`, {}
+          );
+          setProfileData(response.data);
+        } catch (error){
+            console.error("Error fetching artistProfile :", error);
+        }
+    }
+    fetchData();
+}, [userId]);
+
+
+const handleFollowButton = async() => {
+  try{
+  const response = await makeAuthenticatedPOSTRequest(
+    `/user/follow/${userId}`, {}
+  );
+  if (response && response.message === "You are now following the artist") {
+    setIsFollowing(true);
+  }
+  } catch(error) {
+    console.error("Error unfollowing artist:", error)
+  }
+}
+
+const handleUnfollowButton = async () => {
+  try {
+    const response = await makeAuthenticatedPOSTRequest(
+      `/user/unfollow/${userId}`
+    );
+    if (response && response.message === "You have unfollowed the artist") {
+      setIsFollowing(false);
+    }
+
+  } catch (error){
+    console.error("Error unfollowing artist", error)
+  }
+}
+
   const handleButtonClick = () => {
     setIsFollowing((prevIsFollowing) => !prevIsFollowing);
     setShowDropdown(false);
@@ -45,21 +87,6 @@ const PublicProfile = () => {
         return null;
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-        try {
-          const response =  await makeAuthenticatedGETRequest(
-            `/profile/get/artistProfile/${userId}`
-          );
-          console.log(response.data)
-          setProfileData(response.data);
-        } catch (error){
-            console.error("Error fetching artistProfile :", error);
-        }
-    }
-    fetchData();
-}, [userId]);
 
 if (!profileData) {
   return <p>Loading...</p>; 
@@ -128,18 +155,19 @@ setSelectedPlaylistId(playlistId);
                             </div>
                                 <h1 className="text-xl font-bold">{userName}</h1>
                             <div>
-                                <button onClick={handleButtonClick}>
-                                {isFollowing ? 'FOLLOWING' : 'FOllOW'}
+                                <div>
+                                {isFollowing ? (
+                                  <button onClick={handleFollowButton}>
+                                    FOLLOW
+                                  </button>
+                                ) : (
+                                  <button onClick={handleUnfollowButton}>
+                                    UNFOLLOW
+                                  </button>
+                                )}
 
-                                </button>
+                                </div>
                                 
-                                {showDropdown && isFollowing && (
-                                    <div className="absolute top-10 right-0 mt-2 py-2 px-4 bg-white rounded-lg shadow-md">
-                                    {/* Add the unfollow options in the dropdown */}
-                                    
-          
-                                   </div>
-                                 )}
                             </div>
                             <div>
                                 <p>{biography}</p>

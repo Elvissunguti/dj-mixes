@@ -29,7 +29,7 @@ const NavBar = () => {
                 } else {
                     const response = await makeAuthenticatedGETRequest(
                         `/search/searchText?query=${searchText}`
-                    );
+                    ); 
                     setSearchResults(response.data)  
                 }
 
@@ -193,6 +193,7 @@ const NavBar = () => {
                         <SearchUser 
                         profilePic={user.profilePic}
                         userName={user.userName}
+                        userId={user._id}
                         />
                       </div>
                     </li>
