@@ -91,7 +91,7 @@ const NavBar = () => {
                         </form>
                         </div>
                         {isExpanded && (
-                          <div className="absolute top-0 right-0 mt-3 mr-3">
+                          <div className="absolute top-0 right-12 mt-3">
                             <button
                               className="text-gray-500 text-3xl hover:text-gray-700"
                               onClick={() => setIsExpanded(false)}

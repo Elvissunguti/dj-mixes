@@ -24,7 +24,7 @@ const SearchMix = ({ thumbnail, title, artist, userId }) => {
                       className="w-24 h-24 object-center cursor-pointer"
                       onClick={handleArtistClick}
                     />
-                    <div className="ml-4">
+                    <div className="flex flex-col items-start ml-4">
                         <p className="text-xl">{title}</p>
                         <p className="text-xl hover:text-green-200 cursor-pointer" onClick={handleArtistClick}>
                             {artist}

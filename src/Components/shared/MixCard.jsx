@@ -76,9 +76,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
   
-
-    
-    const handleFavoriteClick = () => {
+      const handleFavoriteClick = () => {
       toggleFavourite(mixId);
   
       // Update local storage with favorited mix IDs
@@ -234,7 +232,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
                            <ImPlay  />
                         )}
                     </div>
-                    <div className="text-2xl font-medium">
+                    <div className="flex flex-col items-start text-2xl font-medium">
                         <p className="hover:text-gray-600 cursor-pointer">
                             {title}
                         </p>

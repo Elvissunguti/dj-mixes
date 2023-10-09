@@ -5,7 +5,7 @@ const { profileUploads } = require("../Middleware/Profile");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 
-
+// router to create profile
 router.post("/create",
  passport.authenticate("jwt", { session: false}),
  (req, res) => {
@@ -42,7 +42,7 @@ router.post("/create",
 
  });
 
-// router to get my profile
+// router to get profile of the current user
  router.get("/get/profiles",
    passport.authenticate("jwt", { session: false}),
      async (req, res) => {
@@ -52,14 +52,11 @@ router.post("/create",
 
             const userProfile = await Profile.findOne({ userId: currentUser });
 
-            if (!userProfile) {
-                return res.status(404).json({ error: "User profile not found" });
-              }
 
               const profileData = {
                 userName: req.user.userName,
-                coverPic: userProfile.coverPic.replace("../../../public", ""),
-                profilePic: userProfile.profilePic.replace("../../../public", ""),
+                coverPic: userProfile ? userProfile.coverPic.replace("../../public") : null, 
+                profilePic: userProfile ? userProfile.profilePic.replace("../../public") : null,
                 
               };
 
@@ -69,10 +66,9 @@ router.post("/create",
             console.error("Error retrieving user Profile", error)
             return res.json({ error: "Failed to retrieve user profile"})
         }
-
      });
 
-
+// router to get profile of a user
 router.get("/get/artistProfile/:userId",
   passport.authenticate("jwt", {session: false}),
      async (req, res) => {
