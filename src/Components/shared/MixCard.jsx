@@ -6,13 +6,13 @@ import { FcShare } from "react-icons/fc";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LuListMusic } from "react-icons/lu";
-import { makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
+import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourite: initialIsFavourite, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, createPlaylistAndAddMix, fetchPlaylists, existingPlaylists }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, createPlaylistAndAddMix, fetchPlaylists, existingPlaylists }) => {
 
     const [ open, setOpen ] = useState(false);
-    const [ isFavourite, setIsFavourite ] = useState(initialIsFavourite);
+    const [ isFavourite, setIsFavourite ] = useState(false);
     const [ currentTime, setCurrentTime ] = useState(0);
     const [ duration, setDuration ] = useState({});
     const [addToPlaylist, setAddToPlaylist] = useState(false);
@@ -69,6 +69,24 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
     }, [addToPlaylist]);
 
 
+  // Function to check if the mix is favorited
+  const checkIfFavorited = async () => {
+    try {
+      // Make a GET request to the backend to check if the mix is favorited by the user
+      const response = await makeAuthenticatedGETRequest(`/mix/checkfavourited?mixId=${mixId}`);
+      if (response && response.data && response.data.favouredMixes && response.data.favouredMixes.includes(mixId)) {
+        setIsFavourite(true); 
+      }
+    } catch (error) {
+      console.error("Error checking if mix is favorited:", error);
+    }
+  };
+
+  useEffect(() => {
+  
+    checkIfFavorited();
+  }, [mixId]);
+
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -78,18 +96,13 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, isFavourit
   
       const handleFavoriteClick = () => {
       toggleFavourite(mixId);
-  
-      // Update local storage with favorited mix IDs
-      const favoritedMixes = JSON.parse(localStorage.getItem("favoritedMixes")) || [];
-      if (isFavourite) {
-        const updatedFavoritedMixes = favoritedMixes.filter(id => id !== mixId);
-        localStorage.setItem("favoritedMixes", JSON.stringify(updatedFavoritedMixes));
+
+      if(isFavourite){
+        setIsFavourite(true);
       } else {
-        favoritedMixes.push(mixId);
-        localStorage.setItem("favoritedMixes", JSON.stringify(favoritedMixes));
+        setIsFavourite(false);
       }
-  
-      setIsFavourite(!isFavourite);
+
     };
    
   const thumbnailFilename = thumbnail.split("\\").pop();

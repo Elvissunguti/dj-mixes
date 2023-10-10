@@ -122,6 +122,30 @@ async ( req, res ) => {
 });
 
 
+// router to check if mixes are liked
+router.get("/checkfavourited",
+passport.authenticate("jwt", {session: false}),
+async (req, res) => {
+  try{
+
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+
+    if(!user){
+      return res.json({ message: "user not found" });
+    }
+
+    const favouredMixes = user.favouredMixes.map(mix => mix.toString());
+
+    return res.json({ data : { favouredMixes } });
+
+  } catch (error){
+    console.error("Error in checking if mixes are favourited", error);
+    res.json({ error: "Failed to check if mixes are favourited"})
+  }
+})
+
 
 // Router to get all the Mix I liked
 router.get("/favourited",
