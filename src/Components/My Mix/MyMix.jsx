@@ -195,8 +195,8 @@ const MyMix = () => {
 
     return(
        <LoggedInContainer curActiveScreen="my mixes">
-        <div className="flex items-start  mb-6">
-            <h1 className="font-bold text-xl">MY MIXES</h1>
+        <div className="flex items-start mb-2">
+            <h1 className="font-bold text-2xl">MY MIXES</h1>
         </div>
         <div className="space-y-4  overflow-auto  ">
             {mixData.length > 0 ? (

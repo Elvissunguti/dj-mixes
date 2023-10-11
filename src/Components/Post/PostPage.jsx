@@ -23,8 +23,8 @@ const PostPage = () => {
 
     return (
         <LoggedInContainer curActiveScreen="post page">
-            <div>
-                <h1>POSTS</h1>
+            <div className="flex items-start mb-2">
+                <h1 className="font-bold text-2xl">POSTS</h1>
             </div>
             <div>
                 { postData.length > 0 ? (

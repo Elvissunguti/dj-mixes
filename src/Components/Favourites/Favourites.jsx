@@ -205,8 +205,8 @@ const Favourites = () => {
 
     return(
         <LoggedInContainer curActiveScreen="favourites">
-            <div className="flex items-start mb-6">
-                <h1 className="font-bold text-xl">Favourites</h1>
+            <div className="flex items-start mb-2">
+                <h1 className="font-bold text-2xl">Favourites</h1>
             </div>
             <div className="space-y-4 overflow-auto">
             {favouriteData.length > 0 ? (

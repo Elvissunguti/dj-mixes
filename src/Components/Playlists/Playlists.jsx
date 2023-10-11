@@ -36,8 +36,8 @@ const navigate = useNavigate();
 
     return (
         <LoggedInContainer curActiveScreen="playlists" >
-            <div className="flex items-start mb-6">
-                <h1 className="font-bold text-xl">Playlists</h1>
+            <div className="flex items-start mb-2">
+                <h1 className="font-bold text-2xl">Playlists</h1>
             </div>
             <div className="grid grid-cols-4 gap-4">
                 { playlistData.length > 0 ? (

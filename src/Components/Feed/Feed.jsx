@@ -29,58 +29,7 @@ const Feed = () => {
     };
     fetchData();
   }, []);
-
-
-
   
-
-  const handleToggleFavourite = async (_id, isFavourite) => {
-    try {
-      if (isFavourite) {
-        await deleteFavourite(_id);
-      } else {
-        await addFavourite(_id);
-      }
-      // No need to fetch data again, just update the state with the changed data
-      setFeedData((prevFeedData) =>
-        prevFeedData.map((item) =>
-          item._id === _id ? { ...item, isFavourite: !isFavourite } : item
-        )
-      );
-    } catch (error) {
-      console.error("Error toggling favourite:", error);
-    }
-  };
-
-  const addFavourite = async (_id) => {
-    try {
-      const response = await makeAuthenticatedPOSTRequest(
-        "/mix/addFavourite",
-        { mixId: _id }
-      );
-
-      if (response.error) {
-        console.error("Error adding to favourites:", response.error);
-      }
-    } catch (error) {
-      console.error("Error adding to favourites:", error);
-    }
-  };
-
-  const deleteFavourite = async (_id) => {
-    try {
-      const response = await makeAuthenticatedPOSTRequest(
-        "/mix/deleteFavourite",
-        { mixId: _id }
-      );
-
-      if (response.error) {
-        console.error("Error deleting from favourites:", response.error);
-      }
-    } catch (error) {
-      console.error("Error deleting from favourites:", error);
-    }
-  };
 
   const handlePlayPause = (mixId) => {
     if (currentlyPlayingMixId === mixId) {
@@ -205,8 +154,8 @@ const Feed = () => {
 
   return (
     <LoggedInContainer curActiveScreen="feed">
-      <div className="flex items-start mb-6">
-        <h1 className="font-bold text-xl">Feed</h1>
+      <div className="flex items-start mb-2">
+        <h1 className="font-bold text-2xl">Feed</h1>
       </div>
       <div className="space-y-4 overflow-auto">
         {feedData.length > 0 ? (
@@ -219,9 +168,6 @@ const Feed = () => {
               artist={item.artist}
               audioSrc={item.track}
               userId={item.userId}
-              toggleFavourite={() =>
-                handleToggleFavourite(item._id, item.isFavourite)
-              }
               favouriteCount={item.favouriteCount}
               onMixPlay={handlePlayPause}
               currentlyPlayingMixId={currentlyPlayingMixId}

@@ -199,8 +199,8 @@ const NewUpload = () => {
 
     return(
         <LoggedInContainer curActiveScreen="new uploads">
-            <div>
-                <h1>NEW UPLOADS</h1>
+            <div className="flex items-start mb-2">
+                <h1 className="font-bold text-2xl">NEW UPLOADS</h1>
             </div>
             <div>
             {newUploads.length > 0 ? (

@@ -9,7 +9,7 @@ import { LuListMusic } from "react-icons/lu";
 import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
  
 
-const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, toggleFavourite, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, createPlaylistAndAddMix, fetchPlaylists, existingPlaylists }) => {
+const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, favouriteCount, currentlyPlayingMixId, onMixPlay, isPlaying, createPlaylistAndAddMix, fetchPlaylists, existingPlaylists }) => {
 
     const [ open, setOpen ] = useState(false);
     const [ isFavourite, setIsFavourite ] = useState(false);
@@ -20,13 +20,6 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, toggleFavo
     const [ existingPlaylist, setExistingPlaylist ] = useState([]);
     
     const navigate = useNavigate();
-      
-    // useEffect to add favoritedMixes to localStorage
-    useEffect(() => {
-      // Load favorited mix IDs from local storage
-      const favoritedMixes = JSON.parse(localStorage.getItem("favoritedMixes")) || [];
-      setIsFavourite(favoritedMixes.includes(mixId));
-    }, [mixId]);
 
 
     useEffect(() => {
@@ -76,6 +69,8 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, toggleFavo
       const response = await makeAuthenticatedGETRequest(`/mix/checkfavourited?mixId=${mixId}`);
       if (response && response.data && response.data.favouredMixes && response.data.favouredMixes.includes(mixId)) {
         setIsFavourite(true); 
+      } else {
+        setIsFavourite(false);
       }
     } catch (error) {
       console.error("Error checking if mix is favorited:", error);
@@ -93,16 +88,45 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, toggleFavo
     const seconds = Math.floor(timeInSeconds % 60);
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
-  
-      const handleFavoriteClick = () => {
-      toggleFavourite(mixId);
 
-      if(isFavourite){
-        setIsFavourite(true);
-      } else {
-        setIsFavourite(false);
+  const addFavourite = async (mixId) => {
+    try {
+      const response = await makeAuthenticatedPOSTRequest(
+        "/mix/addFavourite",
+        { mixId }
+      );
+
+      if (response.error) {
+        console.error("Error adding to favourites:", response.error);
       }
+    } catch (error) {
+      console.error("Error adding to favourites:", error);
+    }
+  };
 
+  const deleteFavourite = async ( mixId) => {
+    try {
+      const response = await makeAuthenticatedPOSTRequest(
+        "/mix/deleteFavourite",
+        { mixId }
+      );
+
+      if (response.error) {
+        console.error("Error deleting from favourites:", response.error);
+      }
+    } catch (error) {
+      console.error("Error deleting from favourites:", error);
+    }
+  };
+  
+    // Function to handle the favorite click
+    const handleFavoriteClick = async () => {
+      if (isFavourite) {
+        await deleteFavourite(mixId);
+      } else {
+        await addFavourite(mixId);
+      }
+      setIsFavourite(!isFavourite); // Toggle the isFavourite state
     };
    
   const thumbnailFilename = thumbnail.split("\\").pop();
@@ -230,11 +254,11 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, toggleFavo
 
 
     return(
-        <section className={`relative  ${isCurrentMixPlaying ? "bg-gray-200" : ""}`}>
-            <div className="flex border-b border-green-500 mt-5  w-2/3">
+        <section className="relative">
+            <div className={`flex p-5 mt-5 rounded w-2/3 ${isCurrentMixPlaying ? "bg-gray-300" : "bg-gray-100"}`}>
                 <div className="w-1/5">
-                    <img src={imageUrl} alt=""
-                    className="h-full w-full rounded object-cover" />
+                    <img src={imageUrl} alt="image"
+                    className="h-44 w-44 rounded object-cover" />
                 </div>
                 <div className="flex flex-col w-4/5 space-x-12 mt-4 pl-4">
                 <div className="flex space-x-4 my-4">
