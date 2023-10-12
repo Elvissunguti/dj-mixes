@@ -13,6 +13,7 @@ const Feed = () => {
   const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [existingPlaylists, setExistingPlaylists] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
 
   useEffect(() => {
@@ -21,10 +22,11 @@ const Feed = () => {
         const response = await makeAuthenticatedGETRequest(
           "/user/followed-mixes"
         );
-        console.log(response)
         setFeedData(response.data);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching feed data:", error);
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -153,12 +155,17 @@ const Feed = () => {
   
 
   return (
-    <LoggedInContainer curActiveScreen="feed">
-      <div className="flex items-start mb-2">
-        <h1 className="font-bold text-2xl">Feed</h1>
-      </div>
-      <div className="space-y-4 overflow-auto">
-        {feedData.length > 0 ? (
+      <LoggedInContainer curActiveScreen="feed">
+    <div className="flex items-start mb-2">
+      <h1 className="font-bold text-2xl">Feed</h1>
+    </div>
+    <div className="space-y-4 overflow-auto">
+      {isLoading ? (
+        <div className="min-h-screen flex justify-center overflow-none">
+          <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
+        </div> 
+      ) : (
+        feedData.length > 0 ? (
           feedData.map((item, index) => (
             <MixCard
               key={index}
@@ -175,34 +182,35 @@ const Feed = () => {
               createPlaylistAndAddMix={createPlaylistAndAddMix}
               fetchPlaylists={fetchPlaylists}
               existingPlaylists={existingPlaylists}
-              
             />
           ))
         ) : (
-          <p>Loading...</p>
-        )}
-      </div>
-      {currentMix && (
-        <CurrentMix
-          mixId={currentMix._id}
-          userId={currentMix.userId}
-          thumbnail={currentMix.thumbnail}
-          title={currentMix.title}
-          artist={currentMix.artist}
-          audioSrc={currentMix.track}
-          currentSong={currentMix.currentSong}
-          setCurrentSong={(songState) =>
-            setCurrentMix({ ...currentMix, currentSong: songState })
-          }
-          currentTime={currentMix.currentTime}
-          isPlaying={isPlaying}
-          onMixPlay={handlePlayPause}
-          onPlayNext={playNextMix} 
-          onPlayPrev={playPrevMix}
-
-        />
+          <p>
+            Follow artist to see mixes here
+          </p>
+        )
       )}
-    </LoggedInContainer>
+    </div>
+    {currentMix && (
+      <CurrentMix
+        mixId={currentMix._id}
+        userId={currentMix.userId}
+        thumbnail={currentMix.thumbnail}
+        title={currentMix.title}
+        artist={currentMix.artist}
+        audioSrc={currentMix.track}
+        currentSong={currentMix.currentSong}
+        setCurrentSong={(songState) =>
+          setCurrentMix({ ...currentMix, currentSong: songState })
+        }
+        currentTime={currentMix.currentTime}
+        isPlaying={isPlaying}
+        onMixPlay={handlePlayPause}
+        onPlayNext={playNextMix}
+        onPlayPrev={playPrevMix}
+      />
+    )}
+  </LoggedInContainer>
   );
 };
 

@@ -104,7 +104,11 @@ const handleUnfollowButton = async () => {
   };
 
 if (!profileData) {
-  return <p>Loading...</p>; 
+  return (
+    <div className="min-h-screen flex  justify-center overflow-none">
+      <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
+   </div> 
+  )
 }
 
 

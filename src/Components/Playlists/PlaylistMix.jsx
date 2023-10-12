@@ -17,6 +17,8 @@ const PlaylistMix = ({ playlistId }) => {
     const [ currentlyPlayingMixId, setCurrentlyPlayingMixId ] = useState(null);
     const [ isPlaying, setIsPlaying ] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [existingPlaylists, setExistingPlaylists] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,62 +27,15 @@ const PlaylistMix = ({ playlistId }) => {
                 `/playlist/playlistMixes/${playlistId}`,
             );
                 setPlaylistData(response.data);
+                setIsLoading(false);
             } catch (error){
                 console.error("Error fetching mixes from the playlist", error);
+                setIsLoading(false);
             }
         }
         fetchData();
     }, [playlistId]);
 
-
-    const handleToggleFavourite = async (_id, isFavourite) => {
-        try {
-          if (isFavourite) {
-            await deleteFavourite(_id);
-          } else {
-            await addFavourite(_id);
-          }
-          // No need to fetch data again, just update the state with the changed data
-          setPlaylistData((prevPlaylistData) => ({
-            ...prevPlaylistData,
-            mixData: prevPlaylistData.mixData.map((item) =>
-              item._id === _id ? { ...item, isFavourite: !isFavourite } : item
-            ),
-          }));
-        } catch (error) {
-          console.error("Error toggling favourite:", error);
-        }
-      };
-    
-      const addFavourite = async (_id) => {
-        try {
-          const response = await makeAuthenticatedPOSTRequest(
-            "/mix/addFavourite",
-            { mixId: _id }
-          );
-    
-          if (response.error) {
-            console.error("Error adding to favourites:", response.error);
-          }
-        } catch (error) {
-          console.error("Error adding to favourites:", error);
-        }
-      };
-    
-      const deleteFavourite = async (_id) => {
-        try {
-          const response = await makeAuthenticatedPOSTRequest(
-            "/mix/deleteFavourite",
-            { mixId: _id }
-          );
-    
-          if (response.error) {
-            console.error("Error deleting from favourites:", response.error);
-          }
-        } catch (error) {
-          console.error("Error deleting from favourites:", error);
-        }
-      };
     
       const handlePlayPause = (mixId) => {
         if (currentlyPlayingMixId === mixId) {
@@ -202,6 +157,30 @@ const PlaylistMix = ({ playlistId }) => {
         setShowDeleteConfirmation(false);
       };
 
+      const  createPlaylistAndAddMix = async ({mixId, name}) => {
+        try{
+          const response = await makeAuthenticatedPOSTRequest(
+            "/playlist/createPlaylist", { mixId, name}
+          );
+          return response;
+    
+        } catch (error) {
+          console.error("Error creating playlist and adding mix:", error);
+        }
+      };
+    
+      const fetchPlaylists = async () => {
+        try{
+          const response = await makeAuthenticatedGETRequest(
+            "/playlist/get/playlist"
+          );
+          console.log(response.data);
+          setExistingPlaylists(response.data);
+        } catch (error) {
+          console.error("Error fetching Playlist", error)
+        }
+      };
+
       
 
 
@@ -242,29 +221,36 @@ const PlaylistMix = ({ playlistId }) => {
 
             </div>
             <div className="space-y-4 overflow-auto">
-          
-            {playlistData.mixData.length > 0 ? (
-          playlistData.mixData.map((mixItem, mixIndex) => (
+            {isLoading ? (
+        <div className="min-h-screen flex  justify-center overflow-none">
+          <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
+        </div> 
+      ) : (
+        playlistData.mixData.length > 0 ? (
+          playlistData.mixData.map((item, index) => (
             <MixCard
-              key={mixIndex}
-              mixId={mixItem._id}
-              thumbnail={mixItem.thumbnail}
-              title={mixItem.title}
-              artist={mixItem.artist}
-              audioSrc={mixItem.track}
-              userId={mixItem.userId}
-              toggleFavourite={() =>
-                handleToggleFavourite(mixItem._id, mixItem.isFavourite)
-              }
-              favouriteCount={mixItem.favouriteCount}
+              key={index}
+              mixId={item._id}
+              thumbnail={item.thumbnail}
+              title={item.title}
+              artist={item.artist}
+              audioSrc={item.track}
+              userId={item.userId}
+              favouriteCount={item.favouriteCount}
               onMixPlay={handlePlayPause}
               currentlyPlayingMixId={currentlyPlayingMixId}
               isPlaying={isPlaying}
-            />
-          ))
-        ) : (
-          <p>No mixes in this playlist</p>
-        )}   
+              createPlaylistAndAddMix={createPlaylistAndAddMix}
+              fetchPlaylists={fetchPlaylists}
+              existingPlaylists={existingPlaylists}
+             />
+             ))
+             ) : (
+               <p>
+                  Add mixes to playlist to see mixes here
+              </p>
+           )
+          )}    
             </div>
             <div>
             {currentMix && (

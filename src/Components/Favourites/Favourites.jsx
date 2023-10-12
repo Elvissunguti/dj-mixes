@@ -12,6 +12,8 @@ const Favourites = () => {
     const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [existingPlaylists, setExistingPlaylists] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,68 +21,17 @@ const Favourites = () => {
                 const response = await makeAuthenticatedGETRequest(
                     "/mix/favourited"
                 );
-                console.log(response)
-                setFavouriteData(response.data)
-                
+                setFavouriteData(response.data);
+                setIsLoading(false);                
 
             } catch (error){
                 console.error("Error fetching favouritedData :", error);
+                setIsLoading(false);
             }
         }
         fetchData();
     }, []);
-
-
-
-
-    const handleToggleFavourite = async (_id, isFavourite) => {
-        try {
-          console.log("Toggling favorite for mix:", _id);
-          if (isFavourite) {
-            await deleteFavourite(_id);
-          } else {
-            await addFavourite(_id);
-          }
-          // No need to fetch data again, just update the state with the changed data
-          setFavouriteData((prevFavouriteData) =>
-            prevFavouriteData.map((item) =>
-              item._id === _id ? { ...item, isFavourite: !isFavourite } : item
-            )
-          );
-        } catch (error) {
-          console.error("Error toggling favourite:", error);
-        }
-      };
-    
-      const addFavourite = async (_id) => {
-        try {
-          const response = await makeAuthenticatedPOSTRequest(
-            "/mix/addFavourite",
-            { mixId: _id }
-          );
-    
-          if (response.error) {
-            console.error("Error adding to favourites:", response.error);
-          }
-        } catch (error) {
-          console.error("Error adding to favourites:", error);
-        }
-      };
-    
-      const deleteFavourite = async (_id) => {
-        try {
-          const response = await makeAuthenticatedPOSTRequest(
-            "/mix/deleteFavourite",
-            { mixId: _id }
-          );
-    
-          if (response.error) {
-            console.error("Error deleting from favourites:", response.error);
-          }
-        } catch (error) {
-          console.error("Error deleting from favourites:", error);
-        }
-      };
+  
 
       const handlePlayPause = (mixId) => {
         if (currentlyPlayingMixId === mixId) {
@@ -209,31 +160,36 @@ const Favourites = () => {
                 <h1 className="font-bold text-2xl">Favourites</h1>
             </div>
             <div className="space-y-4 overflow-auto">
-            {favouriteData.length > 0 ? (
-              favouriteData.map((item, index) => (
-               <MixCard
-                 key={index}
-                 mixId={item._id}
-                 thumbnail={item.thumbnail}
-                 title={item.title}
-                 artist={item.artist}
-                 userId={item.userId}
-                 audioSrc={item.track}
-                 toggleFavourite={() =>
-                 handleToggleFavourite(item._id, item.isFavourite)
-                  }
-                favouriteCount={item.favouriteCount}
-                onMixPlay={handlePlayPause}
-                currentlyPlayingMixId={currentlyPlayingMixId}
-                isPlaying={isPlaying}
-                createPlaylistAndAddMix={createPlaylistAndAddMix}
-                fetchPlaylists={fetchPlaylists}
-                existingPlaylists={existingPlaylists}
-            />
-          ))
-        ) : (
-          <p>Loading...</p>
-        )}
+            {isLoading ? (
+           <div className="min-h-screen flex justify-center overflow-none">
+           <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
+           </div> 
+          ) : (
+        favouriteData.length > 0 ? (
+          favouriteData.map((item, index) => (
+            <MixCard
+              key={index}
+              mixId={item._id}
+              thumbnail={item.thumbnail}
+              title={item.title}
+              artist={item.artist}
+              audioSrc={item.track}
+              userId={item.userId}
+              favouriteCount={item.favouriteCount}
+              onMixPlay={handlePlayPause}
+              currentlyPlayingMixId={currentlyPlayingMixId}
+              isPlaying={isPlaying}
+              createPlaylistAndAddMix={createPlaylistAndAddMix}
+              fetchPlaylists={fetchPlaylists}
+              existingPlaylists={existingPlaylists}
+             />
+             ))
+             ) : (
+               <p>
+               Like Mixes to see them here
+              </p>
+           )
+          )}
            </div>
            {currentMix && (
              <CurrentMix

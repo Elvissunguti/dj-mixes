@@ -8,13 +8,20 @@ import PostCard from "./PostCard";
 const MyPost = () => {
 
     const [ postData, setPostData ] = useState([]);
+    const [ isLoading, setIsLoading ] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
+            try{
             const response = await makeAuthenticatedGETRequest(
                 "/post/get/myposts"
             );
-            setPostData(response.data)
+                setPostData(response.data)
+                setIsLoading(false)
+            } catch(error){
+                console.error("Error Fetching posts:", error);
+                setIsLoading(false)
+            }
         }
         fetchData();
     }, []);
@@ -32,20 +39,26 @@ const MyPost = () => {
                 </div>
             </div>
             <div className="space-y-4 overflow-auto  ">
-            { postData.length > 0 ? (
-                    postData.map((item, index) => (
-                         <PostCard
-                          key={index}
-                          user={item.user}
-                          image={item.image}
-                          description={item.description}
-                          postDate={item.postDate} 
-                          postTime={item.postTime} 
-                          profilePic={item.profilePic}
-                          />
-                    ))
+                {isLoading ? (
+                   <div className="min-h-screen flex  justify-center overflow-none">
+                      <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
+                   </div>
                 ) : (
-                    <p>Loading...</p>
+                    postData.length > 0 ? (
+                        postData.map((item, index) => (
+                             <PostCard
+                              key={index}
+                              user={item.user}
+                              image={item.image}
+                              description={item.description}
+                              postDate={item.postDate} 
+                              postTime={item.postTime} 
+                              profilePic={item.profilePic}
+                              />
+                        ))
+                    ) : (
+                        <p>You haven't posted any posts yet.</p>
+                    )
                 )}
             </div>
         </section>

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { IoCreateOutline } from "react-icons/io5";
-import { MdOutlineDeleteOutline } from "react-icons/md";
-import { makeAuthenticatedDELETERequest, makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
+
+import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import MixCard from "../shared/MixCard";
 import CurrentMix from "../shared/CurrentMix";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const PublicPlaylistMix = ({ playlistId }) => {
 
@@ -16,6 +15,8 @@ const PublicPlaylistMix = ({ playlistId }) => {
     const [ currentMix, setCurrentMix ] = useState(null);
     const [ currentlyPlayingMixId, setCurrentlyPlayingMixId ] = useState(null);
     const [ isPlaying, setIsPlaying ] = useState(false);
+    const [existingPlaylists, setExistingPlaylists] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     
 
     const location = useLocation();
@@ -28,64 +29,16 @@ const PublicPlaylistMix = ({ playlistId }) => {
             const response = await makeAuthenticatedGETRequest(
                 `/playlist/playlistMixes/${userId}/${playlistId}`,
             );
-                console.log(response.data);
                 setPlaylistData(response.data);
+                setIsLoading(false);
             } catch (error){
                 console.error("Error fetching mixes from the playlist", error);
+                setIsLoading(false);
             }
         }
         fetchData();
     }, [playlistId]);
 
-
-    const handleToggleFavourite = async (_id, isFavourite) => {
-        try {
-          if (isFavourite) {
-            await deleteFavourite(_id);
-          } else {
-            await addFavourite(_id);
-          }
-          // No need to fetch data again, just update the state with the changed data
-          setPlaylistData((prevPlaylistData) => ({
-            ...prevPlaylistData,
-            mixData: prevPlaylistData.mixData.map((item) =>
-              item._id === _id ? { ...item, isFavourite: !isFavourite } : item
-            ),
-          }));
-        } catch (error) {
-          console.error("Error toggling favourite:", error);
-        }
-      };
-    
-      const addFavourite = async (_id) => {
-        try {
-          const response = await makeAuthenticatedPOSTRequest(
-            "/mix/addFavourite",
-            { mixId: _id }
-          );
-    
-          if (response.error) {
-            console.error("Error adding to favourites:", response.error);
-          }
-        } catch (error) {
-          console.error("Error adding to favourites:", error);
-        }
-      };
-    
-      const deleteFavourite = async (_id) => {
-        try {
-          const response = await makeAuthenticatedPOSTRequest(
-            "/mix/deleteFavourite",
-            { mixId: _id }
-          );
-    
-          if (response.error) {
-            console.error("Error deleting from favourites:", response.error);
-          }
-        } catch (error) {
-          console.error("Error deleting from favourites:", error);
-        }
-      };
     
       const handlePlayPause = (mixId) => {
         if (currentlyPlayingMixId === mixId) {
@@ -181,6 +134,30 @@ const PublicPlaylistMix = ({ playlistId }) => {
           }
         }
       };
+
+      const  createPlaylistAndAddMix = async ({mixId, name}) => {
+        try{
+          const response = await makeAuthenticatedPOSTRequest(
+            "/playlist/createPlaylist", { mixId, name}
+          );
+          return response;
+    
+        } catch (error) {
+          console.error("Error creating playlist and adding mix:", error);
+        }
+      };
+    
+      const fetchPlaylists = async () => {
+        try{
+          const response = await makeAuthenticatedGETRequest(
+            "/playlist/get/playlist"
+          );
+          console.log(response.data);
+          setExistingPlaylists(response.data);
+        } catch (error) {
+          console.error("Error fetching Playlist", error)
+        }
+      };
       
       
     return(
@@ -191,29 +168,36 @@ const PublicPlaylistMix = ({ playlistId }) => {
                 </div>
             </div>
             <div className="space-y-4 overflow-auto">
-          
-            {playlistData.mixData.length > 0 ? (
-          playlistData.mixData.map((mixItem, mixIndex) => (
+            {isLoading ? (
+        <div className="min-h-screen flex  justify-center overflow-none">
+          <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
+        </div> 
+      ) : (
+        playlistData.mixData.length > 0 ? (
+          playlistData.mixData.map((item, index) => (
             <MixCard
-              key={mixIndex}
-              mixId={mixItem._id}
-              thumbnail={mixItem.thumbnail}
-              title={mixItem.title}
-              artist={mixItem.artist}
-              audioSrc={mixItem.track}
-              userId={mixItem.userId}
-              toggleFavourite={() =>
-                handleToggleFavourite(mixItem._id, mixItem.isFavourite)
-              }
-              favouriteCount={mixItem.favouriteCount}
+              key={index}
+              mixId={item._id}
+              thumbnail={item.thumbnail}
+              title={item.title}
+              artist={item.artist}
+              audioSrc={item.track}
+              userId={item.userId}
+              favouriteCount={item.favouriteCount}
               onMixPlay={handlePlayPause}
               currentlyPlayingMixId={currentlyPlayingMixId}
               isPlaying={isPlaying}
-            />
-          ))
-        ) : (
-          <p>No mixes in this playlist</p>
-        )}   
+              createPlaylistAndAddMix={createPlaylistAndAddMix}
+              fetchPlaylists={fetchPlaylists}
+              existingPlaylists={existingPlaylists}
+             />
+             ))
+             ) : (
+               <p>
+               Follow artist to see mixes here
+              </p>
+           )
+          )}   
             </div>
             <div>
             {currentMix && (
