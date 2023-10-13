@@ -18,22 +18,34 @@ router.post("/create",
         }
 
         const userId = req.user._id;
-
         const coverPic = req.files["coverPic"][0].path;
         const profilePic = req.files["profilePic"][0].path;
         const { biography, facebookUrl, twitterUrl, instagramUrl } = req.body;
 
         if (!biography || !facebookUrl || !twitterUrl || !instagramUrl || !coverPic || !profilePic || !userId){
-
             return res.json({ error: "unable to upload profile data"})
         }
 
-        
-        const profileData = { biography, facebookUrl, twitterUrl, instagramUrl, coverPic, profilePic, userId};
+         // Check if a profile already exists for the user
+        const existingProfile = await Profile.findOne({ userId });
 
+        if (existingProfile) {
+        // If a profile exists, update it
+            existingProfile.biography = biography;
+            existingProfile.facebookUrl = facebookUrl;
+            existingProfile.twitterUrl = twitterUrl;
+            existingProfile.instagramUrl = instagramUrl;
+            existingProfile.coverPic = coverPic;
+            existingProfile.profilePic = profilePic;
         
+            const updatedProfile = await existingProfile.save();
+            return res.json({ message: "Profile updated successfully", updatedProfile });
+        } else {
+         // If no profile exists, create a new one
+            const profileData = { biography, facebookUrl, twitterUrl, instagramUrl, coverPic, profilePic, userId };
             const createdProfile = await Profile.create(profileData);
-            return res.json({ message: "Profile created successfully", createdProfile})
+            return res.json({ message: "Profile created successfully", createdProfile });
+        }
         } catch(error) {
             console.error("Error saving profile", error)
             return res.json({ error : "failed to save Profile"})

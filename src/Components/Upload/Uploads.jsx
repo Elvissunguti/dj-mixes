@@ -154,18 +154,18 @@ const Uploads = () => {
 
     return(
         <section>
-        <div className="flex items-start justify-between mb-6">
+        <div className="flex items-start  mb-6">
             <h1 className="font-bold text-xl">MY MIXES</h1>
             <div className="text-xl">
               <Link to="/upload edit">
-                 <button className="flex items-center  border p-2 rounded-md">
+                 <button className="flex items-center border p-2 rounded-md">
                     <IoCreateOutline  /> EDIT</button>
               </Link>
             </div>
         </div>
         <div className="space-y-4 overflow-auto  ">
         {isLoading ? (
-        <div className="min-h-screen flex  justify-center overflow-none">
+        <div className="min-h-screen flex mr-80 justify-center overflow-none">
           <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
         </div> 
       ) : (

@@ -39,6 +39,7 @@ function App() {
             {/* Public routes */}
             {loggedIn ? (
               <>
+              <Route path="/" element={<LoggedInContainer />} />
               <Route path='/feed' element={<Feed />} />
               <Route path="/my mixes" element={<MyMix />} />
               <Route path="/new uploads" element={<NewUpload />} />

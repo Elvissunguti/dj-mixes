@@ -18,6 +18,7 @@ const NavBar = () => {
     const [openAvatar, setOpenAvatar] = useState(false);
     const [searchResults, setSearchResults] = useState({ mixes: [], users: [] });
     const [isExpanded, setIsExpanded] = useState(false);
+    const [ profileData, setProfileData ] = useState(null);
     
 
 
@@ -40,6 +41,17 @@ const NavBar = () => {
         fetchData();
     }, [searchText]);
 
+    useEffect(() => {
+      const getData = async () => {
+        const response = await makeAuthenticatedGETRequest(
+          "/profile/get/profiles"
+        );
+        console.log(response.data);
+        setProfileData(response.data);
+      }
+      getData();
+    }, []);
+
 
     const handleSearchInputChange = (e) => {
         setSearchText(e.target.value);
@@ -55,14 +67,32 @@ const NavBar = () => {
       };
 
       if (searchResults === null) {
-        return <div>Loading...</div>;
+        return (
+          <div className="min-h-screen flex items-center justify-center overflow-none">
+             <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
+          </div> 
+        );
       };
+
+      if (!profileData) {
+        return (
+            <div className="min-h-screen flex items-center justify-center overflow-none">
+               <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
+            </div> 
+        ) 
+    };
+
+      const { profilePic } = profileData;
+
+      const profilePicFilename = profilePic ? profilePic.split("\\").pop() : null;
+      const profilePicUrl = profilePic ? `/Profile/ProfilePic/${profilePicFilename}` : null;
+
 
     
 
 
     return(
-        <nav className="relative">
+        <nav className="relative bg-black">
             <div className="mx-auto flex justify-between items-center max-w-4xl max-w-7xl" >
                 <div className="flex ">
                     <div className="">
@@ -104,7 +134,7 @@ const NavBar = () => {
                 </div>
                 { !isExpanded && (
                  <>
-                <div className="relative flex flex-col items-center justify-center ">
+                <div className="relative flex flex-col text-white items-center justify-center ">
                     <button className="border border-green-300 flex items-center justify-center text-lg  px-2 py-2"
                     onClick={() => setIsOpen(!isOpen)}>
                     <MdAddCircleOutline className="mr-2" /> 
@@ -128,11 +158,22 @@ const NavBar = () => {
                     )}
                 </div>
                 <div className="relative flex flex-col items-center justify-center">
+                  {profilePicUrl ? (
+                    <img 
+                      src={profilePicUrl}
+                      alt="profilePic"
+                      className="h-7 w-7 rounded-full object-cover"
+                      onClick={() => setOpenAvatar(!openAvatar)}
+                    />
+                  ) : (
                     <img className="h-7 w-7 rounded-full object-cover"
                     src={avatar}
                     alt="img"
                     onClick={() => setOpenAvatar(!openAvatar)}
                     />
+
+                  )}
+
                     { openAvatar && (
                         <div className="absolute top-full mt-2 w-36 bg-green-500 rounded">
                             <ul className="space-y-2 my-3">
