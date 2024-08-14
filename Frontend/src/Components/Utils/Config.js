@@ -1,0 +1,1 @@
+export const backendUrl = "https://us-central1-mixjam-30173.cloudfunctions.net/api";
