@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
 import Home from './Components/Home/Home';
 import Login from './Components/Login/Login';
@@ -9,7 +9,6 @@ import Feed from './Components/Feed/Feed';
 import UploadMix from './Components/Upload/UploadMix';
 import Post from './Components/Post/Post';
 import ProfilePage from './Components/Profile/ProfilePage';
-import LoggedInContainer from './Components/Containers/LoggedInContainer';
 import NewUpload from './Components/Upload/newUploads';
 import MyMix from './Components/My Mix/MyMix';
 import PostPage from './Components/Post/PostPage';
@@ -22,7 +21,6 @@ import EditPost from './Components/Post/EditPost';
 import { useAuth } from './Components/Context/AuthContext';
 
 
-
 function App() {
   
   const { loggedIn } = useAuth();
@@ -32,39 +30,33 @@ function App() {
       <Router>
           <Routes>
             {/* Public routes */}
-            {loggedIn ? (
+            {!loggedIn ? (
               <>
-              <Route path="/" element={<LoggedInContainer />} />
-              <Route path='/feed' element={<Feed />} />
-              <Route path="/my mixes" element={<MyMix />} />
-              <Route path="/new uploads" element={<NewUpload />} />
-              <Route path="/post page" element={<PostPage />} />
-              <Route path="/posts" element={<Post />} />
-              <Route path="/favourites" element={<Favourites />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/uploadMix" element={<UploadMix />} />
-              <Route path='/profilepage' element={<ProfilePage />} />
-              <Route path="/public profile" element={<PublicProfile /> } />
-              <Route path="/playlists" element={<Playlists />} />
-              <Route path="/edit/:playlistID" element={<Edit />} />
-              <Route path="/upload edit" element={<UploadEdit />} />
-              <Route path="/post edit" element={<EditPost />} />
-              
-              <Route path="/*" element={<NotFound />} />
-              
-              
-            </>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+              </>
             ) : (
-              // Logged-in routes
-              
               <>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-    
-              <Route path="/*" element={<NotFound />} />
-            </>
+                <Route path="/" element={<Feed />} />
+                <Route path='/feed' element={<Feed />} />
+                <Route path="/my-mixes" element={<MyMix />} />
+                <Route path="/new-uploads" element={<NewUpload />} />
+                <Route path="/post-page" element={<PostPage />} />
+                <Route path="/posts" element={<Post />} />
+                <Route path="/favourites" element={<Favourites />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/upload-mix" element={<UploadMix />} />
+                <Route path='/profile-page' element={<ProfilePage />} />
+                <Route path="/public-profile" element={<PublicProfile /> } />
+                <Route path="/playlists" element={<Playlists />} />
+                <Route path="/edit/:playlistID" element={<Edit />} />
+                <Route path="/upload-edit" element={<UploadEdit />} />
+                <Route path="/post-edit" element={<EditPost />} />
+              </>
             )}
+            {/* Catch-all for 404 */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
       </Router>
     </div>
@@ -72,8 +64,7 @@ function App() {
 }
 
 function NotFound() {
-  return <h1>Page not found.</h1>;
+  return <h1 className='text-2xl'>Page not found. <Link to="/" className="text-red-600">Go to Homepage</Link></h1>;
 }
 
 export default App;
-

@@ -1,179 +1,115 @@
 import React, { useEffect, useState } from "react";
-
 import { makeAuthenticatedGETRequest, makeAuthenticatedPOSTRequest } from "../Utils/ServerHelpers";
 import MixCard from "../shared/MixCard";
 import CurrentMix from "../shared/CurrentMix";
 import { useLocation } from "react-router-dom";
 
 const PublicPlaylistMix = ({ playlistId }) => {
+  const [playlistData, setPlaylistData] = useState({
+    playlistName: "",
+    playlistID: "",
+    mixData: [],
+  });
+  const [currentMix, setCurrentMix] = useState(null);
+  const [currentlyPlayingMixId, setCurrentlyPlayingMixId] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [existingPlaylists, setExistingPlaylists] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const [playlistData, setPlaylistData] = useState({
-       playlistName: "",
-       playlistID:"",
-       mixData: [],
-     });
-    const [ currentMix, setCurrentMix ] = useState(null);
-    const [ currentlyPlayingMixId, setCurrentlyPlayingMixId ] = useState(null);
-    const [ isPlaying, setIsPlaying ] = useState(false);
-    const [existingPlaylists, setExistingPlaylists] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const userId = queryParams.get("userId");
 
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const userId = queryParams.get("userId");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await makeAuthenticatedGETRequest(
+          `/playlist/playlistMixes/${userId}/${playlistId}`
+        );
+        setPlaylistData(response.data);
+      } catch (error) {
+        console.error("Error fetching mixes from the playlist", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [playlistId]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try{
-            const response = await makeAuthenticatedGETRequest(
-                `/playlist/playlistMixes/${userId}/${playlistId}`,
-            );
-                setPlaylistData(response.data);
-                setIsLoading(false);
-            } catch (error){
-                console.error("Error fetching mixes from the playlist", error);
-                setIsLoading(false);
-            }
-        }
-        fetchData();
-    }, [playlistId]);
+  const handlePlayPause = (mixId) => {
+    if (currentlyPlayingMixId === mixId) {
+      setIsPlaying(false);
+      setCurrentlyPlayingMixId(null);
+    } else {
+      setIsPlaying(true);
+      setCurrentlyPlayingMixId(mixId);
+      const playingMix = playlistData.mixData.find((item) => item._id === mixId);
+      setCurrentMix({
+        ...playingMix,
+        currentSong: "play",
+        currentTime: 0,
+      });
+    }
+  };
 
-    
-      const handlePlayPause = (mixId) => {
-        if (currentlyPlayingMixId === mixId) {
-          // Pause the currently playing mix
-          setIsPlaying(false);
-          setCurrentlyPlayingMixId(null);
-        } else {
-          // Play the selected mix
-          setIsPlaying(true);
-          setCurrentlyPlayingMixId(mixId);
-          // Find the playing mix data from feedData and set it as the currentMix
-          const playingMix = playlistData.mixData.find((item) => item._id === mixId);
-          setCurrentMix({
-            ...playingMix,
-            currentSong: "play",
-            currentTime: 0,
-          });
-        }
-      };
+  const playPrevMix = () => {
+    if (!currentMix) return;
+    const currentIndex = playlistData.mixData.findIndex((item) => item._id === currentMix._id);
+    if (currentIndex > 0) {
+      const prevMix = playlistData.mixData[currentIndex - 1];
+      setCurrentMix({
+        ...prevMix,
+        currentSong: "play",
+        currentTime: 0,
+      });
+      setCurrentlyPlayingMixId(prevMix._id);
+      setIsPlaying(true);
+    }
+  };
 
-      const playPrevMix = () => {
-        if (!currentMix) {
-          // If no mix is currently set as the currentMix, return or do nothing
-          return;
-        }
-      
-        const currentIndex = playlistData.mixData.findIndex((item) => item._id === currentMix._id);
-      
-        if (currentIndex > 0) {
-          const prevIndex = currentIndex - 1;
-          const prevMix = playlistData.mixData[prevIndex];
-      
-          if (prevMix) {
-            // Pause the current mix if it is playing
-            if (isPlaying) {
-              setIsPlaying(false);
-              const audioElement = document.getElementById(`audio-${currentMix._id}`);
-              if (audioElement) {
-                audioElement.pause();
-              }
-            }
-      
-            // Set the previous mix as the current mix and play it
-            setCurrentMix({
-              ...prevMix,
-              currentSong: "play", 
-              currentTime: 0,
-            });
-            setCurrentlyPlayingMixId(prevMix._id);
-            const audioElement = document.getElementById(`audio-${prevMix._id}`);
-              if (audioElement) {
-                audioElement.play();
-              }
-              setIsPlaying(true);
-          }
-        }
-      };
-      
-      const playNextMix = () => {
-        if (!currentMix) {
-          // If no mix is currently set as the currentMix, return or do nothing
-          return;
-        }
-      
-        const currentIndex = playlistData.mixData.findIndex((item) => item._id === currentMix._id);
-      
-        if (currentIndex !== -1 && currentIndex < playlistData.mixData.length - 1) {
-          const nextIndex = currentIndex + 1;
-          const nextMix = playlistData.mixData[nextIndex];
-      
-          if (nextMix) {
-            // Pause the current mix if it is playing
-            if (isPlaying) {
-              setIsPlaying(false);
-              const audioElement = document.getElementById(`audio-${currentMix._id}`);
-              if (audioElement) {
-                audioElement.pause();
-              }
-            }
-      
-            // Set the next mix as the current mix and play it
-            setCurrentMix({
-              ...nextMix,
-              currentSong: "play", 
-              currentTime: 0,
-            });
-            setCurrentlyPlayingMixId(nextMix._id);
-            const audioElement = document.getElementById(`audio-${nextMix._id}`);
-            if (audioElement) {
-              audioElement.play();
-            }
-            setIsPlaying(true);
-          }
-        }
-      };
+  const playNextMix = () => {
+    if (!currentMix) return;
+    const currentIndex = playlistData.mixData.findIndex((item) => item._id === currentMix._id);
+    if (currentIndex < playlistData.mixData.length - 1) {
+      const nextMix = playlistData.mixData[currentIndex + 1];
+      setCurrentMix({
+        ...nextMix,
+        currentSong: "play",
+        currentTime: 0,
+      });
+      setCurrentlyPlayingMixId(nextMix._id);
+      setIsPlaying(true);
+    }
+  };
 
-      const  createPlaylistAndAddMix = async ({mixId, name}) => {
-        try{
-          const response = await makeAuthenticatedPOSTRequest(
-            "/playlist/createPlaylist", { mixId, name}
-          );
-          return response;
-    
-        } catch (error) {
-          console.error("Error creating playlist and adding mix:", error);
-        }
-      };
-    
-      const fetchPlaylists = async () => {
-        try{
-          const response = await makeAuthenticatedGETRequest(
-            "/playlist/get/playlist"
-          );
-          console.log(response.data);
-          setExistingPlaylists(response.data);
-        } catch (error) {
-          console.error("Error fetching Playlist", error)
-        }
-      };
-      
-      
-    return(
-        <section>
-            <div className="flex ">
-                <div>
-                    <h1 className="font-bold text-xl">{playlistData.playlistName}</h1>
-                </div>
-            </div>
-            <div className="space-y-4 overflow-auto">
-            {isLoading ? (
-        <div className="min-h-screen flex  justify-center overflow-none">
-          <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
-        </div> 
-      ) : (
-        playlistData.mixData.length > 0 ? (
+  const createPlaylistAndAddMix = async ({ mixId, name }) => {
+    try {
+      await makeAuthenticatedPOSTRequest("/playlist/createPlaylist", { mixId, name });
+    } catch (error) {
+      console.error("Error creating playlist and adding mix:", error);
+    }
+  };
+
+  const fetchPlaylists = async () => {
+    try {
+      const response = await makeAuthenticatedGETRequest("/playlist/get/playlist");
+      setExistingPlaylists(response.data);
+    } catch (error) {
+      console.error("Error fetching Playlist", error);
+    }
+  };
+
+  return (
+    <section className="p-6 bg-base-100 rounded-lg shadow-lg">
+      <div className="flex flex-col items-start mb-6">
+        <h1 className="text-3xl font-semibold text-primary">{playlistData.playlistName}</h1>
+      </div>
+      <div className="space-y-4">
+        {isLoading ? (
+          <div className="flex justify-center items-center min-h-screen">
+            <div className="animate-spin w-16 h-16 border-t-4 border-primary border-solid rounded-full"></div>
+          </div>
+        ) : playlistData.mixData.length > 0 ? (
           playlistData.mixData.map((item, index) => (
             <MixCard
               key={index}
@@ -190,38 +126,33 @@ const PublicPlaylistMix = ({ playlistId }) => {
               createPlaylistAndAddMix={createPlaylistAndAddMix}
               fetchPlaylists={fetchPlaylists}
               existingPlaylists={existingPlaylists}
-             />
-             ))
-             ) : (
-               <p>
-               Follow artist to see mixes here
-              </p>
-           )
-          )}   
-            </div>
-            <div>
-            {currentMix && (
-        <CurrentMix
-          mixId={currentMix._id}
-          userId={currentMix.userId}
-          thumbnail={currentMix.thumbnail}
-          title={currentMix.title}
-          artist={currentMix.artist}
-          audioSrc={currentMix.track}
-          currentSong={currentMix.currentSong}
-          setCurrentSong={(songState) =>
-            setCurrentMix({ ...currentMix, currentSong: songState })
-          }
-          currentTime={currentMix.currentTime}
-          isPlaying={isPlaying}
-          onMixPlay={handlePlayPause}
-          onPlayNext={playNextMix} 
-          onPlayPrev={playPrevMix}
-
-        />
-      )}
+            />
+          ))
+        ) : (
+          <p className="text-center text-gray-500">Follow artist to see mixes here.</p>
+        )}
       </div>
-        </section>
-    )
-}
+      {currentMix && (
+        <div className="mt-6">
+          <CurrentMix
+            mixId={currentMix._id}
+            userId={currentMix.userId}
+            thumbnail={currentMix.thumbnail}
+            title={currentMix.title}
+            artist={currentMix.artist}
+            audioSrc={currentMix.track}
+            currentSong={currentMix.currentSong}
+            setCurrentSong={(songState) => setCurrentMix({ ...currentMix, currentSong: songState })}
+            currentTime={currentMix.currentTime}
+            isPlaying={isPlaying}
+            onMixPlay={handlePlayPause}
+            onPlayNext={playNextMix}
+            onPlayPrev={playPrevMix}
+          />
+        </div>
+      )}
+    </section>
+  );
+};
+
 export default PublicPlaylistMix;

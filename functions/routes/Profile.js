@@ -61,6 +61,7 @@ router.post("/create",
 
               const profileData = {
                 userName: req.user.userName,
+                email: userProfile ? userProfile.email : null,
                 coverPic: userProfile ? userProfile.coverPic : null, 
                 profilePic: userProfile ? userProfile.profilePic : null,
                 

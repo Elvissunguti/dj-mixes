@@ -153,13 +153,13 @@ const MyMix = () => {
 
 
     return(
-       <LoggedInContainer curActiveScreen="my mixes">
+       <LoggedInContainer curActiveScreen="my-mixes">
         <div className="flex items-start mb-2">
             <h1 className="font-bold text-2xl">MY MIXES</h1>
         </div>
         <div className="space-y-4 overflow-auto">
         {isLoading ? (
-        <div className="min-h-screen flex  justify-center overflow-none">
+        <div className="min-h-[70vh] flex items-center justify-center">
           <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
         </div> 
       ) : (

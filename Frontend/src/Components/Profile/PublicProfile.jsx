@@ -124,132 +124,89 @@ const handlePlaylistClick = (playlistId) => {
 setSelectedPlaylistId(playlistId);
 };
 
-    return(
-        <section>
-            <NavBar />
-            <div>
-                <div className="flex items-center justify-center w-full h-48">
-                    { coverPic ? (
-                        <div>
-                            <img
-                            src={coverPic}
-                            alt="cover"
-                            className=""
-                            />
+return (
+  <section className="mx-auto max-w-7xl p-4">
+    <NavBar />
+    <div className="bg-base-100 shadow-md rounded-lg overflow-hidden">
+      {/* Cover Section */}
+      <div className="flex items-center justify-center h-48 bg-gray-200">
+        {coverPic ? (
+          <img src={coverPic} alt="cover" className="object-cover w-full h-full" />
+        ) : (
+          <div className="flex items-center justify-center text-primary space-x-2">
+            <AiOutlineCamera size={24} />
+            <p className="text-gray-800 hover:text-blue-400">Cover image not yet uploaded</p>
+          </div>
+        )}
+      </div>
 
-                        </div>   
-                    ) : (
-                        <div className="flex items-center justify-center space-x-1">
-                        <AiOutlineCamera /><p className="text-gray-800 hover:text-blue-400">cover image not yet uploaded</p>
-                     </div>
-                    )}
+      <div className="flex flex-col md:flex-row p-6">
+        {/* Profile Picture and Bio Section */}
+        <div className="md:w-1/4 flex flex-col items-center space-y-4">
+          <div className="w-36 h-36 rounded-full overflow-hidden shadow-lg">
+            <img src={profilePic || avatar} alt="profile pic" className="w-full h-full" />
+          </div>
+          <h1 className="text-xl font-semibold text-center">{userName}</h1>
 
-                </div>
-                <div className="flex">
-                <div className="h-full w-1/5 mx-10 flex flex-col justify-between ">
-                    <div className="shadow-md bg-white w-full">
-                        <div className="flex items-center justify-center w-full my-4">
-                                {profilePic ? (
-                                    <img 
-                                    src={profilePic}
-                                    alt="profile pic"
-                                    className="w-36 rounded-full"
-                                    />
-                                ) : (
-                                    <div>
-                                        <img
-                                        src={avatar}
-                                        alt="avatar"
-                                        className="w-36 rounded-full"
-                                        />
-                                    </div>    
-                                )}
-                            </div>
-                                <h1 className="text-xl my-4 font-bold">{userName}</h1>
-                            <div>
-                                <div>
-                                {!isUserFollowed ? (
-                                  <button className="px-4 py-2 rounded font-semibold text-white bg-blue-500 hover:bg-blue-600 shadow-lg" onClick={handleFollowButton}>
-                                    FOLLOW
-                                  </button>
-                                ) : (
-                                  <button className="px-4 py-2 rounded font-semibold text-white bg-blue-500 hover:bg-blue-600 shadow-lg" onClick={handleUnfollowButton}>
-                                    UNFOLLOW
-                                  </button>
-                                )}
+          {/* Follow/Unfollow Button */}
+          <button
+            className={`btn ${isUserFollowed ? "btn-primary" : "btn-outline btn-primary"} mt-4`}
+            onClick={isUserFollowed ? handleUnfollowButton : handleFollowButton}
+          >
+            {isUserFollowed ? "Unfollow" : "Follow"}
+          </button>
 
-                                </div>
-                                
-                            </div>
-                            <div className="mt-2">
-                                <p>{biography}</p>
-                            </div>
-                            <div>
-                                <ul className="flex flex-row items-center justify-center space-x-2 my-4 text-3xl font-semibold">
-                                    <li className="hover:text-green-500 cursor-pointer"><BiLogoFacebookCircle /></li>
-                                    <li className="hover:text-green-500 cursor-pointer"><BiLogoTwitter /></li>
-                                    <li className="hover:text-green-500 cursor-pointer"><BiLogoInstagram /></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col mt-40 items-start">
-                      <div className="flex space-x-2 mt-2">
-                        <button
-                          className={`${
-                          activeTab === 'my mixes' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                          } px-4 py-2 rounded`}
-                          onClick={() => setActiveTab('my mixes')}
-                        >
-                         Shows
-                        </button>
-                        <button
-                          className={`${
-                          activeTab === 'favorites' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                          } px-4 py-2 rounded`}
-                          onClick={() => setActiveTab('favorites')}
-                        >
-                        Favorites
-                        </button>
-                        <button
-                          className={`${
-                          activeTab === 'post' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                          } px-4 py-2 rounded`}
-                          onClick={() => setActiveTab('post')}
-                        >
-                        Post
-                        </button>
-                        <div className=" relative">
-                         <button className={`${
-                            activeTab === 'playlist' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                            } px-4 py-2 rounded`}
-                            onClick={() => {
-                            setActiveTab('playlist');
-                            togglePlaylistDropdown();
-                         }}>
-                          Playlist
-                         </button>
-                          {isPlaylistDropdownOpen && (
-                             <div className="absolute left-0 mt-2 w-64 max-h-60 overflow-y-auto z-50 ">
-                                <PublicListPlaylist
-                                    isDropdownOpen={isPlaylistDropdownOpen}
-                                    onPlaylistClick={(playlistId) => {
-                                    togglePlaylistDropdown();
-                                    handlePlaylistClick(playlistId);
-                                     }}
-                                     className="px-6"
+          {/* Bio */}
+          <p className="text-center text-gray-700 mt-2">{biography}</p>
 
-                                />
-                             </div>
-                           )}
-                        </div>
-                        </div>
-                        <div className="mt-4">{renderActiveTab()}</div>
-                    </div>
-                </div>
+          {/* Social Links */}
+          <div className="flex space-x-4 text-3xl mt-6">
+            <BiLogoFacebookCircle className="hover:text-blue-600 cursor-pointer" />
+            <BiLogoTwitter className="hover:text-blue-400 cursor-pointer" />
+            <BiLogoInstagram className="hover:text-pink-500 cursor-pointer" />
+          </div>
+        </div>
 
+        {/* Tabs and Content Section */}
+        <div className="md:w-3/4 mt-10 md:mt-0 p-4">
+          <div className="flex justify-start space-x-4 mb-6">
+            {["my mixes", "favorites", "post", "playlist"].map((tab) => (
+              <button
+                key={tab}
+                className={`btn btn-sm ${
+                  activeTab === tab
+                    ? "btn-primary"
+                    : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
+                }`}
+                onClick={() => {
+                  setActiveTab(tab);
+                  if (tab === "playlist") togglePlaylistDropdown();
+                }}
+              >
+                {tab === "my mixes" ? "Shows" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          {isPlaylistDropdownOpen && (
+            <div className="relative mb-4">
+              <PublicListPlaylist
+                isDropdownOpen={isPlaylistDropdownOpen}
+                onPlaylistClick={(playlistId) => {
+                  togglePlaylistDropdown();
+                  handlePlaylistClick(playlistId);
+                }}
+                className="bg-white shadow-md rounded-lg w-full p-4 max-h-60 overflow-y-auto z-50"
+              />
             </div>
-        </section>
-    )
-}
+          )}
+
+          <div className="bg-base-200 rounded-lg p-4 shadow-inner">{renderActiveTab()}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+};
+
 export default PublicProfile;

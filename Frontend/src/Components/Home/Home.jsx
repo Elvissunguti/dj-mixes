@@ -1,11 +1,11 @@
 import React from "react";
-import NavBar from "./NavBar";
 import Hero from "./Hero";
+import PreviewNavBar from "./PreviewNavBar";
 
 const Home = () => {
     return(
         <section>
-            <NavBar />
+            <PreviewNavBar />
             <Hero />
         </section>
     )

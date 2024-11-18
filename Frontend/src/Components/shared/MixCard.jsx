@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { ImFacebook, ImPause, ImPlay, ImWhatsapp } from "react-icons/im";
 import { AiFillHeart, AiOutlineHeart, AiOutlineInstagram, AiOutlineMore, AiOutlineTwitter } from "react-icons/ai";
 import { PiMusicNotesPlusFill, PiMusicNotesPlusThin } from "react-icons/pi";
@@ -21,6 +21,8 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, favouriteC
     const [ existingPlaylist, setExistingPlaylist ] = useState([]);
     
     const navigate = useNavigate();
+
+    const addToPlaylistRef = useRef(null);
 
 
     useEffect(() => {
@@ -82,6 +84,23 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, favouriteC
   
     checkIfFavorited();
   }, [mixId]);
+
+
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (addToPlaylistRef.current && !addToPlaylistRef.current.contains(event.target)) {
+        setAddToPlaylist(false);
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  
 
 
   const formatTime = (timeInSeconds) => {
@@ -249,117 +268,161 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, favouriteC
 
 
     return(
-        <section className="relative">
-            <div className={`flex p-5 mt-5 rounded w-2/3 ${isCurrentMixPlaying ? "bg-gray-300" : "bg-gray-100"}`}>
-                <div className="w-1/5">
-                    <img src={thumbnail} alt=""
-                    className="h-44 w-44 rounded object-cover" />
-                </div>
-                <div className="flex flex-col w-4/5 space-x-12 mt-4 pl-4">
-                <div className="flex space-x-4 my-4">
-                    <div className="  text-5xl cursor-pointer" onClick={handlePlayPause}>
-                        {isPlaying && currentlyPlayingMixId === mixId ? (
-                           <ImPause  /> 
-                        ) : (
-                           <ImPlay  />
-                        )}
-                    </div>
-                    <div className="flex flex-col items-start text-2xl font-medium">
-                        <p className="hover:text-gray-600 cursor-pointer">
-                            {title}
-                        </p>
-                        <p className=" hover:text-gray-600 cursor-pointer" onClick={handleArtistClick}>
-                            By <span className="text-gray-500 hover:text-black">{artist}</span>
-                        </p>
-                    </div>
-                </div>
-                <div className="flex" >
-                    <p>{formatTime(currentTime)}</p>
-                    <Slider
-  value={isNaN(duration[mixId]) ? 0 : (currentTime / duration[mixId]) * 100}
-  onChange={(e, value) => handleSeek({ target: { value } })}
-  sx={{
-    width: 300,
-    color: "#10b981",
-    height: 8,
-    "& .MuiSlider-thumb": {
-      height: 24,
-      width: 24,
-      backgroundColor: "#fff",
-      border: "2px solid currentColor",
-    },
-    "& .MuiSlider-track": {
-      border: "none",
-    },
-    "& .MuiSlider-rail": {
-      opacity: 0.5,
-      backgroundColor: "#d1d5db",
-    },
-  }}
-/>
-
-                    <p>{formatTime(duration[mixId])}</p>
-                    </div>
-                    
-                <div className="flex flex-row relative mt-4 space-x-4">
-                    <div onClick={handleFavoriteClick}>
-                        { isFavourite ? (
-                            <AiFillHeart  className="text-red-600 text-4xl cursor-pointer"  />
-                        ) : (
-                            <AiOutlineHeart className="text-black text-4xl cursor-pointer" />
-                        )}
-                        <span className="text-green-600">{favouriteCount}</span>
-                    </div>  
-                    <div className="relative" >
-                       <PiMusicNotesPlusFill className="text-4xl cursor-pointer" onClick={handleAddToPlaylistClick} />
-                    {addToPlaylist && (
-                    <div className="absolute z-10 left-0 bottom-0 mb-7 w-60 bg-white border border-gray-300 rounded-lg shadow-lg">
-                        <div className="relative">
-                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                            <PiMusicNotesPlusThin className="w-6 h-6 text-gray-400" />
-                        </div>
-                        <input
-                          type="text"
-                          placeholder="NEW PLAYLIST"
-                          value={playlistName}
-                          onChange={(e) => setPlaylistName(e.target.value)}
-                          onKeyPress={handleInputKeyPress}
-                          className="pl-10 px-4 py-2 border-b border-gray-300 rounded-t-lg w-full focus:outline-none"
-                        />
-                       </div>
-                         <div className="max-h-32 overflow-y-auto">
-                             <ul>
-                               {existingPlaylists.map((playlist) => (
-                                 <li
-                                    key={playlist._id}
-                                    className="flex cursor-pointer py-2 px-4 hover:bg-gray-100"
-                                    onClick={() => addMixToPlaylist(playlist._id, mixId)}
-                                 >
-                                   <LuListMusic className="mr-2" /> {playlist.name}
-                                 </li>
-                               ))}
-                             </ul>
-                        </div>
-                        </div>
-                       )}
-                     </div>
-                        <FcShare className="cursor-pointer text-4xl" onClick={() => setOpen(!open)}/>
-                    { open && (
-                        <div className="absolute bg-green-500 top-full mt-2 px-2 py-3 ">
-                            <ul className="flex items-center justify-center space-x-4 text-xl font-medium">
-                                <li><AiOutlineTwitter className="cursor-pointer" /></li>
-                                <li><ImWhatsapp className="cursor-pointer" /></li>
-                                <li><ImFacebook className="cursor-pointer" /></li>
-                                <li><AiOutlineInstagram className="cursor-pointer" /></li>
-                            </ul>
-                        </div>
-                    )}
-                    <AiOutlineMore className="cursor-pointer text-4xl" />
-                </div>
-                </div>
+      <section className="relative">
+      <div
+        className={`flex p-5 mt-5 rounded-lg shadow-lg  ${
+          isCurrentMixPlaying ? "bg-gray-800" : "bg-gray-700"
+        }`}
+      >
+        {/* Thumbnail */}
+        <div className="w-1/4">
+          <img
+            src={thumbnail}
+            alt=""
+            className="h-40 w-40 rounded-lg object-cover shadow-md"
+          />
+        </div>
+    
+        {/* Mix Info */}
+        <div className="flex flex-col w-3/4 space-x-6 pl-6 justify-between">
+          <div className="flex space-x-4 items-center">
+            {/* Play/Pause Button */}
+            <div
+              className="text-5xl cursor-pointer text-green-500 hover:text-green-400"
+              onClick={handlePlayPause}
+            >
+              {isPlaying && currentlyPlayingMixId === mixId ? (
+                <ImPause />
+              ) : (
+                <ImPlay />
+              )}
             </div>
-            <audio id={`audio-${mixId}`} src={audioSrc} preload="metadata" onEnded={() => onMixPlay(null, 0)}></audio>
-        </section>
+    
+            {/* Title and Artist */}
+            <div className="flex flex-col">
+              <p className="text-2xl font-semibold text-white hover:text-green-400 cursor-pointer">
+                {title}
+              </p>
+              <p
+                className="text-lg text-gray-400 cursor-pointer hover:text-green-500"
+                onClick={handleArtistClick}
+              >
+                By{" "}
+                <span className="text-gray-500 hover:text-white">{artist}</span>
+              </p>
+            </div>
+          </div>
+    
+          {/* Slider and Time */}
+          <div className="flex items-center space-x-4 mt-2">
+            <p className="text-gray-400">{formatTime(currentTime)}</p>
+            <Slider
+              value={isNaN(duration[mixId]) ? 0 : (currentTime / duration[mixId]) * 100}
+              onChange={(e, value) => handleSeek({ target: { value } })}
+              sx={{
+                width: 300,
+                color: "#10b981",
+                height: 8,
+                "& .MuiSlider-thumb": {
+                  height: 24,
+                  width: 24,
+                  backgroundColor: "#fff",
+                  border: "2px solid currentColor",
+                },
+                "& .MuiSlider-track": {
+                  border: "none",
+                },
+                "& .MuiSlider-rail": {
+                  opacity: 0.5,
+                  backgroundColor: "#d1d5db",
+                },
+              }}
+            />
+            <p className="text-gray-400">{formatTime(duration[mixId])}</p>
+          </div>
+    
+          {/* Actions (Favorite, Playlist, Share) */}
+          <div className="flex items-center space-x-6 mt-4">
+            {/* Favorite */}
+            <div onClick={handleFavoriteClick} className="relative">
+              {isFavourite ? (
+                <AiFillHeart className="text-red-600 text-4xl cursor-pointer" />
+              ) : (
+                <AiOutlineHeart className="text-gray-400 text-4xl cursor-pointer hover:text-white" />
+              )}
+              <span className="absolute bottom-0 left-7 text-green-500 text-lg">
+                {favouriteCount}
+              </span>
+            </div>
+    
+            {/* Add to Playlist */}
+            <div className="relative">
+              <PiMusicNotesPlusFill
+                className="text-gray-400 text-4xl cursor-pointer hover:text-green-500"
+                onClick={handleAddToPlaylistClick}
+              />
+              {addToPlaylist && (
+                <div ref={addToPlaylistRef} className="absolute z-50 left-0 top-full mt-2 w-60 bg-gray-800 border border-gray-600 rounded-lg shadow-lg p-4">
+                  <input
+                    type="text"
+                    placeholder="NEW PLAYLIST"
+                    value={playlistName}
+                    onChange={(e) => setPlaylistName(e.target.value)}
+                    onKeyPress={handleInputKeyPress}
+                    className="w-full bg-gray-900 text-white border-b border-gray-600 rounded-t-lg p-2 focus:outline-none"
+                  />
+                  <ul className="max-h-32 overflow-y-auto mt-2">
+                    {existingPlaylists.map((playlist) => (
+                      <li
+                        key={playlist._id}
+                        className="flex items-center p-2 bg-gray-700 hover:bg-gray-900 text-white cursor-pointer"
+                        onClick={() => addMixToPlaylist(playlist._id, mixId)}
+                      >
+                        <LuListMusic className="mr-2" /> {playlist.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+    
+            {/* Share */}
+            <FcShare
+              className="text-gray-400 text-4xl cursor-pointer hover:text-green-500"
+              onClick={() => setOpen(!open)}
+            />
+            {open && (
+              <div className="absolute bg-gray-800 text-white top-full mt-2 px-2 py-3 rounded-lg shadow-lg">
+                <ul className="flex items-center justify-center space-x-4 text-xl font-medium">
+                  <li>
+                    <AiOutlineTwitter className="cursor-pointer" />
+                  </li>
+                  <li>
+                    <ImWhatsapp className="cursor-pointer" />
+                  </li>
+                  <li>
+                    <ImFacebook className="cursor-pointer" />
+                  </li>
+                  <li>
+                    <AiOutlineInstagram className="cursor-pointer" />
+                  </li>
+                </ul>
+              </div>
+            )}
+    
+            {/* More options */}
+            <AiOutlineMore className="cursor-pointer text-4xl hover:text-white" />
+          </div>
+        </div>
+      </div>
+      <audio
+        id={`audio-${mixId}`}
+        src={audioSrc}
+        preload="metadata"
+        onEnded={() => onMixPlay(null, 0)}
+      ></audio>
+    </section>
+    
     )
 };
  export default MixCard;

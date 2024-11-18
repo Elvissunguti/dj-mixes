@@ -153,11 +153,11 @@ const Favourite = () => {
     return(
         <section>
             <div className="flex items-start mb-6">
-                <h1 className="font-bold text-xl">Favourites</h1>
+                <h1 className="font-bold text-xl text-primary">Favourites</h1>
             </div>
-          <div className="space-y-4 overflow-auto">
+          <div className="space-y-4 overflow-y-auto">
           {isLoading ? (
-           <div className="min-h-screen flex justify-center overflow-none">
+           <div className="min-h-[70vh] flex items-center justify-center overflow-none">
            <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
            </div> 
           ) : (

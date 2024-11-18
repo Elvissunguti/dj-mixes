@@ -185,51 +185,50 @@ const PlaylistMix = ({ playlistId }) => {
 
 
     return(
-        <section>
-            <div className="flex justify-between">
-                <div>
-                    <h1 className="font-bold text-xl">{playlistData.playlistName}</h1>
-                </div>
-                <div className="flex flex-col">
-                    <ul className="flex space-x-4">
-                        <li className="text-xl">
-                          {!showDeleteConfirmation && (
-                            <button onClick={handleDeleteClick} className="flex  items-center border p-2 rounded-md">
-                              <MdOutlineDeleteOutline /> DELETE</button>
-                          )}
-              
-                        </li>
-                        <li className="flex text-xl">
-                          {showDeleteConfirmation && (
-                            <button onClick={handleConfirmDelete} className="border bg-red-500 hover:bg-red-700 text-white p-2 rounded-md" >
-                              CONFIRM</button>
-                          )}
-                        </li>
-                        <li className="text-xl">
-                          { showDeleteConfirmation && (
-                            <button onClick={handleCancelDelete} className="border hover:text-blue-500 p-2 rounded-md">CANCEL</button>
-                          )}
-                        </li>
-                        <li className="text-xl">
-                          <Link to={`/edit/${playlistData.playlistID}`}>
-                            <button className="flex items-center  border p-2 rounded-md">
-                              <IoCreateOutline  /> EDIT</button>
-                          </Link>
-                        </li>
-                    </ul>
-                </div>
+      <section className="p-6 bg-base-100 rounded-lg shadow-lg">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="font-bold text-2xl text-primary">{playlistData.playlistName}</h1>
+        <div className="flex space-x-4">
+          {!showDeleteConfirmation ? (
+            <button
+              onClick={handleDeleteClick}
+              className="flex items-center space-x-2 p-2 bg-red-500 hover:bg-red-600 text-white rounded-md shadow-md"
+            >
+              <MdOutlineDeleteOutline /> <span>DELETE</span>
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={handleConfirmDelete}
+                className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-md"
+              >
+                CONFIRM
+              </button>
+              <button
+                onClick={handleCancelDelete}
+                className="p-2 text-blue-500 border border-blue-500 hover:bg-blue-50 rounded-md shadow-md"
+              >
+                CANCEL
+              </button>
+            </>
+          )}
+          <Link to={`/edit/${playlistData.playlistID}`}>
+            <button className="flex items-center space-x-2 p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow-md">
+              <IoCreateOutline /> <span>EDIT</span>
+            </button>
+          </Link>
+        </div>
+      </div>
 
-            </div>
-            <div className="space-y-4 overflow-auto">
-            {isLoading ? (
-        <div className="min-h-screen flex  justify-center overflow-none">
-          <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
-        </div> 
-      ) : (
-        playlistData.mixData.length > 0 ? (
-          playlistData.mixData.map((item, index) => (
+      <div className="space-y-4 overflow-auto">
+        {isLoading ? (
+          <div className="flex justify-center items-center h-48">
+            <div className="animate-spin w-12 h-12 border-4 border-t-primary border-transparent rounded-full"></div>
+          </div>
+        ) : playlistData.mixData.length > 0 ? (
+          playlistData.mixData.map((item) => (
             <MixCard
-              key={index}
+              key={item._id}
               mixId={item._id}
               thumbnail={item.thumbnail}
               title={item.title}
@@ -243,38 +242,33 @@ const PlaylistMix = ({ playlistId }) => {
               createPlaylistAndAddMix={createPlaylistAndAddMix}
               fetchPlaylists={fetchPlaylists}
               existingPlaylists={existingPlaylists}
-             />
-             ))
-             ) : (
-               <p>
-                  Add mixes to playlist to see mixes here
-              </p>
-           )
-          )}    
-            </div>
-            <div>
-            {currentMix && (
-        <CurrentMix
-          mixId={currentMix._id}
-          userId={currentMix.userId}
-          thumbnail={currentMix.thumbnail}
-          title={currentMix.title}
-          artist={currentMix.artist}
-          audioSrc={currentMix.track}
-          currentSong={currentMix.currentSong}
-          setCurrentSong={(songState) =>
-            setCurrentMix({ ...currentMix, currentSong: songState })
-          }
-          currentTime={currentMix.currentTime}
-          isPlaying={isPlaying}
-          onMixPlay={handlePlayPause}
-          onPlayNext={playNextMix} 
-          onPlayPrev={playPrevMix}
-
-        />
-      )}
+            />
+          ))
+        ) : (
+          <p className="text-center text-secondary">Add mixes to playlist to see them here</p>
+        )}
       </div>
-        </section>
+
+      {currentMix && (
+        <div className="mt-6 bg-base-200 rounded-lg p-4 shadow-lg">
+          <CurrentMix
+            mixId={currentMix._id}
+            userId={currentMix.userId}
+            thumbnail={currentMix.thumbnail}
+            title={currentMix.title}
+            artist={currentMix.artist}
+            audioSrc={currentMix.track}
+            currentSong={currentMix.currentSong}
+            setCurrentSong={(songState) => setCurrentMix({ ...currentMix, currentSong: songState })}
+            currentTime={currentMix.currentTime}
+            isPlaying={isPlaying}
+            onMixPlay={handlePlayPause}
+            onPlayNext={playNextMix}
+            onPlayPrev={playPrevMix}
+          />
+        </div>
+      )}
+    </section>
     )
 }
 export default PlaylistMix;

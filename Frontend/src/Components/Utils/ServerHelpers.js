@@ -67,6 +67,21 @@ export const makeAuthenticatedGETRequest = async (route) => {
     return formattedResponse;
 };
 
+
+export const makeUnAuthenticatedGETRequest = async (route) => {
+    
+    const response = await fetch(backendUrl + route, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        
+    });
+    const formattedResponse = await response.json();
+    return formattedResponse;
+};
+
+
 export const makeAuthenticatedPUTRequest = async (route, body) => {
     const token = getToken();
     const response = await fetch(backendUrl + route, {

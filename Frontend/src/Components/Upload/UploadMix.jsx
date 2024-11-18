@@ -11,7 +11,7 @@ const UploadMix = () => {
     const [title, setTitle] = useState("");
     const [thumbnail, setThumbnail] = useState(null);
     const [track, setTrack] = useState(null);
-    const [uploading, setUploading] = useState(false); // State to handle uploading status
+    const [uploading, setUploading] = useState(false); 
 
     const navigate = useNavigate();
 

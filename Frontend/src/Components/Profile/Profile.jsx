@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../Home/NavBar";
-import avatar from "../Assets/avatar.png"
+import avatar from "../Assets/avatar.png";
 import { IoCreateOutline } from "react-icons/io5";
 import { BsLink45Deg } from "react-icons/bs";
 import { AiOutlineMore, AiOutlineCamera } from "react-icons/ai";
@@ -12,189 +12,148 @@ import ListPlaylist from "../Playlists/ListPlaylist";
 import PlaylistMix from "../Playlists/PlaylistMix";
 import MyPost from "../Post/MyPost";
 
-
 const Profile = () => {
-    
-    const [profileData, setProfileData] = useState(null); 
-    const [activeTab, setActiveTab] = useState('my mixes')
-    const [isPlaylistDropdownOpen, setIsPlaylistDropdownOpen] = useState(false); 
-    const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
+  const [profileData, setProfileData] = useState(null);
+  const [activeTab, setActiveTab] = useState("my mixes");
+  const [isPlaylistDropdownOpen, setIsPlaylistDropdownOpen] = useState(false);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
 
-    // Get request to get the Profile of the current User
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await makeAuthenticatedGETRequest(
-                "/profile/get/profiles"
-            );
-            setProfileData(response.data);
-        };
-        fetchData();
-    }, []);
-
-    const renderActiveTab = () => {
-        switch (activeTab) {
-          case 'my mixes':
-            return <Uploads />;
-          case 'favorites':
-            return <Favourite />;
-          case 'post':
-            return <MyPost />;
-          case 'playlistMix': 
-            return selectedPlaylistId ? <PlaylistMix playlistId={selectedPlaylistId} /> : null;
-          default:
-            return null;
-        }
-      };
-
-
-    if (!profileData) {
-        return (
-            <div className="min-h-screen flex items-center justify-center overflow-none">
-               <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
-            </div> 
-        ) 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await makeAuthenticatedGETRequest("/profile/get/profiles");
+        setProfileData(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user profile", error);
+      }
     };
+    getData();
+  }, []);
 
-    const { userName, coverPic, profilePic } = profileData;
-    
-    const togglePlaylistDropdown = () => {
-        setIsPlaylistDropdownOpen(!isPlaylistDropdownOpen);
-    };
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case "my-mixes":
+        return <Uploads />;
+      case "favorites":
+        return <Favourite />;
+      case "post":
+        return <MyPost />;
+      case "playlistMix":
+        return selectedPlaylistId ? <PlaylistMix playlistId={selectedPlaylistId} /> : null;
+      default:
+        return null;
+    }
+  };
 
-    
+  if (!profileData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center overflow-none">
+        <div className="animate-spin w-16 h-16 border-4 border-primary border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
+
+  const { userName, coverPic, profilePic } = profileData;
+
+  const togglePlaylistDropdown = () => {
+    setIsPlaylistDropdownOpen(!isPlaylistDropdownOpen);
+  };
+
   const handlePlaylistClick = (playlistId) => {
-    // Set the selected playlist ID when a playlist is clicked
     setSelectedPlaylistId(playlistId);
   };
 
-
-    return (
-        <section className="mx-auto max-w-9xl ">
-            <NavBar />
-            <div className="h-full">
-                <div className="flex items-center justify-center w-full h-48">
-                    {coverPic ? (
-                        <img
-                            src={coverPic}
-                            alt="Cover"
-                            className="object-cover "
-                        />
-                    ) : (
-                        <div className="flex items-center justify-center space-x-1">
-                            <AiOutlineCamera /><Link to="/profilepage"><p className="text-gray-800 hover:text-blue-400">Upload cover image</p></Link>
-                        </div>
-                    )}
-                </div>
-
-                <div className="flex ">
-                    <div className="h-full w-1/5 mx-10 flex flex-col justify-between">
-                        <div className="shadow-md bg-white w-full">
-                            <div className="flex items-center justify-center w-full my-4">
-                                {profilePic ? (
-                                    <img
-                                        src={profilePic}
-                                        alt="Profile pic"
-                                        className="w-36 rounded-full"
-                                    />
-                                ) : (
-                                    <div>
-                                        <img
-                                            src={avatar}
-                                            alt="avatar"
-                                            className="w-36 rounded-full"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                            
-                            <h1 className="text-xl font-semibold">{userName}</h1>
-                            <div className="mt-6">
-                                <button className="px-3 py-2 rounded text-white bg-blue-400 hover:bg-blue-700">
-                                    <Link to="/profilepage" className="flex items-center text-xl space-x-4 ">
-                                        <IoCreateOutline /><p>EDIT MY PROFILE</p>
-                                    </Link>
-                                </button>
-                            </div>
-                            <div>
-                                <ul className="space-y-8 mt-4 px-6 ">
-                                    <li><Link to="/profilepage" className="flex items-center text-lg mx-4 space-x-4  hover:text-blue-800">
-                                        <IoCreateOutline /><p>ADD BIO</p>
-                                    </Link></li>
-                                    <li><Link to="/profilepage" className="flex items-center text-lg mx-4 space-x-4 hover:text-blue-800">
-                                        <BsLink45Deg /><p>ADD SOCIALS</p>
-                                    </Link></li>
-                                    <li><Link to="/profilepage" className="flex items-center text-lg mx-4 space-x-4 hover:text-blue-800">
-                                        <BsLink45Deg /><p>ADD LINKS</p>
-                                    </Link></li>
-                                    <li className="border-t"><Link to="/profilepage" className="flex  px-2 py-1 items-center hover:bg-gray-200 text-lg  my-4 space-x-4 hover:text-blue-800">
-                                        <AiOutlineMore /><p>MORE OPTIONS</p>
-                                    </Link></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col w-4/5 mt-36 relative">
-                    <div className="flex">
-                      <div className="flex space-x-4 mt-8">
-                        <button
-                          className={`${
-                          activeTab === 'my mixes' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                          } px-4 py-2 rounded`}
-                          onClick={() => setActiveTab('my mixes')}
-                        >
-                         Shows
-                        </button>
-                        <button
-                          className={`${
-                          activeTab === 'favorites' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                          } px-4 py-2 rounded`}
-                          onClick={() => setActiveTab('favorites')}
-                        >
-                        Favorites
-                        </button>
-                        <button
-                          className={`${
-                          activeTab === 'post' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                          } px-4 py-2 rounded`}
-                          onClick={() => setActiveTab('post')}
-                        >
-                         Posts
-                        </button>
-
-                        <div className=" relative">
-                         <button className={`${
-                            activeTab === 'playlistMix' ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                            } px-4 py-2 rounded`}
-                            onClick={() => {
-                            setActiveTab('playlistMix');
-                            togglePlaylistDropdown();
-                         }}>
-                          Playlist
-                         </button>
-                          {isPlaylistDropdownOpen && (
-                             <div className="absolute left-0 mt-2 w-64 max-h-60 overflow-y-auto z-50 ">
-                                <ListPlaylist
-                                    isDropdownOpen={isPlaylistDropdownOpen}
-                                    onPlaylistClick={(playlistId) => {
-                                    togglePlaylistDropdown();
-                                    handlePlaylistClick(playlistId);
-                                     }}
-                                     className="px-6"
-
-                                />
-                             </div>
-                           )}
-                        </div>
-                        </div>
-                    </div>
-                    <div className="w-full">
-                        <div className="mt-2">{renderActiveTab()}</div>
-                        </div>
-                        </div>
-                                    
+  return (
+    <section className="mx-auto max-w-7xl p-4">
+      <NavBar />
+      <div className="h-full bg-base-100 shadow-md rounded-lg overflow-hidden">
+        <div className="flex items-center justify-center h-48 bg-gray-200">
+          {coverPic ? (
+            <img src={coverPic} alt="Cover" className="object-cover h-full w-full" />
+          ) : (
+            <div className="flex items-center space-x-2 text-primary">
+              <AiOutlineCamera size={24} />
+              <Link to="/profile-page" className="hover:text-blue-400">
+                Upload cover image
+              </Link>
             </div>
+          )}
+        </div>
+
+        <div className="flex flex-col md:flex-row p-6">
+          <div className="md:w-1/4 flex flex-col items-center">
+            <div className="w-36 h-36 rounded-full overflow-hidden mb-4 shadow-lg">
+              <img src={profilePic || avatar} alt="Profile pic" className="w-full h-full" />
             </div>
-        </section>
-    )
-}
+            <h1 className="text-xl font-semibold text-center">{userName}</h1>
+            <Link to="/profile-page" className="mt-4 btn btn-primary btn-block">
+              <IoCreateOutline /> EDIT MY PROFILE
+            </Link>
+            <ul className="mt-6 space-y-4 text-center text-secondary">
+              <li>
+                <Link to="/profile-page" className="flex items-center justify-center space-x-2 hover:text-primary">
+                  <IoCreateOutline />
+                  <p>ADD BIO</p>
+                </Link>
+              </li>
+              <li>
+                <Link to="/profile-page" className="flex items-center justify-center space-x-2 hover:text-primary">
+                  <BsLink45Deg />
+                  <p>ADD SOCIALS</p>
+                </Link>
+              </li>
+              <li>
+                <Link to="/profile-page" className="flex items-center justify-center space-x-2 hover:text-primary">
+                  <BsLink45Deg />
+                  <p>ADD LINKS</p>
+                </Link>
+              </li>
+              <li className="border-t pt-4">
+                <Link to="/profile-page" className="flex items-center justify-center space-x-2 hover:text-primary">
+                  <AiOutlineMore />
+                  <p>MORE OPTIONS</p>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="md:w-3/4 mt-10 md:mt-0 p-4">
+            <div className="flex justify-start space-x-4 mb-6">
+              {["my mixes", "favorites", "post", "playlistMix"].map((tab) => (
+                <button
+                  key={tab}
+                  className={`btn btn-sm ${
+                    activeTab === tab ? "btn-primary" : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
+                  }`}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    if (tab === "playlistMix") togglePlaylistDropdown();
+                  }}
+                >
+                  {tab === "my mixes" ? "Shows" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
+
+            {isPlaylistDropdownOpen && (
+              <div className="relative mb-4">
+                <ListPlaylist
+                  isDropdownOpen={isPlaylistDropdownOpen}
+                  onPlaylistClick={(playlistId) => {
+                    togglePlaylistDropdown();
+                    handlePlaylistClick(playlistId);
+                  }}
+                  className="bg-white shadow-md rounded-lg w-full p-4 max-h-60 overflow-y-auto z-50"
+                />
+              </div>
+            )}
+
+            <div className="bg-base-200 rounded-lg h-screen p-4 shadow-inner">{renderActiveTab()}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default Profile;

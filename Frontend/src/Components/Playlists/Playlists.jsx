@@ -1,75 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LoggedInContainer from "../Containers/LoggedInContainer";
 import PlaylistCard from "./PlaylistCard";
-import { useState } from "react";
 import { makeAuthenticatedGETRequest } from "../Utils/ServerHelpers";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 const Playlists = () => {
+  const [playlistData, setPlaylistData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
-const [playlistData, setPlaylistData ] = useState([]);
-const [isLoading, setIsLoading] = useState(true);
-const navigate = useNavigate();
+  useEffect(() => {
+    const getPlaylist = async () => {
+      try {
+        const response = await makeAuthenticatedGETRequest("/playlist/get/playlist");
+        setPlaylistData(response.data);
+      } catch (error) {
+        console.error("Error fetching playlist data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getPlaylist();
+  }, []);
 
-    useEffect(() => {
-        const getPlaylist = async () => {
-          try {
-            const response = await makeAuthenticatedGETRequest(
-                "/playlist/get/playlist"
-            );
-            setPlaylistData(response.data);
-            setIsLoading(false);
-          } catch (error) {
-            console.error("Error fetching feed data:", error);
-            setIsLoading(false);
-          }
-        };
-        getPlaylist();
-      }, []);
+  const handlePlaylistCardClick = () => {
+    navigate("/profile");
+  };
 
+  return (
+    <LoggedInContainer curActiveScreen="playlists">
+      <div className="flex items-start mb-4">
+        <h1 className="text-2xl font-bold">Playlists</h1>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {isLoading ? (
+          <div className="min-h-screen flex justify-center items-center">
+            <div className="animate-spin w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full"></div>
+          </div>
+        ) : playlistData.length > 0 ? (
+          playlistData.map((item, index) => (
+            <PlaylistCard
+              key={index}
+              name={item.name}
+              mixCount={item.mixCount}
+              userName={item.userName}
+              onClick={() => handlePlaylistCardClick(item._id)}
+            />
+          ))
+        ) : (
+          <p className="text-center text-gray-500">You have not created any playlists yet.</p>
+        )}
+      </div>
+    </LoggedInContainer>
+  );
+};
 
-      const handlePlaylistCardClick = () => {
-        // You can construct the URL as per your application's routing structure
-        navigate("/profile");
-      };
-   
-
-    return (
-        <LoggedInContainer curActiveScreen="playlists" >
-            <div className="flex items-start mb-2">
-                <h1 className="font-bold text-2xl">Playlists</h1>
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              {isLoading ? (
-                  <div className="min-h-screen flex  justify-center overflow-none">
-                    <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
-                 </div> 
-              ) : (
-                 playlistData.length > 0 ? (
-                  playlistData.map((item, index) => (
-                      <PlaylistCard
-                      key={index}
-                      name={item.name}
-                      id={item._id}
-                      mixCount={item.mixCount}
-                      userName={item.userName} 
-                      onClick={() => handlePlaylistCardClick()}
-                      
-              
-                      />
-                      
-                  ))
-              ) : (
-                  <p>You have not created any playlists yet.</p>
-              )
-              )}
-                
-               
-            </div>
-
-        </LoggedInContainer>
-    )
-}
 export default Playlists;

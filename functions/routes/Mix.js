@@ -42,6 +42,33 @@ router.post(
 );
 
 
+// router to fetch 3 random mixes
+router.get("/fetchMix",
+  async (req, res ) => {
+    try{ 
+
+      const randomMixes = await Mix.aggregate([
+        { $sample: { size: 3} }
+      ]);
+
+      const mixData = randomMixes.map((mix) => ({
+        thumbnail: mix.thumbnail, 
+        track: mix.track,
+        title: mix.title,
+        artist: mix.artist,
+        track: mix.track,
+        _id: mix._id,
+        userId: mix.userId,
+    }));
+
+    return res.status(200).json({ data: mixData});
+
+    } catch (error){
+      console.error("Error fetching mixes", error);
+      return res.status(500).json({ error: "Failed to fetch mix" });
+    }
+  }
+)
 
 //router to Like a mix
 router.post("/addFavourite",

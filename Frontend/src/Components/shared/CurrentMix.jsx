@@ -166,11 +166,11 @@ const CurrentMix = ({
 
 
   return (
-    <section className="fixed bottom-0 left-0 right-0 bg-white px-4 border-t border-gray-300">
-      <div className="mx-auto flex justify-center h-20  max-w-8xl max-w-10xl">
-        <div className="flex align-center  w-2/3">
+    <section className="fixed bottom-0 left-0 right-0 bg-gray-800 px-4 border-t border-gray-700">
+      <div className="mx-auto flex justify-center h-20 max-w-7xl">
+        <div className="flex items-center align-center w-3/4 space-x-4">
           <div className="flex  ">
-            <img src={thumbnail} alt="thumbnail" className="w-24 h-20 " />
+            <img src={thumbnail} alt="thumbnail" className="w-20 h-20 rounded-lg" />
           </div>
           <div className="flex items-center w-3/5">
             <div className="font-medium text-lg flex-row px-4">
@@ -191,13 +191,16 @@ const CurrentMix = ({
             <div className="flex items-center">
               <p className="mx-2">{formatTime(currentTime)}</p>
               <input
-                type="range"
-                min="0"
-                max={duration}
-                value={currentTime}
-                onChange={handleTrackProgressChange}
-                className="w-96 bg-gray-300 cursor-pointer"
-              />
+  type="range"
+  min="0"
+  max={duration}
+  value={currentTime}
+  onChange={handleTrackProgressChange}
+  className="w-96 h-2 bg-gray-300 cursor-pointer appearance-none"
+  style={{
+    background: `linear-gradient(to right, #10b981 ${((currentTime / duration) * 100) || 0}%, #d1d5db 0%)`,
+  }}
+/>
               <p className="mx-2">{formatTime(duration)}</p>
             </div>
 

@@ -15,3 +15,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 24px;
+  width: 24px;
+  background-color: #fff;
+  border: 2px solid #10b981;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 24px;
+  width: 24px;
+  background-color: #fff;
+  border: 2px solid #10b981;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-ms-thumb {
+  height: 24px;
+  width: 24px;
+  background-color: #fff;
+  border: 2px solid #10b981;
+  border-radius: 50%;
+  cursor: pointer;
+}

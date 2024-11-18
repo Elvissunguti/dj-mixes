@@ -160,20 +160,19 @@ const PublicFavourites = () => {
 
 
     return(
-        <section>
-            <div className="flex items-start mb-6">
-                <h1 className="font-bold text-xl">Favourites</h1>
-            </div>
-            <div className="space-y-4 overflow-auto">
-            {isLoading ? (
-          <div className="min-h-screen flex justify-center overflow-none">
-          <div className="animate-spin w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full"></div>
-         </div> 
-          ) : (
-        favouriteData.length > 0 ? (
-          favouriteData.map((item, index) => (
+      <section className="p-6 bg-base-100">
+      <div className="flex items-start mb-6">
+        <h1 className="font-bold text-2xl text-primary">Favourites</h1>
+      </div>
+      <div className="space-y-4 overflow-auto">
+        {isLoading ? (
+          <div className="flex justify-center items-center h-48">
+            <div className="animate-spin w-12 h-12 border-4 border-t-primary border-transparent rounded-full"></div>
+          </div>
+        ) : favouriteData.length > 0 ? (
+          favouriteData.map((item) => (
             <MixCard
-              key={index}
+              key={item._id}
               mixId={item._id}
               thumbnail={item.thumbnail}
               title={item.title}
@@ -187,36 +186,30 @@ const PublicFavourites = () => {
               createPlaylistAndAddMix={createPlaylistAndAddMix}
               fetchPlaylists={fetchPlaylists}
               existingPlaylists={existingPlaylists}
-             />
-             ))
-             ) : (
-               <p>
-               Like Mixes to see them here
-              </p>
-           )
-          )}
-           </div>
-           {currentMix && (
-             <CurrentMix
-              mixId={currentMix._id}
-              userId={currentMix.userId}
-              thumbnail={currentMix.thumbnail}
-              title={currentMix.title}
-              artist={currentMix.artist}
-              audioSrc={currentMix.track}
-              currentSong={currentMix.currentSong}
-              setCurrentSong={(songState) =>
-                setCurrentMix({ ...currentMix, currentSong: songState })
-                }
-              currentTime={currentMix.currentTime}
-              isPlaying={isPlaying}
-              onMixPlay={handlePlayPause}
-              onPlayNext={playNextMix} 
-              onPlayPrev={playPrevMix}
-
-             />
-           )}
-        </section>
-    )
+            />
+          ))
+        ) : (
+          <p className="text-center text-secondary">Like Mixes to see them here</p>
+        )}
+      </div>
+      {currentMix && (
+        <div className="mt-6 bg-base-200 rounded-lg p-4 shadow-lg">
+          <CurrentMix
+            mixId={currentMix._id}
+            userId={currentMix.userId}
+            thumbnail={currentMix.thumbnail}
+            title={currentMix.title}
+            artist={currentMix.artist}
+            audioSrc={currentMix.track}
+            currentSong={currentMix.currentSong}
+            setCurrentSong={(songState) => setCurrentMix({ ...currentMix, currentSong: songState })}
+            currentTime={currentMix.currentTime}
+            isPlaying={isPlaying}
+            onMixPlay={handlePlayPause}
+          />
+        </div>
+      )}
+    </section>
+  );
 }
 export default PublicFavourites;

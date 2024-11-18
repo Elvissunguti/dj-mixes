@@ -106,11 +106,11 @@ const Register = () => {
             {emailError && <p className="text-red-500">{emailError}</p>}
           </div>
           <div>
-            <label htmlFor="passWord" className="block text-sm font-medium text-gray-700">Password:</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password:</label>
             <input
               type="password"
-              id="passWord"
-              name="passWord"
+              id="password"
+              name="password"
               value={formData.password}
               onChange={handleChange}
               className="border rounded-md px-3 py-2 w-full mt-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
