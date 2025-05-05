@@ -12,6 +12,8 @@ const UploadMix = () => {
     const [thumbnail, setThumbnail] = useState(null);
     const [track, setTrack] = useState(null);
     const [uploading, setUploading] = useState(false); 
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadStatus, setUploadStatus] = useState("");
 
     const navigate = useNavigate();
 
@@ -38,10 +40,11 @@ const UploadMix = () => {
                 "state_changed",
                 (snapshot) => {
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log("Upload is " + progress + "% done");
+                    setUploadProgress(Math.round(progress));
                 },
                 (error) => {
                     console.error("Upload failed:", error);
+                    setUploadStatus("Upload failed");
                     reject(error);
                 },
                 () => {
@@ -62,6 +65,8 @@ const UploadMix = () => {
         }
 
         setUploading(true);
+        setUploadStatus("");
+        setUploadProgress(0);
 
         try {
             // Upload thumbnail and track to Firebase Storage
@@ -84,9 +89,11 @@ const UploadMix = () => {
                 alert("Mix created successfully");
                 navigate("/my-mixes");
                 console.log("Mix Created:", response.createdMix);
+                setUploadStatus("Upload successful");
             }
         } catch (error) {
             console.error("Error creating mix:", error);
+            setUploadStatus("Upload failed");
             alert("Could not create mix");
         } finally {
             setUploading(false);
@@ -110,7 +117,7 @@ const UploadMix = () => {
                             placeholder="Enter the title of the mix..."
                             onChange={(e) => setTitle(e.target.value)}
                             required
-                            className="px-6 py-2 text-lg border border-gray-300 placeholder-gray-500 text-gray-900 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                            className="px-6 py-2 text-lg border border-gray-300 placeholder-gray-500 text-white focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                         />
                     </div>
                     <div className="flex flex-row-reverse items-center justify-center my-4">
@@ -127,7 +134,7 @@ const UploadMix = () => {
                                 required
                                 onChange={handleImageChange}
                             />
-                            <label htmlFor="thumbnail" className="px-2 py-2 bg-green-200 cursor-pointer">Choose thumbnail</label>
+                            <label htmlFor="thumbnail" className="px-2 py-2 text-black bg-green-200 cursor-pointer">Choose thumbnail</label>
                             <div className="flex items-center w-56 h-56 justify-center border border-red-500">
                                 {thumbnail ? (
                                     <img
@@ -155,9 +162,9 @@ const UploadMix = () => {
                             className="hidden"
                             required
                         />
-                        <label htmlFor="track" className="px-2 py-3 bg-green-300 mx-2 cursor-pointer">Choose track</label>
+                        <label htmlFor="track" className="px-2 py-3 text-black bg-green-300 mx-2 cursor-pointer">Choose track</label>
                         {track ? (
-                            <div className="px-2 py-3 my-4 bg-gray-300">
+                            <div className="px-2 py-3  my-4 text-white">
                                 <p>{track.name}</p>
                             </div>
                         ) : (
@@ -167,14 +174,31 @@ const UploadMix = () => {
                         )}
                     </div>
                     <div className="my-4">
-                        <button
-                            type="submit"
-                            className="px-3 py-2 text-white text-xl font-bold bg-green-400 hover:bg-green-700 cursor-pointer"
-                            disabled={uploading} // Disable button while uploading
-                        >
-                            {uploading ? "Uploading..." : "Publish"}
-                        </button>
-                    </div>
+  <button
+    type="submit"
+    className={`px-3 py-2 text-white text-xl font-bold rounded ${
+      uploading
+        ? "bg-yellow-500"
+        : uploadStatus.toLowerCase().includes("failed")
+        ? "bg-red-500"
+        : uploadStatus.toLowerCase().includes("success")
+        ? "bg-green-500"
+        : "bg-green-400 hover:bg-green-700"
+    }`}
+    disabled={
+      uploading ||
+      uploadStatus.toLowerCase().includes("failed") ||
+      uploadStatus.toLowerCase().includes("success")
+    }
+  >
+    {uploading
+      ? `Uploading... ${uploadProgress}%`
+      : uploadStatus
+      ? uploadStatus
+      : "Publish"}
+  </button>
+</div>
+
                 </form>
             </div>
         </section>

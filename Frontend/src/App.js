@@ -19,6 +19,7 @@ import Edit from './Components/Edit/Edit';
 import UploadEdit from './Components/Upload/UploadEdit';
 import EditPost from './Components/Post/EditPost';
 import { useAuth } from './Components/Context/AuthContext';
+import PlaylistDetails from './Components/Playlists/PlaylistDetails'; 
 
 
 function App() {
@@ -53,6 +54,8 @@ function App() {
                 <Route path="/edit/:playlistID" element={<Edit />} />
                 <Route path="/upload-edit" element={<UploadEdit />} />
                 <Route path="/post-edit" element={<EditPost />} />
+                <Route path="/playlist/:playlistId" element={<PlaylistDetails />} />
+
               </>
             )}
             {/* Catch-all for 404 */}

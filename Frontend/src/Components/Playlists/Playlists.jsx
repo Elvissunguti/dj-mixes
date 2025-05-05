@@ -23,8 +23,8 @@ const Playlists = () => {
     getPlaylist();
   }, []);
 
-  const handlePlaylistCardClick = () => {
-    navigate("/profile");
+  const handlePlaylistCardClick = (playlistId) => {
+    navigate(`/playlist/${playlistId}`); 
   };
 
   return (

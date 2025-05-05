@@ -76,7 +76,7 @@ const Login = () => {
                             placeholder="Email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="relative px-3 py-2 w-full rounded-none rounded-b-md border border-gray-300 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            className="relative px-3 py-2 w-full rounded-none rounded-b-md border border-gray-300 text-white placeholder-green-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             />
                         </div>
                         <div>
@@ -92,7 +92,7 @@ const Login = () => {
                             value={formData.password}
                             placeholder="Password"
                             onChange={handleChange}
-                            className="relative px-3 py-2 w-full text-gray-900 placeholder-gray-500 rounded-none rounded-b-md border border-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm placeholder-gray-500 "
+                            className="relative px-3 py-2 w-full text-white placeholder-green-500 rounded-none rounded-b-md border border-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm placeholder-gray-500 "
                             />
                         </div>
                         <div>

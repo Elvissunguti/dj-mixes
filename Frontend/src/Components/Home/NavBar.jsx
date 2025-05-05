@@ -134,14 +134,14 @@ const NavBar = () => {
                 <div className="absolute top-full left-0 w-40 mt-2 bg-base-100 rounded-lg shadow-lg py-2 z-50">
                   <Link
                     to="/upload-mix"
-                    className="flex items-center justify-start px-4 py-2 text-gray-900 hover:bg-base-200"
+                    className="flex items-center justify-start px-4 py-2 text-white hover:bg-base-200"
                   >
                     <MdAddCircleOutline className="mr-2" />
                     Upload
                   </Link>
                   <Link
                     to="/posts"
-                    className="flex items-center justify-start px-4 py-2 text-gray-900 hover:bg-base-200"
+                    className="flex items-center justify-start px-4 py-2 text-white hover:bg-base-200"
                   >
                     <IoCreateOutline className="mr-2" />
                     Post

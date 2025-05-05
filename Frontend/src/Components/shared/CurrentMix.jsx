@@ -167,7 +167,7 @@ const CurrentMix = ({
 
   return (
     <section className="fixed bottom-0 left-0 right-0 bg-gray-800 px-4 border-t border-gray-700">
-      <div className="mx-auto flex justify-center h-20 max-w-7xl">
+      <div className="mx-auto flex justify-between items-center h-24 max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center align-center w-3/4 space-x-4">
           <div className="flex  ">
             <img src={thumbnail} alt="thumbnail" className="w-20 h-20 rounded-lg" />
@@ -205,29 +205,35 @@ const CurrentMix = ({
             </div>
 
             <div className="flex flex-row relative space-x-6 items-center">
-              <div className="bg-gray-300 cursor-pointer px-4 py-4 relative border border-gray-300"
-                            onMouseEnter={handleVolumeIconHover} 
-                            onMouseLeave={handleVolumeIconLeave}
-              >
-                
-            <LuVolume2
-              className="cursor-pointer text-4xl"
-            />
-            {isVolumeIconHovered && (
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={volume}
-                onChange={handleVolumeChange}
-                className="w-16 h-10 bg-gray-300 absolute -top-5 cursor-pointer transform"
-                style={{
-                  transform: "rotate(90deg) rotate(180deg)",
-                  transformOrigin: "left",
-                }}
-              />
-            )}
-            </div>
+            <div 
+  className="relative flex items-center space-x-2 group"
+  onMouseEnter={handleVolumeIconHover}
+  onMouseLeave={handleVolumeIconLeave}
+>
+  <LuVolume2 className="text-white text-2xl cursor-pointer hover:text-green-400 transition-colors duration-200" />
+
+  {isVolumeIconHovered && (
+    <input
+      type="range"
+      min="0"
+      max="100"
+      value={volume}
+      onChange={handleVolumeChange}
+      className="w-24 h-1 bg-gray-500 rounded-full appearance-none transition-all duration-300 cursor-pointer
+        [&::-webkit-slider-thumb]:appearance-none 
+        [&::-webkit-slider-thumb]:w-3 
+        [&::-webkit-slider-thumb]:h-3 
+        [&::-webkit-slider-thumb]:rounded-full 
+        [&::-webkit-slider-thumb]:bg-green-400 
+        [&::-moz-range-thumb]:w-3 
+        [&::-moz-range-thumb]:h-3 
+        [&::-moz-range-thumb]:rounded-full 
+        [&::-moz-range-thumb]:bg-green-400 
+        shadow-md"
+    />
+  )}
+</div>
+
 
               <AiOutlineMore className="cursor-pointer text-4xl" />
             </div>

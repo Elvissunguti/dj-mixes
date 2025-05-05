@@ -111,7 +111,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     </div>
 
     {/* Main content */}
-    <div className="w-4/5 h-screen overflow-y-auto bg-gray-900">
+    <div className="w-4/5 h-auto overflow-y-auto bg-gray-900">
       <div className="content p-6 bg-gray-800 rounded-lg shadow-lg h-full">
         {children}
       </div>
