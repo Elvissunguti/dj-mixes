@@ -18,7 +18,7 @@ const Feed = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await makeAuthenticatedGETRequest("/user/followed-mixes");
+        const response = await makeAuthenticatedGETRequest("/mix/all");
         setFeedData(response.data);
         setIsLoading(false);
       } catch (error) {

@@ -15,7 +15,7 @@ const PlaylistCard = ({ name, mixCount, playlistId, userName, onClick }) => {
       <div className="relative z-10 flex flex-col justify-between h-full p-4 text-white">
         <div>
           <h2 className="text-lg font-semibold truncate">{name}</h2>
-          <p className="text-sm opacity-80">By {userName}</p>
+          <p className="text-sm opacity-80"><span className="text-green-500">By</span> {userName}</p>
         </div>
 
         <div className="flex items-center justify-between mt-auto">

@@ -49,7 +49,7 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/upload-mix" element={<UploadMix />} />
                 <Route path='/profile-page' element={<ProfilePage />} />
-                <Route path="/public-profile" element={<PublicProfile /> } />
+                <Route path="/public_profile" element={<PublicProfile /> } />
                 <Route path="/playlists" element={<Playlists />} />
                 <Route path="/edit/:playlistID" element={<Edit />} />
                 <Route path="/upload-edit" element={<UploadEdit />} />

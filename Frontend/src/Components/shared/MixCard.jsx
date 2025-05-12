@@ -152,7 +152,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, favouriteC
  
   // To fetch the profile of an artist in a mix
   const handleArtistClick = () => {
-    navigate(`/public profile?userId=${userId}`);
+    navigate(`/public_profile?userId=${userId}`);
   };
 
 
@@ -350,9 +350,7 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, favouriteC
               ) : (
                 <AiOutlineHeart className="text-gray-400 text-4xl cursor-pointer hover:text-white" />
               )}
-              <span className="absolute bottom-0 left-7 text-green-500 text-lg">
-                {favouriteCount}
-              </span>
+            
             </div>
     
             {/* Add to Playlist */}

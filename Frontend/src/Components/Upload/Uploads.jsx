@@ -18,6 +18,7 @@ const Uploads = () => {
             try {
                 const response = await makeAuthenticatedGETRequest("/mix/get/myMix");
                 setMixData(response.data);
+                console.log("My Mixes:", response.data);
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching my mixes:", error);

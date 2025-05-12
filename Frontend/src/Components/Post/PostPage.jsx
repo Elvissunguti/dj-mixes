@@ -40,7 +40,7 @@ const PostPage = () => {
   return (
     <LoggedInContainer curActiveScreen="post-page">
       <div className="flex items-start justify-between mb-6">
-        <h1 className="font-bold text-3xl text-primary">Your Posts</h1>
+        <h1 className="font-bold text-3xl text-primary">Posts</h1>
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}

@@ -68,7 +68,7 @@ const Post = () => {
           
       if (response){
         alert("Post created successfully");  
-        navigate("/post page")
+        navigate("/post-page")
       }
 
     } catch(error){

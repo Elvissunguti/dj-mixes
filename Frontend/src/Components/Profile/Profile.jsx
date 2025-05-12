@@ -14,7 +14,7 @@ import MyPost from "../Post/MyPost";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
-  const [activeTab, setActiveTab] = useState("my mixes");
+  const [activeTab, setActiveTab] = useState("my-mixes");
   const [isPlaylistDropdownOpen, setIsPlaylistDropdownOpen] = useState(false);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
 
@@ -130,7 +130,7 @@ const Profile = () => {
                     if (tab === "playlistMix") togglePlaylistDropdown();
                   }}
                 >
-                  {tab === "my mixes" ? "Shows" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  {tab === "my mixes" ? "My Mixes" : tab.charAt(0).toUpperCase() + tab.slice(1)}
                 </button>
               ))}
             </div>
@@ -148,7 +148,7 @@ const Profile = () => {
               </div>
             )}
 
-            <div className="bg-base-200 rounded-lg h-screen p-4 shadow-inner">{renderActiveTab()}</div>
+            <div className="bg-base-200 rounded-lg h-auto p-4 shadow-inner">{renderActiveTab()}</div>
           </div>
         </div>
       </div>

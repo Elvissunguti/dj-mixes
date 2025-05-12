@@ -157,7 +157,7 @@ return (
           </button>
 
           {/* Bio */}
-          <p className="text-center text-gray-700 mt-2">{biography}</p>
+          <p className="text-center text-white mt-2">{biography}</p>
 
           {/* Social Links */}
           <div className="flex space-x-4 text-3xl mt-6">

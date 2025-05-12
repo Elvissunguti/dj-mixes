@@ -49,6 +49,7 @@ const NavBar = () => {
         "/profile/get/profiles"
       );
       setProfileData(response.data);
+   
     };
     getData();
   }, []);

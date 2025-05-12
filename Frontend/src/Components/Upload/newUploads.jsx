@@ -111,7 +111,7 @@ const NewUpload = () => {
             />
           ))
         ) : (
-          <p className="text-center text-neutral text-lg">Follow artists to see new uploads here.</p>
+          <p className="text-center text-white text-lg">Follow artists to see new uploads here.</p>
         )}
       </div>
 
