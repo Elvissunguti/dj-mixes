@@ -86,7 +86,7 @@ const Feed = () => {
       <div className="flex items-start mb-4">
         <h1 className="font-bold text-3xl text-primary">Feed</h1>
       </div>
-      <div className="space-y-6 overflow-y-axis">
+      <div className=" space-y-4 overflow-auto">
         {isLoading ? (
           <div className="flex justify-center min-h-screen">
             <div className="animate-spin rounded-full w-12 h-12 border-t-4 border-primary"></div>

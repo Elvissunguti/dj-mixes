@@ -12,7 +12,13 @@ const MyPost = () => {
     const fetchData = async () => {
       try {
         const response = await makeAuthenticatedGETRequest("/post/get/myposts");
-        setPostData(response.data);
+
+        // Sort posts by date (newest first)
+        const sortedData = response.data.sort((a, b) => {
+          return new Date(b.postDate) - new Date(a.postDate);
+        });
+
+        setPostData(sortedData);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching posts:", error);

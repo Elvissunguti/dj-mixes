@@ -64,7 +64,7 @@ const Profile = () => {
   };
 
   return (
-    <section className="mx-auto max-w-7xl p-4">
+    <section className="mx-auto p-4">
       <NavBar />
       <div className="h-full bg-base-100 shadow-md rounded-lg overflow-hidden">
         <div className="flex items-center justify-center h-48 bg-gray-200">

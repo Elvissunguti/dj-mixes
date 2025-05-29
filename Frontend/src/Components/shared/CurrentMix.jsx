@@ -166,7 +166,7 @@ const CurrentMix = ({
 
 
   return (
-    <section className="fixed bottom-0 left-0 right-0 bg-gray-800 px-4 border-t border-gray-700">
+    <section className="fixed bottom-0 left-0 right-0 bg-gray-800 px-1 border-t border-gray-700">
       <div className="mx-auto flex justify-between items-center h-24 max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center align-center w-3/4 space-x-4">
           <div className="flex  ">
@@ -219,6 +219,9 @@ const CurrentMix = ({
       max="100"
       value={volume}
       onChange={handleVolumeChange}
+      style={{
+        background: `linear-gradient(to right, #10b981 ${((currentTime / duration) * 100) || 0}%, #d1d5db 0%)`,
+      }}
       className="w-24 h-1 bg-gray-500 rounded-full appearance-none transition-all duration-300 cursor-pointer
         [&::-webkit-slider-thumb]:appearance-none 
         [&::-webkit-slider-thumb]:w-3 

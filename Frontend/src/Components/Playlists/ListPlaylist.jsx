@@ -33,7 +33,7 @@ const ListPlaylist = ({ isDropdownOpen, onPlaylistClick }) => {
                         {playlists.map((playlist) => (
                             <li
                                key={playlist._id}
-                               className="flex py-5 px-3 no-wrap items-center justify-between  bg-green-400 hover:bg-green-600 cursor-pointer"
+                               className="flex py-5 px-3 no-wrap text-white items-center justify-between  bg-gray-400 hover:bg-green-600 cursor-pointer"
                                onClick={() => onPlaylistClick(playlist._id)}>
                                 <p>{playlist.name}</p>
                                 <p className="ml-8">{playlist.mixCount}</p>

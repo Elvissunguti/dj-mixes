@@ -385,28 +385,32 @@ const MixCard = ({ mixId, thumbnail, userId, title, artist, audioSrc, favouriteC
             </div>
     
             {/* Share */}
-            <FcShare
-              className="text-gray-400 text-4xl cursor-pointer hover:text-green-500"
-              onClick={() => setOpen(!open)}
-            />
-            {open && (
-              <div className="absolute bg-gray-800 text-white top-full mt-2 px-2 py-3 rounded-lg shadow-lg">
-                <ul className="flex items-center justify-center space-x-4 text-xl font-medium">
-                  <li>
-                    <AiOutlineTwitter className="cursor-pointer" />
-                  </li>
-                  <li>
-                    <ImWhatsapp className="cursor-pointer" />
-                  </li>
-                  <li>
-                    <ImFacebook className="cursor-pointer" />
-                  </li>
-                  <li>
-                    <AiOutlineInstagram className="cursor-pointer" />
-                  </li>
-                </ul>
-              </div>
-            )}
+<div className="relative">
+  <FcShare
+    className="text-gray-400 text-4xl cursor-pointer hover:text-green-500"
+    onClick={() => setOpen(!open)}
+  />
+  {open && (
+    <div className="absolute z-50 left-0 top-full mt-2 w-60 bg-gray-800 border border-gray-600 rounded-lg shadow-lg p-4">
+      <p className="text-sm text-gray-300 mb-2">Share this mix:</p>
+      <ul className="flex items-center justify-between text-xl text-white">
+        <li className="cursor-pointer hover:text-blue-400">
+          <AiOutlineTwitter />
+        </li>
+        <li className="cursor-pointer hover:text-green-400">
+          <ImWhatsapp />
+        </li>
+        <li className="cursor-pointer hover:text-blue-600">
+          <ImFacebook />
+        </li>
+        <li className="cursor-pointer hover:text-pink-400">
+          <AiOutlineInstagram />
+        </li>
+      </ul>
+    </div>
+  )}
+</div>
+
     
             {/* More options */}
             <AiOutlineMore className="cursor-pointer text-4xl hover:text-white" />
